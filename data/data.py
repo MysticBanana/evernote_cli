@@ -11,3 +11,4 @@ class Data:
 
     def get_path(self, key):
         return self.main_config.get("path")[key]
+

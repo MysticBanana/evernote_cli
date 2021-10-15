@@ -20,7 +20,11 @@ class Evernote:
             pass
             # log error
 
-    def setup_logging(self, logger_name="None", level=logging.INFO):
+    def setup_logging(self, level=logging.INFO):
+        """
+
+        :param level:
+        """
         formatter = logging.Formatter('%(asctime)s [%(levelname)s] [%(name)s] %(message)s')
 
         self.log_handler = logging.FileHandler(self.data_manager.get_path("log") + "logfile.log")
@@ -37,6 +41,11 @@ class Evernote:
         return self.log_handler
 
     def create_logger(self, name):
+        """
+
+        :param name:
+        :return:
+        """
         logger = logging.getLogger(name)
         logger.setLevel(self.log_level)
         logger.addHandler(self.log_handler)

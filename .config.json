@@ -2,5 +2,9 @@
   "path": {
     "log": "logs/",
     "user_data": "user_data/"
-  }
+  },
+  "asd": [
+    2,
+    3
+  ]
 }

@@ -24,7 +24,7 @@ class Config:
             return
 
         if self.mode not in self.modes:
-            if self.logger: self.logger.warn("loading default mode for: " + str(config_name) + " mode: "+ str(self.mode))
+            if self.logger: self.logger.warn("loading default mode for: " + str(config_name) + " mode: " + str(self.mode))
             self.load_default()
 
         if self.logger: self.logger.info("loading file: " + str(config_name))
@@ -35,14 +35,14 @@ class Config:
             self.file_data = json.load(file)
             
     def load_default(self):
-        pass
+        self.set("asf", file_data="{}")
 
     def get(self, key, *args):
         d = copy.deepcopy(self.file_data)
         return d.get(key, *args)
 
     def set(self, key, **params):
-        file_data = params.pop("file_data")
+        file_data = params.get("file_data")
         self.file_data[str(key)] = file_data
 
     def addElement(self, key, e):
