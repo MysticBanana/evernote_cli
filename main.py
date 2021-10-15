@@ -1,11 +1,12 @@
 import sys
 import logging
+import evernote
 
 
 class Evernote:
     def __init__(self, argv=None, **params):
-
-
+        self.log_level = params.get("log_level", logging.INFO)
+        self.setup_logging(level=self.log_level)
 
 
 
@@ -13,20 +14,28 @@ class Evernote:
             pass
             # log error
 
-    def logger(self, level=logging.INFO):
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    def setup_logging(self, logger_name="None", level=logging.INFO):
+        formatter = logging.Formatter('%(asctime)s [%(levelname)s] [%(name)s] %(message)s')
 
-        loggers = {
-            "network": None,
-            "file_manager": None
-        }
+        # hardcoded log path
+        self.log_handler = logging.FileHandler("logs/logfile.log")
+        self.log_handler.setFormatter(formatter)
 
-        # handler = logging.FileHandler(log_file)
-        # handler.setFormatter(formatter)
-        #
-        # logger = logging.getLogger(name)
-        # logger.setLevel(level)
-        # logger.addHandler(handler)
+        self.logger = logging.getLogger("Main")
+        self.logger.setLevel(level)
+        self.logger.addHandler(self.log_handler)
+
+    def get_logger(self):
+        return self.logger
+
+    def get_log_handler(self):
+        return self.log_handler
+
+    def create_logger(self, name):
+        logger = logging.getLogger(name)
+        logger.setLevel(self.log_level)
+        logger.addHandler(self.log_handler)
+        return logger
 
     def exit_error(self, error_message=None):
         """
@@ -37,4 +46,8 @@ class Evernote:
 
 
 if __name__ == "__main__":
-    print(sys.argv)
+    print(sys.argv[1:])
+
+    e = Evernote(sys.argv[1:])
+    e.get_logger().log(msg="test", level=logging.INFO)
+
