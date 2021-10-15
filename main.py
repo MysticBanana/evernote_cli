@@ -49,9 +49,10 @@ class Evernote:
         """
         # close and exit all services now
 
-        self.logger.error(msg=error_message)
-        print("Error... \n\n" + error_message)
-
+        if hasattr(self, "logger"):
+            self.logger.error(msg=error_message)
+        print(error_message)
+        exit()
 
 
 if __name__ == "__main__":

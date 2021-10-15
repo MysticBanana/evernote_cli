@@ -20,6 +20,7 @@ class Config:
         }
 
         if not os.path.exists(self.path):
+            self.main_class.exit_error(".config.json does not exist!")
             return
 
         if self.mode not in self.modes:
