@@ -1,0 +1,6 @@
+{
+  "path": {
+    "log": "logs/",
+    "user_data": "user_data/"
+  }
+}
