@@ -1,6 +1,5 @@
 import sys
 import logging
-import evernote
 
 
 class Evernote:
