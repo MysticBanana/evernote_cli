@@ -1,10 +1,15 @@
 import json
 import os
 import copy
+import sys
 from shutil import copyfile
 
 class Config:
     def __init__(self, config_name, **params):
+        # for encoding in files
+        reload(sys)
+        sys.setdefaultencoding('utf-8')
+
         self.main_class = params.get("main_class")
         self.config_name = config_name
         self.mode = params.get("mode", "json")
@@ -20,7 +25,7 @@ class Config:
         }
 
         if not os.path.exists(self.path):
-            self.main_class.exit_error(".config.json does not exist!")
+            self.main_class.exit_error("File does not exist: " + str(self.path))
             return
 
         if self.mode not in self.modes:
@@ -31,7 +36,7 @@ class Config:
         self.modes[self.mode]()
 
     def load_json(self):
-        with open(self.path, "r", encoding="utf-8") as file:
+        with open(self.path, "r") as file:
             self.file_data = json.load(file)
             
     def load_default(self):
@@ -49,7 +54,7 @@ class Config:
         self.file_data[str(key)].append(e)
 
     def dump(self):
-        with open(self.path, "w", encoding="utf-8") as file:
+        with open(self.path, "w") as file:
             json.dump(self.file_data, file, ensure_ascii=False, indent=4)
 
     def getAll(self):

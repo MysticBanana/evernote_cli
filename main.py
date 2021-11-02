@@ -1,12 +1,12 @@
 import sys
 import logging
-from data import data
+from data import local_data_manager, global_data_manager
 
 
 class Evernote:
     def __init__(self, argv=None, **params):
         # loads configs
-        self.data_manager = data.Data(self)
+        self.global_data_manager = global_data_manager.GlobalFileManager(self)
 
         self.log_level = params.get("log_level", logging.INFO)
         self.setup_logging(level=self.log_level)
@@ -14,7 +14,8 @@ class Evernote:
         self.logger.info("Starting...")
         self.logger.info("Loaded .config.json")
 
-        self.data_manager.setup_logging()
+        self.global_data_manager.setup_logging()
+        self.global_data_manager.init_files()
 
         if not argv:
             pass
@@ -27,7 +28,7 @@ class Evernote:
         """
         formatter = logging.Formatter('%(asctime)s [%(levelname)s] [%(name)s] %(message)s')
 
-        self.log_handler = logging.FileHandler(self.data_manager.get_path("log") + "logfile.log")
+        self.log_handler = logging.FileHandler(self.global_data_manager.get_path("log") + "logfile.log")
         self.log_handler.setFormatter(formatter)
 
         self.logger = logging.getLogger("Main")
@@ -60,7 +61,7 @@ class Evernote:
 
         if hasattr(self, "logger"):
             self.logger.error(msg=error_message)
-        print(error_message)
+        print error_message
         exit()
 
 
@@ -68,5 +69,4 @@ if __name__ == "__main__":
     print(sys.argv[1:])
 
     e = Evernote(sys.argv[1:])
-    e.get_logger().log(msg="logpath works", level=logging.INFO)
 

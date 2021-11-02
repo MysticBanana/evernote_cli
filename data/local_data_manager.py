@@ -1,7 +1,7 @@
 from . import file_loader
 
 
-class Data:
+class BaseManager:
     def __init__(self, main_class):
         self.main_config = file_loader.Config(config_name=".config", main_class=main_class)
         self.main_class = main_class
