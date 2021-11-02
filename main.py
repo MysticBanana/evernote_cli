@@ -64,7 +64,7 @@ class Evernote:
         print error_message
         exit()
 
-
+# main
 if __name__ == "__main__":
     print(sys.argv[1:])
 
