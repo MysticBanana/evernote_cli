@@ -13,6 +13,7 @@ class UserDataManager:
         self.logger = self.main_class.create_logger(user_name)
 
 
-
+    def __del__(self):
+        self.user_config.dump()
 
 
