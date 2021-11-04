@@ -28,6 +28,8 @@ class Config:
             if not create:
                 self.main_class.exit_error("File does not exist: " + str(self.path))
                 return
+            if not os.path.exists(os.path.dirname(self.path)):
+                os.makedirs(os.path.dirname(self.path))
             open(self.path, "w").close()
 
         if self.mode not in self.modes:

@@ -8,13 +8,12 @@ class UserDataManager:
 
         self.path = path
         self.usr_name = user_name
+        self.user_key = "user_key"
 
         self.logger = self.main_class.create_logger(user_name)
 
-    @property
-    def tags(self):
-        return
 
-
+    def __del__(self):
+        self.user_config.dump()
 
 
