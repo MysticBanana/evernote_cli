@@ -1,6 +1,11 @@
 import sys
 import logging
+
+from evernote.api.client import EvernoteClient
+from evernote.edam.notestore.ttypes import NotesMetadataResultSpec, NoteFilter
+
 from data import local_data_manager, global_data_manager
+from downloader import downloadFile
 
 
 class Evernote:
@@ -16,6 +21,7 @@ class Evernote:
 
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
+        self.download()
 
         if not argv:
             pass
@@ -64,9 +70,21 @@ class Evernote:
         print error_message
         exit()
 
+    def download(self):
+        # access_token for testing
+        access_token = "S=s564:U=dbe7665:E=17d0ede1840:C=17cead19440:P=185:A=mneuhaus:V=2:H=05f118609b3d85a044e259255e322dc2"
+        client = EvernoteClient(token=access_token, sandbox=False)  # sandbox=True for devtoken
+        noteStore = client.get_note_store()
+        # find all Guids:
+        filter = NoteFilter()  # Suchfilter
+        filter.ascending = True  # results ascending
+        meta = NotesMetadataResultSpec()
+        meta.includeTitle = True
+        downloadFile(noteStore, access_token, filter, meta)
+
+
 # main
 if __name__ == "__main__":
     print(sys.argv[1:])
 
     e = Evernote(sys.argv[1:])
-
