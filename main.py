@@ -77,7 +77,7 @@ class Evernote:
 
     def download(self):
         # access_token for testing
-        access_token = "S=s564:U=dbe7665:E=17d0ede1840:C=17cead19440:P=185:A=mneuhaus:V=2:H=05f118609b3d85a044e259255e322dc2"
+        access_token = self.api_key
         client = EvernoteClient(token=access_token, sandbox=False)  # sandbox=True for devtoken
         noteStore = client.get_note_store()
         # find all Guids:
@@ -85,7 +85,7 @@ class Evernote:
         filter.ascending = True  # results ascending
         meta = NotesMetadataResultSpec()
         meta.includeTitle = True
-        downloadFile(noteStore, access_token, filter, meta)
+        downloadFile(noteStore, access_token, filter, meta, self)
 
 
 # main
