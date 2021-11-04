@@ -1,12 +1,15 @@
 import os
 
 
-def downloadFile(noteStore, access_token, filter, meta):
+def downloadFile(noteStore, access_token, filter, meta, main_class):
     # Used to find the high-level information about a set of the notes from a user's account based on various criteria
     # (string authenticationToken, NoteFilter filter, i32 offset, i32 maxNotes, NotesMetadataResultSpec resultSpec)
     ourNoteList = noteStore.findNotesMetadata(access_token, filter, 0, 250, meta)
     guidlist = []
     titlelist = []
+
+    logger =main_class.create_logger("FileDownloader")
+    logger.info("test")
 
     for note in ourNoteList.notes:
         wholeNote = noteStore.getNote(access_token, note.guid, True, False, True, False)
