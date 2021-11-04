@@ -1,19 +1,25 @@
 import os
 
+
 def downloadFile(noteStore, access_token, filter, meta, main_class):
     # Used to find the high-level information about a set of the notes from a user's account based on various criteria
     # (string authenticationToken, NoteFilter filter, i32 offset, i32 maxNotes, NotesMetadataResultSpec resultSpec)
     ourNoteList = noteStore.findNotesMetadata(access_token, filter, 0, 250, meta)
     guidlist = []
     titlelist = []
+    bookguid = []
+    booktitle = []
 
     logger = main_class.create_logger("FileDownloader")
 
     for note in ourNoteList.notes:
         wholeNote = noteStore.getNote(access_token, note.guid, True, False, True, False)
         logger.info("Note guid: " + note.guid)
+        logger.info("Notebook guid: " + str(wholeNote.notebookGuid))
+        bookguid.append(wholeNote.notebookGuid)
         guidlist.append(note.guid)  # Liste with all guids of Notes
         titlelist.append(note.title)
+        booktitle.append(noteStore.getNotebook(access_token, wholeNote.notebookGuid).name)
 
     counter = 0
     for numbers in guidlist:
@@ -28,9 +34,12 @@ def downloadFile(noteStore, access_token, filter, meta, main_class):
         if not os.path.exists("Notes"):  # Folder for Notes
             os.makedirs("Notes")
 
+        if not os.path.exists("Notes/" + booktitle[counter]):  # Folder for Notes
+            os.makedirs("Notes/" + booktitle[counter])
+
         newpath = titlelist[counter]  # Folder for every Note
-        if not os.path.exists('Notes/' + newpath):
-            os.makedirs('Notes/' + newpath)
+        if not os.path.exists('Notes/' + booktitle[counter] + '/' + newpath):
+            os.makedirs('Notes/' + booktitle[counter] + '/' + newpath)
 
         while True:
             offset = resguid.find("guid='", offset + 1)  # find guid of File in resources
@@ -44,19 +53,23 @@ def downloadFile(noteStore, access_token, filter, meta, main_class):
             file_content = resource.data.body  # raw data of File
 
             file_name = resource.attributes.fileName  # file_name includes File extension
-            f = open('Notes/' + newpath + '/' + file_name, "w+")  # create file with correspond. File extension
+            f = open('Notes/' + booktitle[counter] + '/' + newpath + '/' + file_name,
+                     "w+")  # create file with correspond. File extension
             logger.info("File " + file_name + " created")
+            logger.info(
+                "Path of File " + file_name + ": " + 'Notes/' + booktitle[counter] + '/' + newpath + '/' + file_name)
             f.write(file_content)  # TODO check ob beriets vorhanden
             logger.info("File " + file_name + " written")
             f.close()
-
-        # print '\n', note.content
         counter = counter + 1
+
+
 def downloadText(noteStore, access_token, filter, meta, main_class):
     counter = 0
     ourNoteList = noteStore.findNotesMetadata(access_token, filter, 0, 250, meta)
     guidlist = []
     titlelist = []
+    booktitle = []
 
     logger = main_class.create_logger("TextDownloader")
 
@@ -65,6 +78,7 @@ def downloadText(noteStore, access_token, filter, meta, main_class):
         logger.info("Note guid: " + note.guid)
         guidlist.append(note.guid)  # Liste with all guids of Notes
         titlelist.append(note.title)
+        booktitle.append(noteStore.getNotebook(access_token, wholeNote.notebookGuid).name)
 
     counter = 0
     for numbers in guidlist:
@@ -73,12 +87,18 @@ def downloadText(noteStore, access_token, filter, meta, main_class):
         if not os.path.exists("Notes"):  # Folder for Notes
             os.makedirs("Notes")
 
-        newpath = titlelist[counter]  # Folder for every Note
-        if not os.path.exists('Notes/' + newpath):
-            os.makedirs('Notes/' + newpath)
+        if not os.path.exists("Notes/" + booktitle[counter]):  # Folder for Notes
+            os.makedirs("Notes/" + booktitle[counter])
 
-        f = open('Notes/' + newpath + '/' + "text.txt", "w+")  # create file
+        newpath = titlelist[counter]  # Folder for every Note
+        if not os.path.exists('Notes/' + booktitle[counter] + '/' + newpath):
+            os.makedirs('Notes/' + booktitle[counter] + '/' + newpath)
+
+        f = open('Notes/' + booktitle[counter] + '/' + newpath + '/' + "text.txt", "w+")  # create file
         logger.info("text.txt of " + titlelist[counter] + " created")
+        logger.info(
+            "Path of File text.txt: " + 'Notes/' + booktitle[counter] + '/' + newpath + '/text.txt')
+
         f.write(note.content)  # TODO check ob beriets vorhanden
         logger.info("text.txt of " + titlelist[counter] + " written")
         f.close()
@@ -87,3 +107,4 @@ def downloadText(noteStore, access_token, filter, meta, main_class):
 
 # TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
 # TODO download mit tags (funkt nicht in sandbox)
+# TODO fixen: funkt. nicht ohne bild etc
