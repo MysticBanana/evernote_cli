@@ -8,23 +8,22 @@ def downloadFile(noteStore, access_token, filter, meta, main_class):
     guidlist = []
     titlelist = []
 
-    logger =main_class.create_logger("FileDownloader")
-    logger.info("test")
+    logger = main_class.create_logger("FileDownloader")
 
     for note in ourNoteList.notes:
         wholeNote = noteStore.getNote(access_token, note.guid, True, False, True, False)
-        print note.guid
+        logger.info("Note guid: " + note.guid)
         guidlist.append(note.guid)  # Liste with all guids of Notes
         titlelist.append(note.title)
-    print guidlist
 
     counter = 0
     for numbers in guidlist:
         note = noteStore.getNote(access_token, guidlist[counter], True, False, True, False)  # Data about Note
         resguid = ' '.join(map(str, note.resources))  # note.resources contains guid for Files; to string
         resguidcount = resguid.count("guid='")  # count Files in Notes
-        print "\n\n", resguidcount
-        print resguid
+        logger.info("Files in Note: " + str(resguidcount))
+        logger.info("Note Resources: " + resguid)
+
         offset = -1
 
         if not os.path.exists("Notes"):  # Folder for Notes
@@ -40,7 +39,7 @@ def downloadFile(noteStore, access_token, filter, meta, main_class):
                 break
             offsetend = resguid.find("'", offset + 6)  # find end of guid
             tmpguid = resguid[offset + 6:offsetend]  # "safe" guid
-            print tmpguid
+            logger.info("File guid: " + tmpguid)
 
             resource = noteStore.getResource(tmpguid, True, False, True, False)
             file_content = resource.data.body  # raw data of File
@@ -50,7 +49,7 @@ def downloadFile(noteStore, access_token, filter, meta, main_class):
             f.write(file_content)  # TODO check ob beriets vorhanden -> schneller
             f.close()
 
-        print '\n', note.content
+        # print '\n', note.content
         counter = counter + 1
 
 # TODO prints in log schreiben ich weiss aber nicht wie
