@@ -21,7 +21,7 @@ class Config:
             self.logger = None
         
         self.modes = {
-            "json": self.load_json
+            "json": [self.load_json]
         }
 
         if not os.path.exists(self.path):
@@ -37,29 +37,42 @@ class Config:
             self.load_default()
 
         if self.logger: self.logger.info("loading file: " + str(config_name))
-        self.modes[self.mode]()
+        self.modes[self.mode][0]()
 
     def load_json(self):
         with open(self.path, "r") as file:
             self.file_data = json.load(file)
             
     def load_default(self):
-        pass # self.set("asf", file_data="{}")
+        with open(self.path, "r") as file:
+            self.file_data = file.readlines()
 
     def get(self, key, *args):
         d = copy.deepcopy(self.file_data)
-        return d.get(key, *args)
+        return d.get(key, *args) if type(d) == dict else d
 
     def set(self, key, **params):
         file_data = params.get("file_data")
-        self.file_data[str(key)] = file_data
+        if type(self.file_data) == dict:
+            self.file_data[str(key)] = file_data
+        else:
+            self.file_data = file_data
 
     def addElement(self, key, e):
+        if type(self.file_data) != dict:
+            return
         self.file_data[str(key)].append(e)
 
     def dump(self):
+        self.modes[self.mode][1]()
+
+    def dump_json(self):
         with open(self.path, "w") as file:
             json.dump(self.file_data, file, ensure_ascii=False, indent=4)
+
+    def dump_default(self):
+        with open(self.path, "w") as file:
+            file.writelines(self.file_data)
 
     def getAll(self):
         d = copy.deepcopy(self.file_data)
