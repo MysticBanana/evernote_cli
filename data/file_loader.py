@@ -5,15 +5,15 @@ import sys
 from shutil import copyfile
 
 class Config:
-    def __init__(self, config_name, **params):
-        # for encoding in files
+    def __init__(self, config_name, path="", create=False, **params):
+        # for encoding in files?
         reload(sys)
         sys.setdefaultencoding('utf-8')
 
         self.main_class = params.get("main_class")
         self.config_name = config_name
         self.mode = params.get("mode", "json")
-        self.path = self.config_name + "." + self.mode
+        self.path = path + self.config_name + "." + self.mode
 
         if params.get("logging", None):
             self.logger = self.main_class.create_logger("FileLoader")
@@ -25,8 +25,10 @@ class Config:
         }
 
         if not os.path.exists(self.path):
-            self.main_class.exit_error("File does not exist: " + str(self.path))
-            return
+            if not create:
+                self.main_class.exit_error("File does not exist: " + str(self.path))
+                return
+            open(self.path, "w").close()
 
         if self.mode not in self.modes:
             if self.logger: self.logger.warn("loading default mode for: " + str(config_name) + " mode: " + str(self.mode))
@@ -40,7 +42,7 @@ class Config:
             self.file_data = json.load(file)
             
     def load_default(self):
-        self.set("asf", file_data="{}")
+        pass # self.set("asf", file_data="{}")
 
     def get(self, key, *args):
         d = copy.deepcopy(self.file_data)

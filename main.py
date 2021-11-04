@@ -64,6 +64,11 @@ class Evernote:
         print error_message
         exit()
 
+    @property
+    def api_key(self):
+        # getter for api key
+        return self.global_data_manager.get_api_key()
+
 # main
 if __name__ == "__main__":
     print(sys.argv[1:])

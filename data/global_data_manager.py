@@ -17,6 +17,9 @@ class GlobalFileManager:
                 self.logger.warning("File does not exists: " + str(path))
                 os.makedirs(path)
 
+    def get_api_key(self):
+        return self.main_config.get("key")
+
     def get_path(self, key=None):
         return self.main_config.get("path")[key] if key else self.main_config.get("path")
 

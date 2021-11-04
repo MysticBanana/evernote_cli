@@ -1,14 +1,20 @@
 from . import file_loader
 
 
-class BaseManager:
-    def __init__(self, main_class):
-        self.main_config = file_loader.Config(config_name=".config", main_class=main_class)
+class UserDataManager:
+    def __init__(self, main_class, path, user_name):
+        self.user_config = file_loader.Config(config_name=".config", path=path, main_class=main_class)
         self.main_class = main_class
 
-    def setup_logging(self):
-        self.logger = self.main_class.create_logger("DataLoader")
+        self.path = path
+        self.usr_name = user_name
 
-    def get_path(self, key):
-        return self.main_config.get("path")[key]
+        self.logger = self.main_class.create_logger(user_name)
+
+    @property
+    def tags(self):
+        return
+
+
+
 

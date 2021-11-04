@@ -3,6 +3,7 @@
     "log": "logs/",
     "user_data": "user_data/"
   },
+  "key": "",
   "asd": [
     2,
     3
