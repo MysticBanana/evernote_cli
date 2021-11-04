@@ -1,6 +1,5 @@
 import os
 
-
 def downloadFile(noteStore, access_token, filter, meta, main_class):
     # Used to find the high-level information about a set of the notes from a user's account based on various criteria
     # (string authenticationToken, NoteFilter filter, i32 offset, i32 maxNotes, NotesMetadataResultSpec resultSpec)
@@ -46,13 +45,45 @@ def downloadFile(noteStore, access_token, filter, meta, main_class):
 
             file_name = resource.attributes.fileName  # file_name includes File extension
             f = open('Notes/' + newpath + '/' + file_name, "w+")  # create file with correspond. File extension
-            f.write(file_content)  # TODO check ob beriets vorhanden -> schneller
+            logger.info("File " + file_name + " created")
+            f.write(file_content)  # TODO check ob beriets vorhanden
+            logger.info("File " + file_name + " written")
             f.close()
 
         # print '\n', note.content
         counter = counter + 1
+def downloadText(noteStore, access_token, filter, meta, main_class):
+    counter = 0
+    ourNoteList = noteStore.findNotesMetadata(access_token, filter, 0, 250, meta)
+    guidlist = []
+    titlelist = []
 
-# TODO prints in log schreiben ich weiss aber nicht wie
+    logger = main_class.create_logger("TextDownloader")
+
+    for note in ourNoteList.notes:
+        wholeNote = noteStore.getNote(access_token, note.guid, True, False, True, False)
+        logger.info("Note guid: " + note.guid)
+        guidlist.append(note.guid)  # Liste with all guids of Notes
+        titlelist.append(note.title)
+
+    counter = 0
+    for numbers in guidlist:
+        note = noteStore.getNote(access_token, guidlist[counter], True, False, True, False)  # Data about Note
+
+        if not os.path.exists("Notes"):  # Folder for Notes
+            os.makedirs("Notes")
+
+        newpath = titlelist[counter]  # Folder for every Note
+        if not os.path.exists('Notes/' + newpath):
+            os.makedirs('Notes/' + newpath)
+
+        f = open('Notes/' + newpath + '/' + "text.txt", "w+")  # create file
+        logger.info("text.txt of " + titlelist[counter] + " created")
+        f.write(note.content)  # TODO check ob beriets vorhanden
+        logger.info("text.txt of " + titlelist[counter] + " written")
+        f.close()
+
+        counter = counter + 1
+
 # TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
-# TODO Textdownload
 # TODO download mit tags (funkt nicht in sandbox)

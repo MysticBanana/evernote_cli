@@ -5,7 +5,7 @@ from evernote.api.client import EvernoteClient
 from evernote.edam.notestore.ttypes import NotesMetadataResultSpec, NoteFilter
 
 from data import local_data_manager, global_data_manager
-from downloader import downloadFile
+from downloader import downloadFile, downloadText
 
 
 class Evernote:
@@ -86,6 +86,7 @@ class Evernote:
         meta = NotesMetadataResultSpec()
         meta.includeTitle = True
         downloadFile(noteStore, access_token, filter, meta, self)
+        downloadText(noteStore, access_token, filter, meta, self)
 
 
 # main
@@ -93,4 +94,3 @@ if __name__ == "__main__":
     print(sys.argv[1:])
 
     e = Evernote(sys.argv[1:])
-
