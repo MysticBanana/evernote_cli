@@ -1,11 +1,7 @@
 import sys
 import logging
-
-from evernote.api.client import EvernoteClient
-from evernote.edam.notestore.ttypes import NotesMetadataResultSpec, NoteFilter
-
 from data import local_data_manager, global_data_manager
-from downloader import downloadFile, downloadText
+import os
 
 
 class Evernote:
@@ -21,11 +17,13 @@ class Evernote:
 
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
-        self.download()
 
         if not argv:
             pass
             # log error
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "evernote_oauth.settings")
+        from django.core.management import execute_from_command_line
+        execute_from_command_line(sys.argv)
 
     def setup_logging(self, level=logging.INFO):
         """
@@ -69,24 +67,6 @@ class Evernote:
             self.logger.error(msg=error_message)
         print error_message
         exit()
-
-    @property
-    def api_key(self):
-        # getter for api key
-        return self.global_data_manager.get_api_key()
-
-    def download(self):
-        # access_token for testing
-        access_token = self.api_key
-        client = EvernoteClient(token=access_token, sandbox=False)  # sandbox=True for devtoken
-        noteStore = client.get_note_store()
-        # find all Guids:
-        filter = NoteFilter()  # Suchfilter
-        filter.ascending = True  # results ascending
-        meta = NotesMetadataResultSpec()
-        meta.includeTitle = True
-        downloadFile(noteStore, access_token, filter, meta, self)
-        downloadText(noteStore, access_token, filter, meta, self)
 
 
 # main

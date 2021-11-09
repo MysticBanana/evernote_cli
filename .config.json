@@ -1,11 +1,1 @@
-{
-  "path": {
-    "log": "logs/",
-    "user_data": "user_data/"
-  },
-  "key": "S=s564:U=dbe7665:E=17d0ede1840:C=17cead19440:P=185:A=mneuhaus:V=2:H=05f118609b3d85a044e259255e322dc2",
-  "asd": [
-    2,
-    3
-  ]
-}
+{"path": {"log": "logs/", "user_data": "user_data/"}, "key": "S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494", "asd": [2, 3]}
