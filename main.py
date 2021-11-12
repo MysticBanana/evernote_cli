@@ -32,7 +32,12 @@ class Evernote:
         """
         formatter = logging.Formatter('%(asctime)s [%(levelname)s] [%(name)s] %(message)s')
 
-        self.log_handler = logging.FileHandler(self.global_data_manager.get_path("log") + "logfile.log")
+        path = self.global_data_manager.get_path("log") + "logfile.log"
+        if not os.path.exists(path):
+            os.makedirs(os.path.dirname(path))
+            with open(path, "w"):
+                pass
+        self.log_handler = logging.FileHandler(path)
         self.log_handler.setFormatter(formatter)
 
         self.logger = logging.getLogger("Main")
