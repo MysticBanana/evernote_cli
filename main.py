@@ -2,7 +2,7 @@ import sys
 import logging
 from data import local_data_manager, global_data_manager
 import os
-
+from oauth import views
 
 class Evernote:
     def __init__(self, argv=None, **params):
@@ -17,6 +17,8 @@ class Evernote:
 
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
+
+        views.Auth.controller = self
 
         if not argv:
             pass
