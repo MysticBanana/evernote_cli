@@ -19,7 +19,7 @@ class Evernote:
         self.global_data_manager.init_files()
 
 
-        # testing, creating user and deleting after
+        # testing, creating user , writing testuser into userlog
         self.global_data_manager.create_user("test", "adfsuiuasdtesthash")
         self.user = self.global_data_manager.get_user("test")
         self.user.user_log.write("testuser")
@@ -27,7 +27,7 @@ class Evernote:
 
 
         # testing user webauth
-        self.user_web_auth()
+        # self.user_web_auth()
 
     def setup_logging(self, level=logging.INFO):
         """
