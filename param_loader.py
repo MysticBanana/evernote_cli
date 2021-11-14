@@ -194,7 +194,7 @@ arguments = {
                             "subparser": False,
                             "opt_str": ["passwd"],
                             "action": None,
-                            "nargs": "?",
+                            "nargs": 1,
                             "const": None,
                             "default": "PASSWORD",
                             "type": str,
@@ -223,7 +223,7 @@ arguments = {
                             "subparser": False,
                             "opt_str": ["-d", "--delete"],
                             "action": None,
-                            "nargs": None,
+                            "nargs": 1,
                             "const": None,
                             "default": None,
                             "type": str,
@@ -236,16 +236,16 @@ arguments = {
                     "sync":
                         {
                             "subparser": False,
-                            "opt_str": ["-s", "--sy"],
-                            "action": None,
-                            "nargs": 0,
-                            "const": None,
-                            "default": None,
+                            "opt_str": ["-s", "--sync"],
+                            "action": Test,
+                            "nargs": 1,
+                            "const": True,
+                            "default": True,
                             "type": None,
                             "choices": None,
                             "required": False,
                             "help": "Sync with the Cloud",
-                            "metavar": None,
+                            "metavar": "",
                             "dest": None
                         },
                     # subparser
@@ -358,19 +358,19 @@ arguments = {
                             "help": "download -h",
                             "default": True,
                             # opt_arg
-                            "opt_arg_name":
+                            "all":
                                 {
                                     "subparser": False,
                                     "opt_str": ["-a", "--all"],
-                                    "action": None,
-                                    "nargs": 0,
-                                    "const": None,
-                                    "default": None,
+                                    "action": Test,
+                                    "nargs": 1,
+                                    "const": True,
+                                    "default": True,
                                     "type": None,
                                     "choices": None,
                                     "required": False,
                                     "help": "download all",
-                                    "metavar": None,
+                                    "metavar": "",
                                     "dest": None
                                 },
                         }
@@ -410,8 +410,10 @@ if __name__ == "__main__":
                 #    pars.set_defaults(func=args_dict[i]["default"])
                 create(args_dict[i], subpars, pars)
             elif args_dict[i]["subparser"] == False:
-                parser.add_argument(*arguments["user"]["username"]["opt_str"],
-                        **{key: val for key, val in arguments["user"]["username"].items() if key not in ["opt_str", "subparser"]})
+                parser.add_argument(*args_dict[i]["opt_str"],
+                                    **{key: val for key, val in args_dict[i].items() if key not in ["opt_str", "subparser"]})
+                #parser.add_argument(*arguments["user"]["username"]["opt_str"],
+                #        **{key: val for key, val in arguments["user"]["username"].items() if key not in ["opt_str", "subparser"]})
         return parser
 
 
@@ -426,5 +428,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="evernote")
     subparsers = parser.add_subparsers(dest="global")
     parser = create(arguments, subparsers, parser)
-    parser.parse_args("-h".split())
+    parser.parse_args("user passwd -h".split())
     # a = ArgParser("n", test_arguments)
