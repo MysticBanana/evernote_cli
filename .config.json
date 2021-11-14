@@ -1,1 +1,12 @@
-{"path": {"log": "logs/", "user_data": "user_data/"}, "key": "S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494", "asd": [2, 3]}
+{
+    "path": {
+        "log": "logs/", 
+        "user_data": "user_data/"
+    }, 
+    "user_requirements": [
+        ".config.json", 
+        "log.log", 
+        "files"
+    ], 
+    "key": "S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494"
+}

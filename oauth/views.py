@@ -61,15 +61,17 @@ def callback(request):
     except KeyError:
         return redirect('/')
 
-    basepath = path.dirname(__file__)
-    filepath = path.abspath(path.join(basepath, "..", ".config.json"))
+    controller.user.user_key = token
 
-    with open(filepath, "r") as jsonFile:  # TODO fileloader data manager benutzen
-        data = json.load(jsonFile)
-    data["key"] = token
-    with open(filepath, "w") as jsonFile:
-        json.dump(data, jsonFile)
-    downloader.downloadstart(token)
+    # basepath = path.dirname(__file__)
+    # filepath = path.abspath(path.join(basepath, "..", ".config.json"))
+    #
+    # with open(filepath, "r") as jsonFile:
+    #     data = json.load(jsonFile)
+    # data["key"] = token
+    # with open(filepath, "w") as jsonFile:
+    #     json.dump(data, jsonFile)
+    # downloader.downloadstart(token)
 
     return render_to_response('oauth/callback.html')
 

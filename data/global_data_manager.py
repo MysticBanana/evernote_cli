@@ -1,13 +1,13 @@
-from . import file_loader
+from . import file_loader, user_data_manager
 import os
 
 class GlobalFileManager:
-    def __init__(self, main_class):
-        self.main_config = file_loader.Config(config_name=".config", main_class=main_class)
-        self.main_class = main_class
+    def __init__(self, controller):
+        self.main_config = file_loader.Config(config_name=".config", controller=controller)
+        self.controller = controller
 
     def setup_logging(self):
-        self.logger = self.main_class.create_logger("DataLoader")
+        self.logger = self.controller.create_logger("DataLoader")
 
     def init_files(self):
         pathlist = self.get_path()
@@ -17,28 +17,55 @@ class GlobalFileManager:
                 self.logger.warning("File does not exists: " + str(path))
                 os.makedirs(path)
 
+        self.credentials = file_loader.Config(config_name=".credentials", controller=self.controller)
+
     def get_api_key(self):
         return self.main_config.get("key")
 
     def get_path(self, key=None):
         return self.main_config.get("path")[key] if key else self.main_config.get("path")
 
-    def get_user(self, user_name, path=True):
-        ppath = self.get_path("user_data") + str(user_name)
+    def get_user(self, user_name, path=False):
+        """
+        returns relativ path to user files or returns UserObject
+        :rtype:
+        """
+        ppath = self.get_path("user_data") + str(user_name) + "/"
         if self.is_user(user_name):
             if path:
                 return ppath
+            else:
+                return user_data_manager.UserDataManager(self.controller, ppath, user_name)
 
-    def is_user(self, user_name, make_user=False):
-        path = self.get_path("user_data") + str(user_name)
-        if os.path.exists(path):
+    def is_user(self, user_name):
+        if user_name in self.credentials.getAll():
             return True
-        if make_user:
-            self.create_user(user_name)
         return False
 
-    def create_user(self, user_name):
-        path = self.get_path("user_data") + str(user_name)
+    def check_user_hash(self, user_name, password_hash):
+        try:
+            if password_hash == self.credentials.get(user_name):
+                return True
+            return False
+        except:
+            self.logger.error("user: {} is not in .credentials".format(user_name))
+
+    def create_user(self, user_name, password_hash):
+        if self.is_user(user_name):
+            return
+        path = self.get_path("user_data") + "/" + str(user_name) + "/"
         os.makedirs(path)
+        self.credentials.set(user_name, str(password_hash))
+        self.credentials.dump()
+
+        req = self.main_config.get("user_requirements")
+        for file in req:
+            if ".json" in file:
+                open(path + file, "w").write("{\n}")
+            elif "." in file:
+                open(path+file, "w").close()
+            else:
+                os.makedirs(path+file)
+
 
         # create user specific config file

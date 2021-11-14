@@ -1,6 +1,6 @@
 import sys
 import logging
-from data import local_data_manager, global_data_manager
+from data import user_data_manager, global_data_manager
 import os
 from oauth import views
 
@@ -18,14 +18,16 @@ class Evernote:
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
 
-        views.Auth.controller = self
 
-        if not argv:
-            pass
-            # log error
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "evernote_oauth.settings")
-        from django.core.management import execute_from_command_line
-        execute_from_command_line(sys.argv)
+        # testing, creating user and deleting after
+        self.global_data_manager.create_user("test", "adfsuiuasdtesthash")
+        self.user = self.global_data_manager.get_user("test")
+        self.user.user_log.write("testuser")
+
+
+
+        # testing user webauth
+        self.user_web_auth()
 
     def setup_logging(self, level=logging.INFO):
         """
@@ -74,6 +76,12 @@ class Evernote:
             self.logger.error(msg=error_message)
         print error_message
         exit()
+
+    def user_web_auth(self):
+        views.Auth.controller = self
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "evernote_oauth.settings")
+        from django.core.management import execute_from_command_line
+        execute_from_command_line(sys.argv)
 
 
 # main
