@@ -30,254 +30,401 @@ options:
                 -s                              -> sync with Cloud
 '''
 
-'''
-params = ["log", "user"]
-param_info = {
-    "log": {
-        "long": "--log",
-        "short": "-l",
-        "nargs": "?",
-        "const": None,
-        "default": "ALL",
-        "type": str,
-        "choices": None,
-        "required": False,
-        "help": "Shows the Log-File",
-        "metavar": "LOGTYPE"
-    },
-    "user": {
-        "long": "--user",
-        "short": "-u",
-        "nargs": "1",
-        "const": None,
-        "default": "ALL",
-        "type": str,
-        "choices": None,
-        "required": False,
-        "help": "Shows the Log-File",
-        "metavar": "LOGTYPE"
-    },
-
+test_arguments = {
+    "passwd":
+        {
+            "opt_str": ["passwd"],
+            "nargs": 1,
+            "type": str,
+            "help": "Your self chosen password for the Evernote CLI"
+        },
+    "test": "hallo"
 }
 
 
-class ParsAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        print self.dest
+def cmd1(args):
+    print "cmd1 print ...", args
 
-        print namespace.__dict__[self.dest]
 
-# create the top-level parser
-parser = argparse.ArgumentParser(prog="evernote", description="Evernote-CLI")
+def cmd2(args):
+    print "cmd2 print ...", args
 
-mutex_group = parser.add_mutually_exclusive_group()
-# create Handler for Logging
-mutex_group.add_argument("-l", "--log")
 
-toplevel_subparser = parser.add_subparsers(help='commands in comibinition with user')
+class Test(argparse.Action):
+    def __call__(self, *args, **kwargs):
+        print "TEST"
 
-# create the parser for the "user" command
-parser_user = toplevel_subparser.add_parser('user', help='--help')
-mutex_group_user = parser_user.add_mutually_exclusive_group()
-parser_user.add_argument("username", default="default")
-parser_user.add_argument("-t", metavar="TOKEN PASSWD")
 
-seclvl_subparser = parser_user.add_subparsers(help="commands in combi with passwd")
-parser_passwd = seclvl_subparser.add_parser("passwd", help="--help")
-parser_passwd.add_argument("passwd", nargs=1, metavar="PASSWD")
+class ArgParser():
+    def __init__(self, arg_string, arg_dict, main_class=None, *args,
+                 **kwargs):  # TODO: muesste auch mit kwargs funktionieren
+        global_parser = argparse.ArgumentParser(description="EVERNOTE-CLI",
+                                                prog="evernote",
+                                                formatter_class=argparse.ArgumentDefaultsHelpFormatter
+                                                )
+        global_parser.add_argument(*arg_dict["passwd"]["opt_str"],
+                                   **{key: val for key, val in arg_dict["passwd"].items() if key != 'opt_str'})
 
-# parse some argument lists
-print parser.parse_args("user -h".split())
-#parser.parse_args(['--foo', 'b', '--baz', 'Z'])
+        parser = argparse.ArgumentParser(prog="Prog")
 
-'''
-'''
-# Level_2-Param (token, password) -> user-Group
-group_token = group_user.add_mutually_exclusive_group()
-group_passwd = group_user.add_mutually_exclusive_group()
+        subparsers = parser.add_subparsers(dest="cmd")
+        parserCmd1 = subparsers.add_parser("cmd1", help="First Command")
+        parserCmd1.set_defaults(func=cmd1)
+        parserCmd2 = subparsers.add_parser("cmd2", help="Second Command")
+        parserCmd2.set_defaults(func=cmd2)
 
-# Level_3-Param (visualize, change, download, find, delete, sync) -> passwd-Group
-group_visualize = group_passwd.add_mutually_exclusive_group()
-group_change = group_passwd.add_mutually_exclusive_group()
-group_download = group_passwd.add_mutually_exclusive_group()
-# complete group_find, -_delete and -_sync if arguments receive sub-arguments
-
-# add arguments to the appropriate groups
-'''
-'''
-for param in params:
-parser.add_argument(param_info[param]["short"],
-                    param_info[param]["long"],
-                    action=ParsAction,
-                    nargs=param_info[param]["nargs"],
-                    const=param_info[param]["const"],
-                    default=param_info[param]["default"],
-                    type=param_info[param]["type"],
-                    choices=param_info[param]["choices"],
-                    required=param_info[param]["required"],
-                    help=param_info[param]["help"],
-                    metavar=param_info[param]["metavar"],
-                    dest=param )
-'''
-
-class Top_Level_Action(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        if self.dest == "log":
-            logtype = values
-            print logtype
-            # TODO: Log-Funktion einfuegen
-        elif self.dest == "user":
-            print values
-            user_level_parser = argparse.ArgumentParser(description="EVERNOTE-CLI", prog="evernote ... --user",
-                                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-                                                        prefix_chars=":")
-            add_arguments(user_level_parser, user_level_param, user_level_dict)
-            mutex_group = user_level_parser.add_mutually_exclusive_group()
-            add_arguments(mutex_group, user_level_mutex_param, user_level_mutex_dict)
-
-            # kann entfallen wenn Problem mit Praefix geklaert ist
-            if "h" in values:
-                print user_level_parser.print_help()
-                values.remove("h")
-
-            user_level_parser.parse_args(values)
+        a = "123".split()
+        args, extras = global_parser.parse_known_args(a)
+        if len(extras) > 0 and extras[0] in ["cmd1", "cmd2"]:
+            args = parser.parse_args(extras, namespace=args)
+            args.func(args)
         else:
-            print "Manual"
-            pass
-            # TODO: print Manual
+            print "doing system with", args, extras
 
-class User_Level_Action(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(self, *args, **kwargs):
         pass
 
-# praefix-> -
-top_level_mutex_param = ["log", "user", "man"]
-#top_level_param = []
-top_level_mutex_dict = {
-    "log": {
-        "long": "--log",
-        "short": "-l",
-        "action": Top_Level_Action,
-        "nargs": "?",
-        "const": None,
-        "default": "ALL",
-        "type": str,
-        "choices": "BWI",  # Ergaenzungen von Logtypen
-        "required": False,
-        "help": "Shows the Log-File",
-        "metavar": "LOGTYPE"
-    },
-    "user": {
-        "long": "--user",
-        "short": "-u",
-        "action": Top_Level_Action,
-        "nargs": "*",
-        "const": None,
-        "default": None,
-        "type": str,
-        "choices": None,
-        "required": False,
-        "help": "type: -u USERNAME h \n...for more information",
-        "metavar": "."
-    },
-    "man": {
-        "long": "--man",
-        "short": "-m",
-        "action": Top_Level_Action,
-        "nargs": 0,
-        "const": None,
-        "default": None,
-        "type": None,
-        "choices": None,
-        "required": False,
-        "help": "print Manual",
-        "metavar": None
-    }
-}
-#top_level_dict = {}
 
-# praefix -> :
-user_level_mutex_param = ["token", "passwd"]
-user_level_param = ["user"]
-user_level_mutex_dict = {
-    "token": {
-        "long": "::token",
-        "short": ":t",
-        "action": User_Level_Action,
-        "nargs": None,
-        "const": None,
-        "default": None,
-        "type": str,
-        "choices": None,
-        "required": False,
-        "help": "Create new User",
-        "metavar": "TOKEN PASSWD"
-    },
-    "passwd": {
-        "long": "::passwd",
-        "short": ":p",
-        "action": User_Level_Action,
-        "nargs": "?",
-        "const": None,
-        "default": "John Doe",
-        "type": str,
-        "choices": None,
-        "required": False,
-        "help": "need for passwd-commands",
-        "metavar": "PASSWD"
-    }
+def default(parser):
+    print "Test"
+    parser.print_help()
+
+
+''' 
+Module fuer ...
+    "pos_arg_name":
+        {
+            "subparser": False,
+            "opt_str": [],
+            "action": None,
+            "nargs": None,
+            "const": None,
+            "default": None,
+            "type": None,
+            "choices": None,
+            "help": None,
+            "metavar": None
+        }
+    "opt_arg_name":
+        {
+            "subparser": False,
+            "opt_str": [],
+            "action": None,
+            "nargs": None,
+            "const": None,
+            "default": None,
+            "type": None,
+            "choices": None,
+            "required": None,
+            "help": None,
+            "metavar": None,
+            "dest": None
+        }
+    "subparser":
+        {
+            "subparser": True,
+            "help": None,
+            # weiterer args oder subparser
+        }
 }
-user_level_dict = {
-    "user": {
-        "long": "user",
-        "short": None,
-        "action": User_Level_Action,
-        "nargs": "?",
-        "const": None,
-        "default": "John Doe",
-        "type": str,
-        "choices": None,
-        "required": False,
-        "help": None,
-        "metavar": "USERNAME"
-    }
+'''
+
+arguments = {
+    "user":
+        {
+            "subparser": True,
+            "help": "user -h",
+            "default": True,
+            # pos_arg
+            "username":
+                {
+                    "subparser": False,
+                    "opt_str": ["username"],
+                    "action": Test,
+                    "nargs": 1,
+                    "const": None,
+                    "default": None,
+                    "type": str,
+                    "choices": None,
+                    "help": "Your username for Evernote",
+                    "metavar": "USERNAME"
+                },
+            # subparser
+            "token":
+                {
+                    "subparser": True,
+                    "help": "token -h",
+                    "default": True,
+                    # pos_arg
+                    "token":
+                        {
+                            "subparser": False,
+                            "opt_str": ["token"],
+                            "action": None,
+                            "nargs": 1,
+                            "const": None,
+                            "default": None,
+                            "type": str,
+                            "choices": None,
+                            "help": "Your usertoken for Evernote",
+                            "metavar": "TOKEN"
+                        },
+                    "passwd":
+                        {
+                            "subparser": False,
+                            "opt_str": ["passwd"],
+                            "action": None,
+                            "nargs": 1,
+                            "const": None,
+                            "default": None,
+                            "type": str,
+                            "choices": None,
+                            "help": "Your self chosen password for the Evernote CLI",
+                            "metavar": "PASSWD"
+                        },
+                },
+            "passwd":
+                {
+                    "subparser": True,
+                    "help": "passwd -h",
+                    "default": True,
+                    # pos_arg
+                    "passwd":
+                        {
+                            "subparser": False,
+                            "opt_str": ["passwd"],
+                            "action": None,
+                            "nargs": "?",
+                            "const": None,
+                            "default": "PASSWORD",
+                            "type": str,
+                            "choices": None,
+                            "help": "Password for the evernote-CLI",
+                            "metavar": "PASSWD"
+                        },
+                    # opt_arg
+                    "find":
+                        {
+                            "subparser": False,
+                            "opt_str": ["-f", "--find"],
+                            "action": None,
+                            "nargs": 1,
+                            "const": None,
+                            "default": None,
+                            "type": str,
+                            "choices": None,
+                            "required": False,
+                            "help": "Finding the downloadpath for note, notebook or tag",
+                            "metavar": "TAG | NOTENAME | NOTEBOOKNAME",
+                            "dest": "find"
+                        },
+                    "delete":
+                        {
+                            "subparser": False,
+                            "opt_str": ["-d", "--delete"],
+                            "action": None,
+                            "nargs": None,
+                            "const": None,
+                            "default": None,
+                            "type": str,
+                            "choices": None,
+                            "required": False,
+                            "help": "Delete note, notebook (or user)",
+                            "metavar": "NOTENAME | NOTEBOOKNAME | (USERNAME)",
+                            "dest": "delete"
+                        },
+                    "sync":
+                        {
+                            "subparser": False,
+                            "opt_str": ["-s", "--sy"],
+                            "action": None,
+                            "nargs": 0,
+                            "const": None,
+                            "default": None,
+                            "type": None,
+                            "choices": None,
+                            "required": False,
+                            "help": "Sync with the Cloud",
+                            "metavar": None,
+                            "dest": None
+                        },
+                    # subparser
+                    "show":
+                        {
+                            "subparser": True,
+                            "help": "show -h",
+                            "default": True,
+                            # opt_arg
+                            "file":
+                                {
+                                    "subparser": False,
+                                    "opt_str": ["-f", "--file"],
+                                    "action": None,
+                                    "nargs": 1,
+                                    "const": None,
+                                    "default": None,
+                                    "type": str,
+                                    "choices": None,
+                                    "required": False,
+                                    "help": "show files",
+                                    "metavar": "PATH | NOTENAME | NOTEBOOKNAME",
+                                    "dest": "FILE"
+                                },
+                            "user":
+                                {
+                                    "subparser": False,
+                                    "opt_str": ["-u", "--user"],
+                                    "action": None,
+                                    "nargs": 1,
+                                    "const": None,
+                                    "default": None,
+                                    "type": str,
+                                    "choices": None,
+                                    "required": False,
+                                    "help": "show userdata",
+                                    "metavar": "USERNAME",
+                                    "dest": "user"
+                                },
+                            "path":
+                                {
+                                    "subparser": False,
+                                    "opt_str": ["-p", "--path"],
+                                    "action": None,
+                                    "nargs": 1,
+                                    "const": None,
+                                    "default": None,
+                                    "type": str,
+                                    "choices": None,
+                                    "required": False,
+                                    "help": "show path of NOTE or NOTEBOOK",
+                                    "metavar": "NOTENAME | NOTEBOOKNAME",
+                                    "dest": "path"
+                                }
+                        },
+                    "change":
+                        {
+                            "subparser": True,
+                            "help": "change -h",
+                            "default": True,
+                            # pos_arg
+                            "new_pwd_path":
+                                {
+                                    "subparser": False,
+                                    "opt_str": ["new_pwd_path"],
+                                    "action": None,
+                                    "nargs": 1,
+                                    "const": None,
+                                    "default": None,
+                                    "type": str,
+                                    "choices": None,
+                                    "help": "new path or password",
+                                    "metavar": "NEW_PWD_PATH"
+                                },
+                            # opt_arg
+                            "passwd":
+                                {
+                                    "subparser": False,
+                                    "opt_str": ["-p", "--passwd"],
+                                    "action": None,
+                                    "nargs": 1,
+                                    "const": None,
+                                    "default": None,
+                                    "type": str,
+                                    "choices": None,
+                                    "required": False,
+                                    "help": "Current Password",
+                                    "metavar": "OLD_PASSWD",
+                                    "dest": "old_pwd"
+                                },
+                            "downloadpath":
+                                {
+                                    "subparser": False,
+                                    "opt_str": ["-d", "--downloadpath"],
+                                    "action": None,
+                                    "nargs": 1,
+                                    "const": None,
+                                    "default": None,
+                                    "type": str,
+                                    "choices": None,
+                                    "required": False,
+                                    "help": "Old downloadpath",
+                                    "metavar": "OLDPATH",
+                                    "dest": "old_path"
+                                },
+                        },
+                    "download":
+                        {
+                            "subparser": True,
+                            "help": "download -h",
+                            "default": True,
+                            # opt_arg
+                            "opt_arg_name":
+                                {
+                                    "subparser": False,
+                                    "opt_str": ["-a", "--all"],
+                                    "action": None,
+                                    "nargs": 0,
+                                    "const": None,
+                                    "default": None,
+                                    "type": None,
+                                    "choices": None,
+                                    "required": False,
+                                    "help": "download all",
+                                    "metavar": None,
+                                    "dest": None
+                                },
+                        }
+                }
+
+        }
 }
 
-def add_arguments(parser, params, dict):
-    for param in params:
-        # for optional arguments
-        if dict[param]["short"] is not None:
-            parser.add_argument(
-                dict[param]["short"],
-                dict[param]["long"],
-                action=dict[param]["action"],
-                nargs=dict[param]["nargs"],
-                const=dict[param]["const"],
-                default=dict[param]["default"],
-                type=dict[param]["type"],
-                choices=dict[param]["choices"],
-                required=dict[param]["required"],
-                help=dict[param]["help"],
-                metavar=dict[param]["metavar"],
-                dest=param
-            )
-        # for positional arguments
-        else:
-            parser.add_argument(
-                dict[param]["long"],
-                action=dict[param]["action"],
-                nargs=dict[param]["nargs"],
-                const=dict[param]["const"],
-                default=dict[param]["default"],
-                type=dict[param]["type"],
-                choices=dict[param]["choices"],
-                help=dict[param]["help"],
-                metavar=dict[param]["metavar"]
-            )
+
+def create_old(args_dict, subparsers, trenner):
+    trenner += "\t"
+    for i in args_dict:
+        if i == "subparser":
+            continue
+        if args_dict[i]["subparser"]:
+            subparser = parser.add_parser(i, args_dict[i]["help"])
+
+            print trenner, "create subparser ", i, " in ", parser
+            create(args_dict[i], subparser, trenner)
+        elif args_dict[i]["subparser"] == False:
+            parser.add_argument(*args_dict[i]["opt_str"],
+                                **{key: val for key, val in args_dict["passwd"].items() if
+                                   key != 'opt_str' or key != 'subparser'})
+            print trenner, "create argument", i, " in ", parser
     return parser
 
+
 if __name__ == "__main__":
-    top_level_parser = argparse.ArgumentParser(description="EVERNOTE-CLI", prog="evernote", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    mutex_group = top_level_parser.add_mutually_exclusive_group()
-    add_arguments(mutex_group, top_level_mutex_param, top_level_mutex_dict)
-    top_level_parser.parse_args("-u tom :h".split())
+    def create(args_dict, subparsers, parser):
+        for i in args_dict:
+            if i in ["subparser", "default", "help"]:
+                continue
+            if args_dict[i]["subparser"]:
+                pars = subparsers.add_parser(i, help=args_dict[i]["help"])
+                subpars = pars.add_subparsers(dest=i)
+                #if args_dict[i]["default"]:
+                #    pars.set_defaults(func=args_dict[i]["default"])
+                create(args_dict[i], subpars, pars)
+            elif args_dict[i]["subparser"] == False:
+                parser.add_argument(*arguments["user"]["username"]["opt_str"],
+                        **{key: val for key, val in arguments["user"]["username"].items() if key not in ["opt_str", "subparser"]})
+        return parser
+
+
+    '''
+    parser = argparse.ArgumentParser(prog="evernote")
+    subparsers_global = parser.add_subparsers(dest="global")
+    parser_user = subparsers_global.add_parser("user", help=arguments["user"]["help"])
+    parser_user.add_argument("username", nargs="?",default="John Doe")
+    subparsers_user = parser_user.add_subparsers(dest="user")
+    subparsers_user.add_parser("token", help="token -h")
+    '''
+    parser = argparse.ArgumentParser(prog="evernote")
+    subparsers = parser.add_subparsers(dest="global")
+    parser = create(arguments, subparsers, parser)
+    parser.parse_args("-h".split())
+    # a = ArgParser("n", test_arguments)
