@@ -27,7 +27,7 @@ class GlobalFileManager:
 
     def get_user(self, user_name, path=False):
         """
-        returns relativ path to user files or returns UserObject
+        returns relative path to user files or returns UserObject
         :rtype:
         """
         ppath = self.get_path("user_data") + str(user_name) + "/"

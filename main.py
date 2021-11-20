@@ -34,6 +34,11 @@ class Evernote:
         check = self.global_data_manager.check_user_hash(tmp_user_name, tmp_password_hash)
         print check
 
+        # ENCRYPTING USER
+        user = self.global_data_manager.get_user("test")
+        # work in progress
+        # user.get_all_files()
+
     def setup_logging(self, level=logging.INFO):
         """
 
