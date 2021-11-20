@@ -43,12 +43,12 @@ class GlobalFileManager:
         return False
 
     def check_user_hash(self, user_name, password_hash):
-        try:
-            if password_hash == self.credentials.get(user_name):
-                return True
-            return False
-        except:
+        up = self.credentials.get(user_name, None)
+        if password_hash == up:
+            return True
+        if up is None:
             self.logger.error("user: {} is not in .credentials".format(user_name))
+        return False
 
     def create_user(self, user_name, password_hash):
         if self.is_user(user_name):

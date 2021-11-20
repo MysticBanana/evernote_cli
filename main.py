@@ -3,6 +3,7 @@ import logging
 from data import user_data_manager, global_data_manager
 import os
 from oauth import views
+from helper import krypto_manager
 
 class Evernote:
     def __init__(self, argv=None, **params):
@@ -19,15 +20,19 @@ class Evernote:
         self.global_data_manager.init_files()
 
 
-        # testing, creating user , writing testuser into userlog
-        self.global_data_manager.create_user("test", "adfsuiuasdtesthash")
-        self.user = self.global_data_manager.get_user("test")
-        self.user.user_log.write("testuser")
+        # TESTING
+        # User login
+        tmp_user_name = "test1"
+        tmp_user_password = "test1234"
+        tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
+        del tmp_user_password
 
+        # CREATING USER
+        # self.global_data_manager.create_user(tmp_user_name", tmp_password_hash)
 
-
-        # testing user webauth
-        # self.user_web_auth()
+        # CHECK LOGIN
+        check = self.global_data_manager.check_user_hash(tmp_user_name, tmp_password_hash)
+        print check
 
     def setup_logging(self, level=logging.INFO):
         """
