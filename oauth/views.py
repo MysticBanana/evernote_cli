@@ -5,11 +5,7 @@ from django.shortcuts import render_to_response
 from django.shortcuts import redirect
 # rename config.py.template to config.py and paste your credentials.
 from config import EN_CONSUMER_KEY, EN_CONSUMER_SECRET
-from os import path
 from django.views.generic import View
-
-import json
-import downloader
 
 
 def get_evernote_client(token=None):
