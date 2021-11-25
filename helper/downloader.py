@@ -4,6 +4,8 @@ import codecs
 from evernote.api.client import EvernoteClient
 from evernote.edam.notestore.ttypes import NotesMetadataResultSpec, NoteFilter
 
+from helper import krypto_manager
+
 """    @property
     def api_key(main_class):
         # getter for api key
@@ -81,6 +83,7 @@ def downloadFile(noteStore, access_token, filter, meta):
             file_content = resource.data.body  # raw data of File
 
             file_name = resource.attributes.fileName  # file_name includes File extension
+            file_namepath = 'Notes/' + booktitle[counter] + '/' + newpath + '/' + file_name # tmp for hash test
             f = open('Notes/' + booktitle[counter] + '/' + newpath + '/' + file_name,
                      "w+")  # create file with correspond. File extension
             #logger.info("File " + file_name + " created")
@@ -90,6 +93,10 @@ def downloadFile(noteStore, access_token, filter, meta):
             f.write(file_content)  # TODO check ob beriets vorhanden
             #logger.info("File " + file_name + " written")
             f.close()
+
+            if resource.data.bodyHash != krypto_manager.md5(file_namepath):     # Hash check
+                print("ALARM") # tmp
+
         counter = counter + 1
 
 
