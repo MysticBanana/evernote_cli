@@ -22,20 +22,23 @@ class Evernote:
 
         # TESTING
         # User login
-        tmp_user_name = "test1"
+        tmp_user_name = "mneuhaus"
         tmp_user_password = "test1234"
         tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
         del tmp_user_password
 
         # CREATING USER
-        # self.global_data_manager.create_user(tmp_user_name", tmp_password_hash)
+        self.global_data_manager.create_user(tmp_user_name, tmp_password_hash)
 
         # CHECK LOGIN
         check = self.global_data_manager.check_user_hash(tmp_user_name, tmp_password_hash)
         print check
 
         # ENCRYPTING USER
-        user = self.global_data_manager.get_user("test")
+        user = self.global_data_manager.get_user("mneuhaus")
+
+        # download with key
+        user.test_download()
         # work in progress
         # user.get_all_files()
 

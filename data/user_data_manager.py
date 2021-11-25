@@ -1,7 +1,7 @@
 import os
 
 from . import file_loader
-
+from helper import downloader
 
 class UserDataManager:
     def __init__(self, controller, path, user_name):
@@ -41,6 +41,9 @@ class UserDataManager:
     def encrypt(self):
         pass
 
+    def test_download(self):
+        downloader.downloadstart(self.user_key)
+
     def get_all_files(self):
         files = []
         dirlist = [self.user_path]
@@ -53,8 +56,7 @@ class UserDataManager:
         print(files)
 
     def __del__(self):
-        self.user_config.dump()
-        self.user_log.dump()
+        pass #self.user_config.dump()
 
 
 
