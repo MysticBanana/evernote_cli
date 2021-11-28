@@ -41,6 +41,13 @@ class UserDataManager:
     def encrypt(self):
         pass
 
+    def set_custom_path(self, path):
+        # check if path valid
+
+
+        self.user_config.set("file_path", path)
+        self.file_path = path
+
     def test_download(self):
         downloader.downloadstart(self.user_key)
 
