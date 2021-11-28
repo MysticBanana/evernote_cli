@@ -17,6 +17,8 @@ def passwd_check(params):
 
 
 class ArgumentParser():
+    args_dict = dict()
+
     def __init__(self, args):
         self.usage = "evernote [-h] [-u <USERNAME> ] ..."
         self.fkt_code = None
@@ -43,7 +45,7 @@ class ArgumentParser():
             "help":
                 {
                     "contains_args": False,
-                    "opt_str" : ["-h", "--help"],
+                    "opt_str": ["-h", "--help"],
                     "help_msg": "Show this help message and exit"
                 },
             "user":
