@@ -17,8 +17,6 @@ class UserDataManager:
         self.user_log = None
         self.user_key = None
 
-
-
         if not os.path.exists("%s/.config.json" % self.user_path):
             return
 
@@ -41,13 +39,14 @@ class UserDataManager:
     def encrypt(self):
         pass
 
-    # TODO:
     def set_custom_path(self, path):
         # check if path valid
-
-
-        self.user_config.set("file_path", path)
-        self.file_path = path
+        if os.path.isdir(path):
+            self.user_config.set("file_path", path)
+            self.file_path = path
+        else:
+            print "Path is no Dir"
+            # TODO: Error ausgeben
 
     def test_download(self):
         downloader.downloadstart(self.user_key)

@@ -413,6 +413,4 @@ if __name__ == "__main__":
 
     par = ArgumentParser(None, "-h")
     print par.args_dict.items()
-    # print
-    # for k, v in par.params.items():
-    #    print k + "=" + v
+
