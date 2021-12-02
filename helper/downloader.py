@@ -17,6 +17,7 @@ class EvernoteAccess(EvernoteClient):
     # used to interact with the api
     def __init__(self, user_data, **kwargs):
         self.user_data = user_data
+        self.access_token = self.user_data.user_key
         super(EvernoteAccess, self).__init__(token=self.user_data.user_key, **kwargs)
 
 class EvernoteUser(EvernoteAccess):
@@ -34,6 +35,86 @@ class EvernoteNote(EvernoteAccess):
     def __init__(self, user_data, **kwargs):
         super(EvernoteNote, self).__init__(user_data, **kwargs)
 
+
+
+        self.note_store = self.get_note_store()
+        self.filter = NoteFilter(ascending=True)
+        self.meta = NotesMetadataResultSpec(*[True for i in range(10)])
+
+        self.path = self.user_data.file_path
+
+    def download(self):
+        ourNoteList = self.note_store.findNotesMetadata(self.access_token, self.filter, 0, 250, self.meta)
+        guidlist = []
+        titlelist = []
+        bookguid = []
+        booktitle = []
+
+        # logger = main_class.create_logger("FileDownloader")
+
+        for note in ourNoteList.notes:
+            wholeNote = self.note_store.getNote(self.access_token, note.guid, True, False, True, False)
+            # logger.info("Note guid: " + note.guid)
+            # logger.info("Notebook guid: " + str(wholeNote.notebookGuid))
+            bookguid.append(wholeNote.notebookGuid)
+            guidlist.append(note.guid)  # Liste with all guids of Notes
+            titlelist.append(note.title)
+            booktitle.append(self.note_store.getNotebook(self.access_token, wholeNote.notebookGuid).name)
+
+        counter = 0
+        for numbers in guidlist:
+            note = self.note_store.getNote(self.access_token, guidlist[counter], True, False, True, False)  # Data about Note
+            resguid = ""
+            if note.resources is not None:
+                resguid = ' '.join(map(str, note.resources))  # note.resources contains guid for Files; to string
+
+            resguidcount = resguid.count("guid='")  # count Files in Notes
+            # logger.info("Files in Note: " + str(resguidcount))
+            # logger.info("Note Resources: " + resguid)
+
+            offset = -1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            newpath = titlelist[counter]
+
+            while True:
+                offset = resguid.find("guid='", offset + 1)  # find guid of File in resources
+                if offset == -1:
+                    break
+                offsetend = resguid.find("'", offset + 6)  # find end of guid
+                tmpguid = resguid[offset + 6:offsetend]  # "safe" guid
+                # logger.info("File guid: " + tmpguid)
+
+                resource = self.note_store.getResource(tmpguid, True, False, True, False)
+                file_content = resource.data.body  # raw data of File
+
+                file_name = resource.attributes.fileName  # file_name includes File extension
+                file_namepath = self.path + booktitle[counter] + '/' + newpath + '/' + file_name  # tmp for hash test
+
+
+                with open(self.path + booktitle[counter] + '/' + newpath + '/' + file_name, "w") as f: # create file with correspond. File extension
+                    f.write(file_content)  # TODO check ob beriets vorhanden
+
+                if resource.data.bodyHash != krypto_manager.md5(file_namepath):  # Hash check
+                    print("ALARM")  # tmp
+
+            counter = counter + 1
 
 
 

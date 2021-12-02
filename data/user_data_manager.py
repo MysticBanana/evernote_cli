@@ -10,7 +10,7 @@ class UserDataManager:
         self.logger.info("Initializing user: {}".format(user_name))
 
         self.user_path = path
-        self.file_path = "%s/files" % self.user_path
+        self.file_path = "%sfiles/" % self.user_path
         self.user_name = user_name
 
         self.user_config = None
@@ -23,12 +23,12 @@ class UserDataManager:
         self.init_files()
 
     def init_files(self):
-        self.user_config = file_loader.Config(config_name=".config", path=self.user_path, controller=self.controller)
+        self.user_config = file_loader.Config(config_name=".user_info", path=self.user_path, controller=self.controller)
         self.user_log = file_loader.Config(config_name="log", path=self.user_path, controller=self.controller, mode="log")
         self.user_key = self.user_config.get("key", None)
 
         # if user wants a custom download location
-        custom_file_path = self.user_config.get("file_path", None)
+        custom_file_path = self.user_config.get("file_path", "")
         if custom_file_path:
             self.file_path = custom_file_path
             self.logger.info("File location at: {}".format(custom_file_path))
@@ -49,7 +49,8 @@ class UserDataManager:
             # TODO: Error ausgeben
 
     def test_download(self):
-        downloader.downloadstart(self.user_key)
+        d = downloader.EvernoteNote(self)
+        d.download()
 
     def get_all_files(self):
         files = []

@@ -38,7 +38,7 @@ class Evernote:
         user = self.global_data_manager.get_user("mneuhaus")
 
         # download with key
-        # user.test_download()
+        user.test_download()
         # work in progress
         # user.get_all_files()
 
