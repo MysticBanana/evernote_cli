@@ -3,7 +3,7 @@ import logging
 from data import user_data_manager, global_data_manager
 import os
 from oauth import views
-from helper import krypto_manager, displaymanager
+from helper import krypto_manager, displaymanager, param_loader_2
 
 class Evernote:
     def __init__(self, argv=None, **params):
@@ -42,8 +42,11 @@ class Evernote:
         # work in progress
         # user.get_all_files()
 
-        # dm = displaymanager.DisplayManager(self)
-        # dm.get_dict("-u")
+        #dm = displaymanager.DisplayManager(self)
+        #dm.get_dict("-u")
+
+        par = param_loader_2.ArgumentParser(self, "--user mneuhaus -p test1234 -r a")
+        par.parser()
 
     def setup_logging(self, level=logging.INFO):
         """

@@ -41,13 +41,15 @@ class UserDataManager:
 
     def set_custom_path(self, path):
         # check if path valid
-
-
-        self.user_config.set("file_path", path)
-        self.file_path = path
+        if os.path.isdir(path):
+            self.user_config.set("file_path", path)
+            self.file_path = path
+        else:
+            print "Path is no Dir"
+            # TODO: Error ausgeben
 
     def test_download(self):
-        pass #downloader.EvernoteUser(self)
+        downloader.downloadstart(self.user_key)
 
     def get_all_files(self):
         files = []

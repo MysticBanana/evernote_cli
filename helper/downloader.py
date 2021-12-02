@@ -73,11 +73,9 @@ def downloadFile(noteStore, access_token, filter, meta):
     counter = 0
     for numbers in guidlist:
         note = noteStore.getNote(access_token, guidlist[counter], True, False, True, False)  # Data about Note
-        resguid = ' '.join(map(str, note.resources))  # note.resources contains guid for Files; to string
-
-        bodyhash = note.resources[0].data.bodyHash
-
-        print bodyhash.decode()
+        resguid = ""
+        if note.resources is not None:
+            resguid = ' '.join(map(str, note.resources))  # note.resources contains guid for Files; to string
 
         resguidcount = resguid.count("guid='")  # count Files in Notes
         #logger.info("Files in Note: " + str(resguidcount))

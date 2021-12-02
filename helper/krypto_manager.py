@@ -3,7 +3,7 @@ import hashlib
 
 def hash_str(string, hash_type="sha256"):
     if hash_type == "sha256":
-        return hashlib.sha256(string).hexdigest()
+        return sha256(string).hexdigest()
 
 
 def md5(fname):
