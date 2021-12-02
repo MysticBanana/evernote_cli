@@ -73,25 +73,9 @@ class EvernoteNote(EvernoteAccess):
             # logger.info("Note Resources: " + resguid)
 
             offset = -1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             newpath = titlelist[counter]
+            if not os.path.exists(self.path + booktitle[counter] + '/' + newpath):
+                os.makedirs(self.path + booktitle[counter] + '/' + newpath)
 
             while True:
                 offset = resguid.find("guid='", offset + 1)  # find guid of File in resources
@@ -108,9 +92,8 @@ class EvernoteNote(EvernoteAccess):
                 file_namepath = self.path + booktitle[counter] + '/' + newpath + '/' + file_name  # tmp for hash test
 
 
-                with open(self.path + booktitle[counter] + '/' + newpath + '/' + file_name, "w") as f: # create file with correspond. File extension
-                    f.write(file_content)  # TODO check ob beriets vorhanden
-
+                with open(file_namepath, "w") as f: # create file with correspond. File extension
+                    f.write(file_content)
                 if resource.data.bodyHash != krypto_manager.md5(file_namepath):  # Hash check
                     print("ALARM")  # tmp
 
