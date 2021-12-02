@@ -92,7 +92,7 @@ class EvernoteNote(EvernoteAccess):
                 file_namepath = self.path + booktitle[counter] + '/' + newpath + '/' + file_name  # tmp for hash test
 
 
-                with open(file_namepath, "w") as f: # create file with correspond. File extension
+                with open(file_namepath, "w+") as f: # create file with correspond. File extension
                     f.write(file_content)
                 if resource.data.bodyHash != krypto_manager.md5(file_namepath):  # Hash check
                     print("ALARM")  # tmp

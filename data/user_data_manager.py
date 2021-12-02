@@ -49,9 +49,9 @@ class UserDataManager:
             # TODO: Error ausgeben
 
     def test_download(self):
-        # d = downloader.EvernoteNote(self)
-        # d.download()
-        downloader.downloadstart(self.user_key)
+        d = downloader.EvernoteNote(self)
+        d.download()
+        # downloader.downloadstart(self.user_key)
 
     def get_all_files(self):
         files = []
