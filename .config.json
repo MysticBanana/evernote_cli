@@ -4,7 +4,7 @@
         "user_data": "user_data/"
     }, 
     "user_requirements": [
-        ".config.json", 
+        ".user_info.json",
         "log.log", 
         "files"
     ], 

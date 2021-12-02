@@ -60,7 +60,7 @@ def callback(request):
     controller.user.user_key = token
 
     # basepath = path.dirname(__file__)
-    # filepath = path.abspath(path.join(basepath, "..", ".config.json"))
+    # filepath = path.abspath(path.join(basepath, "..", ".user_info.json"))
     #
     # with open(filepath, "r") as jsonFile:
     #     data = json.load(jsonFile)

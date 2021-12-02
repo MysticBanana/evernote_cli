@@ -14,7 +14,7 @@ class Evernote:
         self.setup_logging(level=self.log_level)
 
         self.logger.info("Starting...")
-        self.logger.info("Loaded .config.json")
+        self.logger.info("Loaded .user_info.json")
 
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
@@ -42,8 +42,8 @@ class Evernote:
         # work in progress
         # user.get_all_files()
 
-        dm = displaymanager.DisplayManager(self)
-        dm.get_dict("-u")
+        # dm = displaymanager.DisplayManager(self)
+        # dm.get_dict("-u")
 
     def setup_logging(self, level=logging.INFO):
         """

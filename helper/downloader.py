@@ -12,6 +12,31 @@ from helper import krypto_manager
         return main_class.global_data_manager.get_api_key()"""
 #TODO eine klasse
 
+
+class EvernoteAccess(EvernoteClient):
+    # used to interact with the api
+    def __init__(self, user_data, **kwargs):
+        self.user_data = user_data
+        super(EvernoteAccess, self).__init__(token=self.user_data.user_key, **kwargs)
+
+class EvernoteUser(EvernoteAccess):
+    # for getting user specific data from evernote
+    def __init__(self, user_data, **kwargs):
+        super(EvernoteUser, self).__init__(user_data, **kwargs)
+
+        self.user_store = self.get_user_store()
+        self.user_info = self.user_store.getUser()
+
+    def get_user_info(self):
+        return vars(self.user_info)
+
+class EvernoteNote(EvernoteAccess):
+    def __init__(self, user_data, **kwargs):
+        super(EvernoteNote, self).__init__(user_data, **kwargs)
+
+
+
+
 def downloadstart(token):
     access_token = token
     client = EvernoteClient(token=access_token, sandbox=True)  # sandbox=True for devtoken
@@ -24,7 +49,6 @@ def downloadstart(token):
     meta.includeTitle = True
     downloadFile(noteStore, access_token, filter, meta)
     downloadText(noteStore, access_token, filter, meta)
-
 
 def downloadFile(noteStore, access_token, filter, meta):
     # Used to find the high-level information about a set of the notes from a user's account based on various criteria

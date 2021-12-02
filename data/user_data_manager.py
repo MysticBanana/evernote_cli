@@ -17,9 +17,7 @@ class UserDataManager:
         self.user_log = None
         self.user_key = None
 
-
-
-        if not os.path.exists("%s/.config.json" % self.user_path):
+        if not os.path.exists("%s/.user_info.json" % self.user_path):
             return
 
         self.init_files()
@@ -49,7 +47,7 @@ class UserDataManager:
         self.file_path = path
 
     def test_download(self):
-        downloader.downloadstart(self.user_key)
+        pass #downloader.EvernoteUser(self)
 
     def get_all_files(self):
         files = []
