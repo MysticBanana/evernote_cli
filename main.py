@@ -38,15 +38,18 @@ class Evernote:
         user = self.global_data_manager.get_user("mneuhaus")
 
         # download with key
-        user.test_download()
+        # user.test_download()
         # work in progress
         # user.get_all_files()
 
-        #dm = displaymanager.DisplayManager(self)
-        #dm.get_dict("-u")
+        # dm = displaymanager.DisplayManager(self)
+        # dm.get_dict("-u")
 
-        par = param_loader_2.ArgumentParser(self, "--user mneuhaus -p test1234 -r a")
-        par.parser()
+        # par = param_loader_2.ArgumentParser(self, "--user mneuhaus -p test1234 -r a")
+        # par.parser()
+
+        dm = displaymanager.DisplayManager(self)
+        dm.print_help(dict())
 
     def setup_logging(self, level=logging.INFO):
         """
