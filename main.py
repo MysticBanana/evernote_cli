@@ -22,10 +22,13 @@ class Evernote:
 
         # TESTING
         # User login
+
+
+
         tmp_user_name = "mneuhaus"
         tmp_user_password = "test1234"
         tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
-        del tmp_user_password
+        tmp_user_password
 
         # CREATING USER
         self.global_data_manager.create_user(tmp_user_name, tmp_password_hash)
@@ -35,10 +38,10 @@ class Evernote:
         print check
 
         # ENCRYPTING USER
-        user = self.global_data_manager.get_user("mneuhaus")
+        self.user = self.global_data_manager.get_user("mneuhaus")
 
         # download with key
-        # user.test_download()
+        self.user.test_download()
         # work in progress
         # user.get_all_files()
 
@@ -47,6 +50,8 @@ class Evernote:
 
         # par = param_loader_2.ArgumentParser(self, "--user mneuhaus -p test1234 -r a")
         # par.parser()
+
+        # self.user_web_auth()
 
         dm = displaymanager.DisplayManager(self)
         dm.print_help(dict())

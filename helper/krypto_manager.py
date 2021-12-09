@@ -4,6 +4,8 @@ import hashlib
 def hash_str(string, hash_type="sha256"):
     if hash_type == "sha256":
         return hashlib.sha256(string).hexdigest()
+    elif hash_type == "md5":
+        return hashlib.md5(string).hexdigest()
 
 
 def md5(fname):

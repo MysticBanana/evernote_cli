@@ -33,6 +33,9 @@ class UserDataManager:
             self.file_path = custom_file_path
             self.logger.info("File location at: {}".format(custom_file_path))
 
+    def dump_config(self):
+        self.user_config.set("key", self.user_key)
+
     def decrypt(self):
         pass
 

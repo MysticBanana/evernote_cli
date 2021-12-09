@@ -5,12 +5,6 @@ from evernote.edam.notestore.ttypes import NotesMetadataResultSpec, NoteFilter
 
 from helper import krypto_manager
 
-"""    @property
-    def api_key(main_class):
-        # getter for api key
-        return main_class.global_data_manager.get_api_key()"""
-
-
 class EvernoteAccess(EvernoteClient):
     # used to interact with the api
     def __init__(self, user_data, **kwargs):
@@ -61,8 +55,7 @@ class EvernoteNote(EvernoteAccess):
 
         counter = 0
         for numbers in guidlist:
-            note = self.note_store.getNote(self.access_token, guidlist[counter], True, False, True,
-                                           False)  # Data about Note
+            note = self.note_store.getNote(self.access_token, guidlist[counter], True, False, True, False)  # Data about Note
             resguid = ""
             if note.resources is not None:
                 resguid = ' '.join(map(str, note.resources))  # note.resources contains guid for Files; to string
