@@ -3,7 +3,7 @@ import os
 
 class GlobalFileManager:
     def __init__(self, controller):
-        self.main_config = file_loader.Config(config_name=".config", controller=controller)
+        self.main_config = file_loader.FileHandler(file_name=".config", controller=controller)
         self.controller = controller
 
     def setup_logging(self):
@@ -17,7 +17,7 @@ class GlobalFileManager:
                 self.logger.warning("File does not exists: " + str(path))
                 os.makedirs(path)
 
-        self.credentials = file_loader.Config(config_name=".credentials", controller=self.controller)
+        self.credentials = file_loader.FileHandler(file_name=".credentials", controller=self.controller)
 
     def get_api_key(self):
         return self.main_config.get("key")
@@ -25,7 +25,7 @@ class GlobalFileManager:
     def get_path(self, key=None):
         return self.main_config.get("path")[key] if key else self.main_config.get("path")
 
-    def get_user(self, user_name, path=False):
+    def get_user(self, user_name, user_password, path=False):
         """
         returns relative path to user files or returns UserObject
         :rtype:
@@ -35,7 +35,7 @@ class GlobalFileManager:
             if path:
                 return ppath
             else:
-                return user_data_manager.UserDataManager(self.controller, ppath, user_name)
+                return user_data_manager.UserDataManager(self.controller, ppath, user_name, user_password)
 
     def is_user(self, user_name):
         if user_name in self.credentials.getAll():
