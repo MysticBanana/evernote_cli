@@ -62,13 +62,13 @@ class KryptoManager:
             print "no file"
             return
 
-        enc_file_name = self.fernet.encrypt(file_name)
+        enc_file_name = self.fernet.encrypt(bytes(file_name))
 
         with open("{}{}".format(file_path, file_name), "rb") as origin:
             enc_content = origin.read()
 
         with open("{}{}.enc".format(file_path, enc_file_name), "wb") as encrypted:
-            encrypted.write(self.fernet.encrypt(enc_content))
+            encrypted.write(self.fernet.encrypt(bytes(enc_content)))
 
     def decrypt(self, file_path, file_name):
         if not os.path.isfile(file_path + file_name):
