@@ -2,12 +2,15 @@ import os
 from datetime import datetime
 
 # TODO: Tags in Meta funkt nicht aber kp warum
-# TODO: a fuer meta.txt ist scheisse
+# TODO: "ä" in meta nicht richtig / irgendwas mit unicode
+# TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
+# TODO download mit tags (funkt nicht in sandbox)
 
 from evernote.api.client import EvernoteClient
 from evernote.edam.notestore.ttypes import NotesMetadataResultSpec, NoteFilter
 
 from helper import krypto_manager
+
 
 class EvernoteAccess(EvernoteClient):
     # used to interact with the api
@@ -57,39 +60,40 @@ class EvernoteNote(EvernoteAccess):
 
         counter = 0
         for numbers in guidlist:
-            note = self.note_store.getNote(self.access_token, guidlist[counter], True, False, True, False)  # Data about Note
+            note = self.note_store.getNote(self.access_token, guidlist[counter], True, False, True,
+                                           False)  # Data about Note
             resguid = ""
             if note.resources is not None:
                 resguid = ' '.join(map(str, note.resources))  # note.resources contains guid for Files; to string
 
         for notes in guidlist:
+
+            meta_note = ""
+
             note = self.note_store.getNote(self.access_token, guidlist[counter], True, False, True,
                                            False)  # Data about Note
 
-            newpath = titlelist[counter]
+            newpath = titlelist[counter].decode('utf-8')
 
             if not os.path.exists(self.path + booktitle[counter] + '/' + newpath):
                 os.makedirs(self.path + booktitle[counter] + '/' + newpath)
 
             # meta of Note
-            with open(self.path + booktitle[counter] + '/' + newpath + '/' + 'meta.txt', "a") as k:
-                k.write("Title: " + note.title + " ")
-                k.write("Created: " + datetime.fromtimestamp(note.created / 1000).strftime("%A, %B %d, %Y %H:%M:%S")
-                        + " ")
-                k.write(
-                    "Updated: " + datetime.fromtimestamp(note.updated / 1000).strftime("%A, %B %d, %Y %H:%M:%S") + " ")
-                if note.tagNames is not None:
-                    k.write("Tag: " + note.tagNames + "\n")
-                k.write(str(note.attributes) + "\n")
+            meta_note = "Title: " + note.title + " " + \
+                        "Created: " + datetime.fromtimestamp(note.created / 1000).strftime("%A, %B %d, %Y %H:%M:%S") \
+                        + " " + "Updated: " \
+                        + datetime.fromtimestamp(note.updated / 1000).strftime("%A, %B %d, %Y %H:%M:%S") + " "
+            if note.tagNames is not None:
+                meta_note = meta_note + note.tagNames + "\n"
+            meta_note = meta_note + str(note.attributes) + "\n"
 
             if note.resources is not None:
                 for guids in note.resources:
                     # logger.info("File guid: " + guids.guid)
 
                     resource = self.note_store.getResource(guids.guid, True, True, True, True)
-                    file_name = resource.attributes.fileName  # file_name includes File extension
-                    file_namepath = self.path + booktitle[
-                        counter] + '/' + newpath + '/' + file_name  # tmp for hash test
+                    file_name = resource.attributes.fileName.decode('utf-8')  # file_name includes File extension
+                    file_namepath = self.path + booktitle[counter].decode('utf-8') + '/' + newpath + '/' + file_name
 
                     if os.path.exists(file_namepath) and resource.data.bodyHash == krypto_manager.md5(file_namepath):
                         print(file_namepath + " schon da")  # tmp
@@ -102,14 +106,14 @@ class EvernoteNote(EvernoteAccess):
                         print("ALARM")  # tmp
 
                     # meta of file
-                    with open(self.path + booktitle[counter] + '/' + newpath + '/' + 'meta.txt',
-                              "a") as k:
-                        k.write(str(resource.attributes) + "\n")
+                    meta_note = meta_note + str(resource.attributes) + "\n"
 
             with open(self.path + booktitle[counter] + '/' + newpath + '/' + 'text.txt', "w+") as f:
                 f.write(note.content)  # download txt of file
 
+            with open(self.path + booktitle[counter] + '/' + newpath + '/' + 'meta.txt', "w+") as f:
+                f.write(meta_note)  # write meta.txt with metadata
+
             counter = counter + 1
 
-# TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
-# TODO download mit tags (funkt nicht in sandbox)
+
