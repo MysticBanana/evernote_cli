@@ -1,10 +1,22 @@
 import os
+import enum
 
-from . import file_loader
+import file_loader
 from helper import downloader
 
+
+
 class UserDataManager:
-    def __init__(self, controller, path, user_name):
+    class EncryptionLevel(enum.Enum):
+        DEFAULT = 0
+        COMPRESS = 1
+        ENCRYPT = 2
+        COMPRESS_ENCRYPT = 4
+
+    def __init__(self, controller, path, user_name, password):
+        # todo: set option in user_info for encryption_level
+
+
         self.controller = controller
         self.logger = self.controller.create_logger(user_name)
         self.logger.info("Initializing user: {}".format(user_name))
@@ -13,19 +25,20 @@ class UserDataManager:
         self.file_path = "%sfiles/" % self.user_path
         self.user_name = user_name
 
-        self.user_config = None
+        self.user_config = file_loader.FileHandler(file_name=".user_info", path=self.user_path, controller=self.controller)
         self.user_log = None
         self.user_key = None
+        self.password = password
 
-        if not os.path.exists("%s/.user_info.json" % self.user_path):
+        if not self.user_config.exists:
             return
 
         self.init_files()
 
     def init_files(self):
-        self.user_config = file_loader.Config(config_name=".user_info", path=self.user_path, controller=self.controller)
-        self.user_log = file_loader.Config(config_name="log", path=self.user_path, controller=self.controller, mode="log")
+        self.user_log = file_loader.FileHandler(file_name="log", path=self.user_path, controller=self.controller, mode="log")
         self.user_key = self.user_config.get("key", None)
+        self.encryption_level = 2
 
         # if user wants a custom download location
         custom_file_path = self.user_config.get("file_path", "")
@@ -40,7 +53,26 @@ class UserDataManager:
         pass
 
     def encrypt(self):
+        # for encrypting
+        # encrypting filenames
+        # encrypting content
+
         pass
+
+    def compress(self):
+        pass
+
+    def decompress(self):
+        pass
+
+    def close(self):
+        if self.encryption_level > self.EncryptionLevel.ENCRYPT:
+            self.encrypt()
+            self.compress()
+        elif self.encryption_level > self.EncryptionLevel.COMPRESS:
+            self.encrypt()
+        elif self.encryption_level > self.EncryptionLevel.DEFAULT:
+            self.compress()
 
     def set_custom_path(self, path):
         # check if path valid
@@ -71,5 +103,9 @@ class UserDataManager:
         pass #self.user_config.dump()
 
 
+if __name__ == "__main__":
+    enc_level = 2
+    if enc_level > UserDataManager.EncryptionLevel.COMPRESS:
+        pass
 
 
