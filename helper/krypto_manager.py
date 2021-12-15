@@ -2,7 +2,7 @@ import hashlib
 import os
 
 import stdiomask as stdiomask
-#from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet
 import base64
 
 from cryptography.hazmat.primitives import hashes

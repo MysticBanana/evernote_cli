@@ -35,10 +35,11 @@ class Evernote:
 
         # ENCRYPTING USER
         self.user = self.global_data_manager.get_user(tmp_user_name, tmp_user_password)
+        self.user.encrypt()
         # self.user.decrypt()
 
         # download with key
-        # self.user.test_download()
+        #self.user.test_download()
         # work in progress
         # user.get_all_files()
 

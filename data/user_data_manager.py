@@ -41,7 +41,7 @@ class UserDataManager:
         # self.get_files(self.encrypt)
 
     def init_files(self):
-        self.user_log = file_loader.FileHandler(file_name="log", path=self.user_path, controller=self.controller, mode="log")
+        #self.user_log = file_loader.FileHandler(file_name="log", path=self.user_path, controller=self.controller, mode="log")
         self.user_key = self.user_config.get("key", None)
         self.encryption_level = 2
 
