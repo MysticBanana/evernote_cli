@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 # TODO: Tags in Meta funkt nicht aber kp warum
-# TODO: "ä" in meta nicht richtig / irgendwas mit unicode
+# TODO: "a mit punkten drüber" in meta nicht richtig / irgendwas mit unicode
 # TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
 # TODO download mit tags (funkt nicht in sandbox)
 
@@ -75,8 +75,8 @@ class EvernoteNote(EvernoteAccess):
 
             newpath = titlelist[counter].decode('utf-8')
 
-            if not os.path.exists(self.path + booktitle[counter] + '/' + newpath):
-                os.makedirs(self.path + booktitle[counter] + '/' + newpath)
+            if not os.path.exists(self.path + booktitle[counter].decode('utf-8') + '/' + newpath):
+                os.makedirs(self.path + booktitle[counter].decode('utf-8') + '/' + newpath)
 
             # meta of Note
             meta_note = "Title: " + note.title + " " + \
@@ -108,10 +108,10 @@ class EvernoteNote(EvernoteAccess):
                     # meta of file
                     meta_note = meta_note + str(resource.attributes) + "\n"
 
-            with open(self.path + booktitle[counter] + '/' + newpath + '/' + 'text.txt', "w+") as f:
+            with open(self.path + booktitle[counter].decode('utf-8') + '/' + newpath + '/' + 'text.txt', "w+") as f:
                 f.write(note.content)  # download txt of file
 
-            with open(self.path + booktitle[counter] + '/' + newpath + '/' + 'meta.txt', "w+") as f:
+            with open(self.path + booktitle[counter].decode('utf-8') + '/' + newpath + '/' + 'meta.txt', "w+") as f:
                 f.write(meta_note)  # write meta.txt with metadata
 
             counter = counter + 1
