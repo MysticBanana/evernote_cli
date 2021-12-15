@@ -3,6 +3,8 @@ import sys
 import krypto_manager
 import operator
 
+import data.user_data_manager as udm
+
 
 def new_user(params):
     print "CREATE new User:"
@@ -40,6 +42,8 @@ def change_path(params):
     print "\tnew path: " + params["new_path"]
 
 
+
+
 def download(params=None):
     print "DOWNLOAD: "
     if params == None:
@@ -61,7 +65,7 @@ class ArgumentParser():
     args_dict = dict()
 
     def __init__(self, controller, args):
-        self.controller = controller
+        self.controller = controller.user
 
         self.usage = "evernote [-h] [-u <USERNAME> ] ..."
         self.fkt_code = None
@@ -240,6 +244,51 @@ class ArgumentParser():
         self.params = {}
 
         self.arg_list = args.split()
+
+    def new_user(self, params):
+        print "CREATE new User:"
+        print "\tusername=" + params["username"]
+        print "\ttoken=" + params["token"]
+        print "\tpasswd=" + params["passwd"]
+
+    def passwd_check(self, params):
+        if params["username"] == "user":
+            if params["passwd"] == "userpwd":
+                return True
+        return False
+
+    def show_path(self, params):
+        print "SHOW:"
+        print "\tfile: " + params["path"]
+
+    def show_userdata(self, params):
+        print "SHOW:" \
+              "\tuserdata from: " + params["username"]
+
+    def change_passwd(self, params):
+        print "CHANGE PWD: "
+        print "\told pwd: " + params["passwd"]
+        print "\tnew pwd: " + params["new_pwd"]
+
+    def change_path(self, params):
+        print "CHANGE PATH: "
+        print "\told path: ...."
+        print "\tnew path: " + params["new_path"]
+
+    def download(self, params=None):
+        print "DOWNLOAD: "
+        if params == None:
+            print "\tALL"
+        else:
+            print "\tREST"
+
+    def find(self, params):
+        print "FIND: "
+        print "\t" + params["find"]
+
+    def refresh(self):
+        print "REFRESH"
+
 
     # Erstellen von Hilfe-Nachrichten
     def help_msg(self, arg_dict, seperator="", lvl=0):

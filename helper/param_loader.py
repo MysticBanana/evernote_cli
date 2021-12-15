@@ -416,7 +416,6 @@ if __name__ == "__main__":
                 #        **{key: val for key, val in arguments["user"]["username"].items() if key not in ["opt_str", "subparser"]})
         return parser
 
-
     '''
     parser = argparse.ArgumentParser(prog="evernote")
     subparsers_global = parser.add_subparsers(dest="global")

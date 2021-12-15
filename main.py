@@ -36,8 +36,9 @@ class Evernote:
         # ENCRYPTING USER
         user = self.global_data_manager.get_user(tmp_user_name, tmp_user_password)
 
+        #user.download_user_data()
         # download with key
-        user.test_download()
+        #user.test_download()
         # work in progress
         # user.get_all_files()
 
@@ -47,8 +48,10 @@ class Evernote:
         # par = param_loader_2.ArgumentParser(self, "--user mneuhaus -p test1234 -r a")
         # par.parser()
 
-        dm = displaymanager.DisplayManager(self)
-        dm.print_help(dict())
+        #dm = displaymanager.DisplayManager(self)
+        #dm.print_help(dict())
+
+        #user_data_manager
 
     def setup_logging(self, level=logging.INFO):
         """

@@ -80,6 +80,20 @@ class UserDataManager:
             print "Path is no Dir"
             # TODO: Error ausgeben
 
+    # downloads user data and stores it in the .user_info.json of the respective user.
+    # More user data can be downloaded by expanding the content of the downloaded_data variable
+    def download_user_data(self):
+        downloaded_data = ["id", "username", "email", "name", "timezone", "created", "updated", "deleted"]
+        d_user = downloader.EvernoteUser(self)
+        user_info = d_user.get_user_info()
+        user_config = self.user_config.get_all()
+        user_config[self.user_name] = {}
+        for key, val in user_info.items():
+            if key in downloaded_data:
+                user_config[self.user_name][key] = val
+        self.user_config.set_all(user_config)
+        self.user_config.write_json()
+
     def test_download(self):
         d = downloader.EvernoteNote(self)
         d.download()

@@ -38,7 +38,7 @@ class GlobalFileManager:
                 return user_data_manager.UserDataManager(self.controller, ppath, user_name, user_password)
 
     def is_user(self, user_name):
-        if user_name in self.credentials.getAll():
+        if user_name in self.credentials.get_all():
             return True
         return False
 
