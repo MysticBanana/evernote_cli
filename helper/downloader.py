@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 # TODO: Tags in Meta funkt nicht aber kp warum
-# TODO: "a mit punkten drüber" in meta nicht richtig / irgendwas mit unicode
+# TODO: "a mit punkten drueber" in meta nicht richtig / irgendwas mit unicode
 # TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
 # TODO download mit tags (funkt nicht in sandbox)
 
