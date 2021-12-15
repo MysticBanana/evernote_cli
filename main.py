@@ -19,6 +19,18 @@ class Evernote:
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
 
+        self.function = {
+            "help": None,
+            "new_user": self.test,#self.global_data_manager.create_user,              # global_data_manager -> create_user ueber Browser
+            "new_user_token": None,   # global_data_manager -> create_user mit token
+            "show_path": None, #self.user.file_path,
+            "show_userdata": None,
+            "new_pwd": None,
+            "new_path": None,
+            "download": None,
+            "find": None,
+            "refresh": None
+        }
 
         # TESTING
         # User login
@@ -35,7 +47,7 @@ class Evernote:
 
         # ENCRYPTING USER
         self.user = self.global_data_manager.get_user(tmp_user_name, tmp_user_password)
-        self.user.encrypt()
+        #self.user.encrypt()
         # self.user.decrypt()
 
         # download with key
@@ -46,14 +58,19 @@ class Evernote:
         # dm = displaymanager.DisplayManager(self)
         # dm.get_dict("-u")
 
-        # par = param_loader_2.ArgumentParser(self, "--user mneuhaus -p test1234 -r a")
-        # par.parser()
+        # PARSER return Dictionary with information about parameter and function
+        args = "-u " + tmp_user_name + " -n passwd"
+        par = param_loader_2.ArgumentParser(self, args)
+        args = par.parser()
+        self.function[args["func"]](args)
 
         #dm = displaymanager.DisplayManager(self)
         #dm.print_help(dict())
 
         #user_data_manager
 
+    def test(self, args):
+        print(args)
     def setup_logging(self, level=logging.INFO):
         """
 

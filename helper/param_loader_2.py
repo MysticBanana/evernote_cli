@@ -6,66 +6,11 @@ import operator
 import data.user_data_manager as udm
 
 
-def new_user(params):
-    print "CREATE new User:"
-    print "\tusername=" + params["username"]
-    print "\ttoken=" + params["token"]
-    print "\tpasswd=" + params["passwd"]
-
-
-def passwd_check(params):
-    if params["username"] == "user":
-        if params["passwd"] == "userpwd":
-            return True
-    return False
-
-
-def show_path(params):
-    print "SHOW:"
-    print "\tfile: " + params["path"]
-
-
-def show_userdata(params):
-    print "SHOW:" \
-          "\tuserdata from: " + params["username"]
-
-
-def change_passwd(params):
-    print "CHANGE PWD: "
-    print "\told pwd: " + params["passwd"]
-    print "\tnew pwd: " + params["new_pwd"]
-
-
-def change_path(params):
-    print "CHANGE PATH: "
-    print "\told path: ...."
-    print "\tnew path: " + params["new_path"]
-
-
-
-
-def download(params=None):
-    print "DOWNLOAD: "
-    if params == None:
-        print "\tALL"
-    else:
-        print "\tREST"
-
-
-def find(params):
-    print "FIND: "
-    print "\t" + params["find"]
-
-
-def refresh():
-    print "REFRESH"
-
-
 class ArgumentParser():
     args_dict = dict()
 
     def __init__(self, controller, args):
-        self.controller = controller.user
+        self.controller = controller
 
         self.usage = "evernote [-h] [-u <USERNAME> ] ..."
         self.fkt_code = None
@@ -85,14 +30,15 @@ class ArgumentParser():
 
         self.function = {
             "help": self.help_msg,
-            "new_user": new_user,
-            "show_path": show_path,
-            "show_userdata": show_userdata,
-            "new_pwd": change_passwd,
-            "new_path": change_path,
-            "download": download,
-            "find": find,
-            "refresh": refresh
+            "new_user": self.new_user,
+            "new_user_token": self.new_user_token,
+            "show_path": self.show_path,
+            "show_userdata": self.show_userdata,
+            "new_pwd": self.change_passwd,
+            "new_path": self.change_path,
+            "download": self.download,
+            "find": self.find,
+            "refresh": self.refresh
         }
 
         self.args_dict = {
@@ -113,11 +59,11 @@ class ArgumentParser():
                             "opt_str": ["<USERNAME>"],
                             "help_msg": "the name of the user in Evernote",
                         },
-                    "token":
+                    "new_user":
                         {
                             "contains_args": True,
-                            "opt_str": ["-t", "--token"],
-                            "help_msg": "Token is required for first time use",
+                            "opt_str": ["-n", "--new"],
+                            "help_msg": "Creat new user",
                             "token_arg":
                                 {
                                     "contains_args": False,
@@ -251,6 +197,9 @@ class ArgumentParser():
         print "\ttoken=" + params["token"]
         print "\tpasswd=" + params["passwd"]
 
+    def new_user_token(self, params):
+        pass
+
     def passwd_check(self, params):
         if params["username"] == "user":
             if params["passwd"] == "userpwd":
@@ -328,7 +277,7 @@ class ArgumentParser():
 
         # Bei Eingabe von "-h"
         if self.arg_list[0] in self.args_dict["help"]["opt_str"]:
-            self.function["help"](self.args_dict)
+            self.params["func"] = "help"
 
         # Bei Eingabe von "-u <Username> ..."
         elif self.arg_list[0] in self.args_dict["user"]["opt_str"]:
@@ -339,14 +288,19 @@ class ArgumentParser():
                 self.error_msg(2, ["--user", "<USERNAME>"])
 
             if nr_of_args < 3:
-                self.error_msg(2, ["<USERNAME>", "--token OR --passwd"])
+                self.error_msg(2, ["<USERNAME>", "--new OR --passwd"])
 
             # Bei Eingabe von "-u <Username> -t <Token> <Passwd>"
-            if self.arg_list[2] in user_dict["token"]["opt_str"]:
+            if self.arg_list[2] in user_dict["new_user"]["opt_str"]:
                 try:
-                    self.params["token"] = self.arg_list[3]
-                    self.params["passwd"] = self.arg_list[4]
-                    self.function["new_user"](self.params)
+                    if len(self.arg_list) == 5:
+                        self.params["token"] = self.arg_list[3]
+                        passwd_hash = krypto_manager.hash_str(self.arg_list[4])
+                        self.params["func"] = "new_user_token"
+                    else:
+                        passwd_hash = krypto_manager.hash_str(self.arg_list[3])
+                        self.params["func"] = "new_user"
+                    self.params["passwd"] = passwd_hash
                     if nr_of_args > 5:
                         self.warning_msg(arguments=self.arg_list[5:])
                 except:
@@ -356,12 +310,12 @@ class ArgumentParser():
             elif self.arg_list[2] in user_dict["passwd"]["opt_str"]:
                 passwd_dict = user_dict["passwd"]
                 try:
-                    self.params["passwd"] = self.arg_list[3]
+                    passwd_hash = krypto_manager.hash_str(self.arg_list[3])
+                    self.params["passwd"] = passwd_hash
                 except:
                     self.error_msg(2, ["--passwd", "<PASSWORD>"])
 
-                passwd_hash = krypto_manager.hash_str(self.params["passwd"])
-                check = self.controller.global_data_manager.check_user_hash(self.params["username"], passwd_hash)
+                check = self.controller.global_data_manager.check_user_hash(self.params["username"], self.params["passwd"])
                 if not check:
                     self.error_msg(3)
 
@@ -379,19 +333,19 @@ class ArgumentParser():
                     if self.arg_list[5] in show_dict["file"]["opt_str"]:
                         try:
                             self.params["file"] = self.arg_list[6]
-                            self.function["show_file"](self.params)
+                            self.params["func"] = "show_file"
                         except:
                             self.error_msg(2, ["--file", "<PATH|NOTE|NOTEBOOK>"])
 
                     # Bei Eingabe von "-u <Username> -p <Passwd> -s -u
                     elif self.arg_list[5] in show_dict["userdata"]["opt_str"]:
-                        self.function["show_userdata"](self.params)
+                        self.params["func"] = "show_userdata"
 
                     # Bei Eingabe von "-u <Username> -p <Passwd> -s -p <NOTE|NOTEBOOK>
                     elif self.arg_list[5] in show_dict["path"]["opt_str"]:
                         try:
                             self.params["path"] = self.arg_list[6]
-                            self.function["show_path"](self.params)
+                            self.params["func"] = "show_path"
                         except:
                             self.error_msg(2, ["--path", "<NOTE|NOTEBOOK>"])
                     else:
@@ -408,7 +362,7 @@ class ArgumentParser():
                     if self.arg_list[5] in change_dict["new_pwd"]["opt_str"]:
                         try:
                             self.params["new_pwd"] = self.arg_list[6]
-                            self.function["new_pwd"](self.params)
+                            self.params["func"] = "new_pwd"
                         except:
                             self.error_msg(2, ["--new_pwd", "<NEW_PWD>"])
 
@@ -416,7 +370,7 @@ class ArgumentParser():
                     elif self.arg_list[5] in change_dict["new_path"]["opt_str"]:
                         try:
                             self.params["new_path"] = self.arg_list[6]
-                            self.function["new_path"](self.params)
+                            self.params["func"] = "new_path"
                         except:
                             self.error_msg(2, ["--new_path", "<NEW_PATH>"])
                     else:
@@ -431,7 +385,7 @@ class ArgumentParser():
 
                     # Bei Eingabe von "-u <Username> -p <Passwd> -d -a
                     if self.arg_list[5] in download_dict["all"]["opt_str"]:
-                        self.function["download"]()
+                        self.params["func"] = "download"
                         if nr_of_args > 6:
                             self.warning_msg(arguments=self.arg_list[6:])
                     else:
@@ -441,7 +395,7 @@ class ArgumentParser():
                 elif self.arg_list[4] in passwd_dict["find"]["opt_str"]:
                     try:
                         self.params["find"] = self.arg_list[5]
-                        self.function["find"](self.params)
+                        self.params["func"] = "find"
                         if nr_of_args > 6:
                             self.warning_msg(arguments=self.arg_list[6:])
                     except:
@@ -449,17 +403,19 @@ class ArgumentParser():
 
                 # Bei Eingabe von "-u <Username> -p <Passwd> -r
                 elif self.arg_list[4] in passwd_dict["refresh"]["opt_str"]:
-                    self.function["refresh"]()
+                    self.params["func"] = "refresh"
                     if nr_of_args > 5:
                         self.warning_msg(arguments=self.arg_list[5:])
                 else:
                     self.error_msg(4, self.arg_list[4])
+        return self.params
 
 
 if __name__ == "__main__":
     user = "mneuhaus"
     password = "test1234"
 
-    par = ArgumentParser(None, "-h")
-    print par.args_dict.items()
+    args = "-u " + user + " -p " +password+ " -s -f PATH"
+    par = ArgumentParser(None, args)
+    print par.parser()
 
