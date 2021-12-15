@@ -43,77 +43,63 @@ class EvernoteNote(EvernoteAccess):
         self.path = self.user_data.file_path
 
     def download(self):
-        ourNoteList = self.note_store.findNotesMetadata(self.access_token, self.filter, 0, 250, self.meta)
-        guidlist = []
-        titlelist = []
-        booktitle = []
+        notelist = self.note_store.findNotesMetadata(self.access_token, self.filter, 0, 250, self.meta)
+        booktitlelist = []
 
         # logger = main_class.create_logger("FileDownloader")
 
-        for note in ourNoteList.notes:
-            wholeNote = self.note_store.getNote(self.access_token, note.guid, True, False, True, False)
-            # logger.info("Note guid: " + note.guid)
-            # logger.info("Notebook guid: " + str(wholeNote.notebookGuid))
-            guidlist.append(note.guid)  # Liste with all guids of Notes
-            titlelist.append(note.title)
-            booktitle.append(self.note_store.getNotebook(self.access_token, wholeNote.notebookGuid).name)
-
         counter = 0
-        for numbers in guidlist:
-            note = self.note_store.getNote(self.access_token, guidlist[counter], True, False, True,
-                                           False)  # Data about Note
-            resguid = ""
-            if note.resources is not None:
-                resguid = ' '.join(map(str, note.resources))  # note.resources contains guid for Files; to string
 
-        for notes in guidlist:
+        for wholenote in notelist.notes:
 
             meta_note = ""
 
-            note = self.note_store.getNote(self.access_token, guidlist[counter], True, False, True,
-                                           False)  # Data about Note
+            wholenote = self.note_store.getNote(self.access_token, wholenote.guid, True, False, True, False)
+            # logger.info("Note guid: " + wholenote.guid)
+            # logger.info("Notebook guid: " + str(wholenote.notebookGuid))
+            booktitlelist.append(self.note_store.getNotebook(self.access_token, wholenote.notebookGuid).name)
 
-            newpath = titlelist[counter].decode('utf-8')
-
-            if not os.path.exists(self.path + booktitle[counter].decode('utf-8') + '/' + newpath):
-                os.makedirs(self.path + booktitle[counter].decode('utf-8') + '/' + newpath)
+            if not os.path.exists(self.path + booktitlelist[counter].decode('utf-8') + '/' + wholenote.title):
+                os.makedirs(self.path + booktitlelist[counter].decode('utf-8') + '/' + wholenote.title)
 
             # meta of Note
-            meta_note = "Title: " + note.title + " " + \
-                        "Created: " + datetime.fromtimestamp(note.created / 1000).strftime("%A, %B %d, %Y %H:%M:%S") \
-                        + " " + "Updated: " \
-                        + datetime.fromtimestamp(note.updated / 1000).strftime("%A, %B %d, %Y %H:%M:%S") + " "
-            if note.tagNames is not None:
-                meta_note = meta_note + note.tagNames + "\n"
-            meta_note = meta_note + str(note.attributes) + "\n"
+            meta_note = "Title: " + wholenote.title + " " + \
+                        "Created: " + datetime.fromtimestamp(wholenote.created / 1000).strftime(
+                "%A, %B %d, %Y %H:%M:%S") + " " \
+                        + "Updated: " + datetime.fromtimestamp(wholenote.updated / 1000).strftime(
+                "%A, %B %d, %Y %H:%M:%S") + "\n"
+            if wholenote.tagNames is not None:
+                meta_note = meta_note + wholenote.tagNames + "\n"
+            meta_note = meta_note + str(wholenote.attributes) + "\n"
 
-            if note.resources is not None:
-                for guids in note.resources:
+            if wholenote.resources is not None:
+                for guids in wholenote.resources:
+
                     # logger.info("File guid: " + guids.guid)
-
                     resource = self.note_store.getResource(guids.guid, True, True, True, True)
-                    file_name = resource.attributes.fileName.decode('utf-8')  # file_name includes File extension
-                    file_namepath = self.path + booktitle[counter].decode('utf-8') + '/' + newpath + '/' + file_name
+
+                    # path with filename and File extension
+                    file_namepath = self.path + booktitlelist[counter].decode(
+                        'utf-8') + '/' + wholenote.title + '/' + resource.attributes.fileName.decode('utf-8')
 
                     if os.path.exists(file_namepath) and resource.data.bodyHash == krypto_manager.md5(file_namepath):
-                        print(file_namepath + " schon da")  # tmp
+                        print(file_namepath + " schon da")  # !!!tmp!!!
                     else:
                         file_content = resource.data.body  # raw data of File
                         with open(file_namepath, "wb") as f:  # create file with corresponding File extension
                             f.write(file_content)
 
                     if resource.data.bodyHash != krypto_manager.md5(file_namepath):  # Hash check
-                        print("ALARM")  # tmp
+                        print("ALARM")  # !!!tmp!!!
 
-                    # meta of file
-                    meta_note = meta_note + str(resource.attributes) + "\n"
+                    meta_note = meta_note + str(resource.attributes) + "\n"  # meta of file
 
-            with open(self.path + booktitle[counter].decode('utf-8') + '/' + newpath + '/' + 'text.txt', "w+") as f:
-                f.write(note.content)  # download txt of file
+            with open(self.path + booktitlelist[counter].decode('utf-8') + '/' + wholenote.title + '/' + 'text.txt',
+                      "w+") as f:
+                f.write(wholenote.content)  # write and download txt of file
 
-            with open(self.path + booktitle[counter].decode('utf-8') + '/' + newpath + '/' + 'meta.txt', "w+") as f:
+            with open(self.path + booktitlelist[counter].decode('utf-8') + '/' + wholenote.title + '/' + 'meta.txt',
+                      "w+") as f:
                 f.write(meta_note)  # write meta.txt with metadata
 
             counter = counter + 1
-
-
