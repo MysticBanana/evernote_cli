@@ -13,6 +13,8 @@ from cryptography.hazmat.backends import default_backend
 def hash_str(string, hash_type="sha256"):
     if hash_type == "sha256":
         return hashlib.sha256(string).hexdigest()
+    elif hash_type == "md5":
+        return hashlib.md5(string).hexdigest()
 
 def file_hash(file_path, hash_type="sha256"):
     with open(file_path, "rb") as _file:
@@ -60,13 +62,13 @@ class KryptoManager:
             print "no file"
             return
 
-        enc_file_name = self.fernet.encrypt(file_name)
+        enc_file_name = self.fernet.encrypt(bytes(file_name))
 
         with open("{}{}".format(file_path, file_name), "rb") as origin:
             enc_content = origin.read()
 
         with open("{}{}.enc".format(file_path, enc_file_name), "wb") as encrypted:
-            encrypted.write(self.fernet.encrypt(enc_content))
+            encrypted.write(self.fernet.encrypt(bytes(enc_content)))
 
     def decrypt(self, file_path, file_name):
         if not os.path.isfile(file_path + file_name):

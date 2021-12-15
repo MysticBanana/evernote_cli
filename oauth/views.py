@@ -40,8 +40,6 @@ class Auth(View):
         print(client.get_authorize_url(request_token))
         return redirect(client.get_authorize_url(request_token))
 
-# def auth(request):
-
 
 def callback(request):
     controller = Auth.controller
@@ -58,19 +56,11 @@ def callback(request):
         return redirect('/')
 
     controller.user.user_key = token
-
-    # basepath = path.dirname(__file__)
-    # filepath = path.abspath(path.join(basepath, "..", ".user_info.json"))
-    #
-    # with open(filepath, "r") as jsonFile:
-    #     data = json.load(jsonFile)
-    # data["key"] = token
-    # with open(filepath, "w") as jsonFile:
-    #     json.dump(data, jsonFile)
-    # downloader.downloadstart(token)
+    controller.user.dump_config()
+    controller.user.user_config.dump()
+    controller.logger.info("setting user key for user: {}".format(controller.user.user_name))
 
     return render_to_response('oauth/callback.html')
-
 
 def reset(request):
     return redirect('/')

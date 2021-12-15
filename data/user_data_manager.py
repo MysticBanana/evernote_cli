@@ -1,6 +1,8 @@
 import os
 import enum
 
+from . import file_loader
+from helper import downloader, krypto_manager
 import file_loader
 from helper import downloader
 
@@ -24,6 +26,7 @@ class UserDataManager:
         self.user_path = path
         self.file_path = "%sfiles/" % self.user_path
         self.user_name = user_name
+        self.user_password = password
 
         self.user_config = file_loader.FileHandler(file_name=".user_info", path=self.user_path, controller=self.controller)
         self.user_log = None
@@ -34,6 +37,8 @@ class UserDataManager:
             return
 
         self.init_files()
+
+        # self.get_files(self.encrypt)
 
     def init_files(self):
         self.user_log = file_loader.FileHandler(file_name="log", path=self.user_path, controller=self.controller, mode="log")
@@ -46,15 +51,42 @@ class UserDataManager:
             self.file_path = custom_file_path
             self.logger.info("File location at: {}".format(custom_file_path))
 
+    def dump_config(self):
+        self.user_config.set("key", self.user_key)
+
     def decrypt(self):
-        pass
+        path = self.get_files()
+
+        k = krypto_manager.KryptoManager(self.user_password)
+
+        for i in path:
+            k.decrypt(i[0], i[1])
+
+        for i in path:
+            os.remove(i[0] + i[1])
 
     def encrypt(self):
-        # for encrypting
-        # encrypting filenames
-        # encrypting content
+        path = self.get_files()
 
-        pass
+        k = krypto_manager.KryptoManager(self.user_password)
+
+        for i in path:
+            k.encrypt(i[0], i[1])
+
+        for i in path:
+            os.remove(i[0] + i[1])
+
+    def get_files(self):
+
+        # k = krypto_manager.KryptoManager(self.user_password)
+
+        list_of_files = []
+
+        for root, dirs, files in os.walk(self.file_path):
+            for f in files:
+                list_of_files.append((root.encode('utf-8') + "/", f.encode('utf-8')))
+
+        return list_of_files
 
     def compress(self):
         pass

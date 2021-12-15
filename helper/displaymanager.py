@@ -291,11 +291,6 @@ class DisplayManager:
                                                                                           helptext=y["help"])
                                     print(string)
 
-
-
-
-
-
 class EvernoteException(BaseException):
     class Exceptions(enum.Enum):
         pass
