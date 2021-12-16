@@ -1,13 +1,3 @@
 {
-    "mneuhaus": {
-        "username": "fritzneuhaus", 
-        "updated": null, 
-        "name": "Vollstaendiger Name", 
-        "created": null, 
-        "deleted": null, 
-        "id": 616449, 
-        "timezone": null, 
-        "email": null
-    }, 
-    "key": "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
+    "key": "S=s1:U=96801:E=184f7685628:C=17d9fb72a28:P=185:A=mneuhaus:V=2:H=4dcd743a1f50a930bcf311eb62f41c73"
 }

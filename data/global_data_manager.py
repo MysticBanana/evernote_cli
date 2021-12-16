@@ -1,5 +1,7 @@
 from . import file_loader, user_data_manager
 import os
+from helper import krypto_manager
+
 
 class GlobalFileManager:
     def __init__(self, controller):
@@ -50,12 +52,16 @@ class GlobalFileManager:
             self.logger.error("user: {} is not in .credentials".format(user_name))
         return False
 
-    def create_user(self, user_name, password_hash):
+    def create_user(self, user_name, user_password_hash=None, user_password=None, token=None):
+        if user_password_hash is None:
+            user_password_hash = krypto_manager.hash_str(user_password)
+
         if self.is_user(user_name):
             return
+
         path = self.get_path("user_data") + "/" + str(user_name) + "/"
         os.makedirs(path)
-        self.credentials.set(user_name, str(password_hash))
+        self.credentials.set(user_name, str(user_password_hash))
         self.credentials.dump()
 
         req = self.main_config.get("user_requirements")
@@ -66,6 +72,12 @@ class GlobalFileManager:
                 open(path+file, "w").close()
             else:
                 os.makedirs(path+file)
+
+        user = self.get_user(user_name, user_password)
+        if token is not None:
+            user.user_token = token
+
+
 
 
         # create user specific config file
