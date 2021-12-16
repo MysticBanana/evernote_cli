@@ -8,7 +8,7 @@ from helper import downloader
 
 
 
-class UserDataManager:
+class UserDataManager(object):
     class EncryptionLevel(enum.Enum):
         DEFAULT = 0
         COMPRESS = 1
@@ -46,9 +46,10 @@ class UserDataManager:
 
     @user_token.setter
     def user_token(self, value):
-        self.user_key = value
         self.user_config.set("key", str(value))
         self.user_config.dump()
+        self.user_key = value
+
 
     def init_files(self):
         #self.user_log = file_loader.FileHandler(file_name="log", path=self.user_path, controller=self.controller, mode="log")
@@ -118,6 +119,7 @@ class UserDataManager:
         if os.path.isdir(path):
             self.user_config.set("file_path", path)
             self.file_path = path
+            self.user_config.dump()
         else:
             print "Path is no Dir"
             # TODO: Error ausgeben
@@ -135,7 +137,7 @@ class UserDataManager:
             if key in downloaded_data:
                 user_config[self.user_name][key] = val
         self.user_config.set_all(user_config)
-        self.user_config.write_json()
+        self.user_config.dump()
 
     def test_download(self):
         d = downloader.EvernoteNote(self)
