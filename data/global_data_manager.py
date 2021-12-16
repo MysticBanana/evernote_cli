@@ -52,6 +52,14 @@ class GlobalFileManager:
             self.logger.error("user: {} is not in .credentials".format(user_name))
         return False
 
+    def remove_user(self, user_name, user_password):
+        user_password_hash = krypto_manager.hash_str(user_password)
+        check = self.check_user_hash(user_name, user_password_hash)
+
+        if check:
+            pass
+
+
     def create_user(self, user_name, user_password_hash=None, user_password=None, token=None):
         if user_password_hash is None:
             user_password_hash = krypto_manager.hash_str(user_password)
@@ -60,6 +68,12 @@ class GlobalFileManager:
             return
 
         path = self.get_path("user_data") + "/" + str(user_name) + "/"
+
+        if os.path.exists(path):
+            # if credentials are deleted but files still there
+            print "User bereits vorhanden"
+            return
+
         os.makedirs(path)
         self.credentials.set(user_name, str(user_password_hash))
         self.credentials.dump()

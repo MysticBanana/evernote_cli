@@ -121,6 +121,7 @@ class UserDataManager:
         else:
             print "Path is no Dir"
             # TODO: Error ausgeben
+            # TODO: In property umwandeln
 
     # downloads user data and stores it in the .user_info.json of the respective user.
     # More user data can be downloaded by expanding the content of the downloaded_data variable

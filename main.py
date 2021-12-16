@@ -52,7 +52,7 @@ class Evernote:
         # self.user.decrypt()
 
         # download with key
-        # self.user.test_download()
+        self.user.test_download()
         # work in progress
         # user.get_all_files()
 
@@ -60,13 +60,13 @@ class Evernote:
         # dm.get_dict("-u")
 
         # PARSER return Dictionary with information about parameter and function
-        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -f TAG"
-        par = param_loader_2.ArgumentParser(self, args)
-        params = par.parser()
-        self.username = params["username"]
-        self.passwd_hash = params["passwd"]
-        print params
-        self.function[params["func"]](params)
+        # args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -f TAG"
+        # par = param_loader_2.ArgumentParser(self, args)
+        # params = par.parser()
+        # self.username = params["username"]
+        # self.passwd_hash = params["passwd"]
+        # print params
+        # self.function[params["func"]](params)
 
         # dm = displaymanager.DisplayManager(self)
         # dm.print_help(dict())
@@ -157,7 +157,7 @@ class Evernote:
         views.Auth.controller = self
         os.environ.setdefault("DJANGO_SETTINGS_MODULE", "evernote_oauth.settings")
         from django.core.management import execute_from_command_line
-        execute_from_command_line(sys.argv)
+        execute_from_command_line(sys.argv[:1] + ["runserver"])
 
 
 # main
