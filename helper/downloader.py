@@ -34,7 +34,8 @@ class EvernoteNote(EvernoteAccess):
         self.meta = NotesMetadataResultSpec(*[True for i in range(10)])
 
         self.path = self.user_data.file_path
-
+        self.path = self.path + "/" if self.path[-1] != "/" else self.path
+        
     def download(self):
         notelist = self.note_store.findNotesMetadata(self.access_token, self.filter, 0, 250, self.meta)
         booktitlelist = []

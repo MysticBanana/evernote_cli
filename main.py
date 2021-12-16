@@ -111,6 +111,7 @@ class Evernote:
     def download(self, params):
         self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.test_download()
+        self.user.download_user_data()
 
     def find(self, params):
         find_param = params["find"]
