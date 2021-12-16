@@ -1,14 +1,7 @@
 import os
 from datetime import datetime
-
-# TODO: Tags in Meta funkt nicht aber kp warum
-# TODO: "a mit punkten drueber" in meta nicht richtig / irgendwas mit unicode
-# TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
-# TODO download mit tags (funkt nicht in sandbox)
-
 from evernote.api.client import EvernoteClient
 from evernote.edam.notestore.ttypes import NotesMetadataResultSpec, NoteFilter
-
 from helper import krypto_manager
 
 
@@ -65,11 +58,10 @@ class EvernoteNote(EvernoteAccess):
             # meta of Note
             meta_note = "Title: " + wholenote.title + " " + \
                         "Created: " + datetime.fromtimestamp(wholenote.created / 1000).strftime(
-                "%A, %B %d, %Y %H:%M:%S") + " " \
-                        + "Updated: " + datetime.fromtimestamp(wholenote.updated / 1000).strftime(
+                "%A, %B %d, %Y %H:%M:%S") + " " + \
+                        "Updated: " + datetime.fromtimestamp(wholenote.updated / 1000).strftime(
                 "%A, %B %d, %Y %H:%M:%S") + "\n"
-            if wholenote.tagNames is not None:
-                meta_note = meta_note + wholenote.tagNames + "\n"
+            meta_note = meta_note + "Tags: " + str(self.note_store.getNoteTagNames(wholenote.guid)) + "\n"
             meta_note = meta_note + str(wholenote.attributes) + "\n"
 
             if wholenote.resources is not None:
@@ -103,3 +95,8 @@ class EvernoteNote(EvernoteAccess):
                 f.write(meta_note)  # write meta.txt with metadata
 
             counter = counter + 1
+
+# TODO: Tags in Meta funkt nicht aber kp warum
+# TODO: "a mit punkten drueber" in meta nicht richtig / irgendwas mit unicode
+# TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
+# TODO download mit tags (funkt nicht in sandbox)
