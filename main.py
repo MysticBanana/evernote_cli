@@ -36,18 +36,18 @@ class Evernote:
         # TESTING
         # User login
         tmp_user_name = "mneuhaus"
-        tmp_user_password = "test1234"
+        tmp_user_password = "passwd123"
         tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
 
         # CREATING USER
-        self.global_data_manager.create_user(tmp_user_name, tmp_password_hash)
+        #self.global_data_manager.create_user(tmp_user_name, tmp_password_hash)
 
         # CHECK LOGIN
         check = self.global_data_manager.check_user_hash(tmp_user_name, tmp_password_hash)
         print check
 
         # ENCRYPTING USER
-        self.user = self.global_data_manager.get_user(tmp_user_name, tmp_user_password)
+        # self.user = self.global_data_manager.get_user(tmp_user_name, tmp_user_password)
         # self.user.encrypt()
         # self.user.decrypt()
 
@@ -60,11 +60,12 @@ class Evernote:
         # dm.get_dict("-u")
 
         # PARSER return Dictionary with information about parameter and function
-        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -f TAG"
+        args = "-u " + tmp_user_name + " -p "+ tmp_user_password +" -d -a"
+        #args = "-u " + tmp_user_name + " -n S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494 passwd123"
         par = param_loader_2.ArgumentParser(self, args)
         params = par.parser()
         self.username = params["username"]
-        self.passwd_hash = params["passwd"]
+        self.passwd = params["passwd"]
         print params
         self.function[params["func"]](params)
 
@@ -76,15 +77,27 @@ class Evernote:
     #####################
     # all start methods #
     #####################
-    def new_user(self, params):
-        token = params["token"]
-        # TODO add METHODE
 
+    # create new user
+    def new_user(self, params):
+        # if token None -> forwarding to website
+        token = params["token"]
+        self.user = self.global_data_manager.create_user(user_name=self.username, user_password=self.passwd, token=token)
+
+    # change password
     def new_pwd(self, params):
         new_pwd = params["new_pwd"]
+        if not self.global_data_manager.is_user(self.username):
+            return
+        new_pwd_hash = krypto_manager.hash_str(new_pwd)
+        self.global_data_manager.credentials.set(self.username, new_pwd_hash)
+        self.global_data_manager.credentials.dump()
 
     def new_path(self, params):
         new_path = params["new_path"]
+        self.user = self.global_data_manager.get_user(self.username, self.passwd)
+        self.user.set_custom_path(new_path)
+
 
     def show_path(self, params):
         path = params["path"]
@@ -96,7 +109,8 @@ class Evernote:
         file = params["file"]
 
     def download(self, params):
-        pass
+        self.user = self.global_data_manager.get_user(self.username, self.passwd)
+        self.user.test_download()
 
     def find(self, params):
         find_param = params["find"]
@@ -157,7 +171,7 @@ class Evernote:
         views.Auth.controller = self
         os.environ.setdefault("DJANGO_SETTINGS_MODULE", "evernote_oauth.settings")
         from django.core.management import execute_from_command_line
-        execute_from_command_line(sys.argv)
+        execute_from_command_line(sys.argv[:1] + ["runserver"])
 
 
 # main

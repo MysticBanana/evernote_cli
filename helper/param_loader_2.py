@@ -234,12 +234,11 @@ class ArgumentParser():
                 try:
                     if len(self.arg_list) == 5:
                         self.params["token"] = self.arg_list[3]
-                        passwd_hash = krypto_manager.hash_str(self.arg_list[4])
+                        self.params["passwd"] = self.arg_list[4]
                     else:
                         self.params["token"] = None
-                        passwd_hash = krypto_manager.hash_str(self.arg_list[3])
+                        self.params["passwd"] = self.arg_list[3]
                     self.params["func"] = "new_user"
-                    self.params["passwd"] = passwd_hash
                     if nr_of_args > 5:
                         self.warning_msg(arguments=self.arg_list[5:])
                 except:

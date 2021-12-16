@@ -57,6 +57,7 @@ class GlobalFileManager:
             user_password_hash = krypto_manager.hash_str(user_password)
 
         if self.is_user(user_name):
+            print "VORHANDEN"
             return
 
         path = self.get_path("user_data") + "/" + str(user_name) + "/"
@@ -76,7 +77,9 @@ class GlobalFileManager:
         user = self.get_user(user_name, user_password)
         if token is not None:
             user.user_token = token
-
+        else:
+            pass #self.controller.user_web_auth()
+        return user
 
 
 
