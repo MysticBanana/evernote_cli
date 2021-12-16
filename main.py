@@ -5,6 +5,7 @@ import os
 from oauth import views
 from helper import krypto_manager, displaymanager, param_loader_2
 
+
 class Evernote:
     def __init__(self, argv=None, **params):
         # loads configs
@@ -21,15 +22,15 @@ class Evernote:
 
         self.function = {
             "help": None,
-            "new_user": self.test,#self.global_data_manager.create_user,              # global_data_manager -> create_user ueber Browser
-            "new_user_token": None,   # global_data_manager -> create_user mit token
-            "show_path": None, #self.user.file_path,
-            "show_userdata": None,
-            "new_pwd": None,
-            "new_path": None,
-            "download": None,
-            "find": None,
-            "refresh": None
+            "new_user": self.new_user,
+            "show_path": self.new_path,
+            "show_userdata": self.show_userdata,
+            "show_file": self.show_file,
+            "new_pwd": self.new_pwd,
+            "new_path": self.new_path,
+            "download": self.download,
+            "find": self.find,
+            "refresh": self.refresh
         }
 
         # TESTING
@@ -47,11 +48,11 @@ class Evernote:
 
         # ENCRYPTING USER
         self.user = self.global_data_manager.get_user(tmp_user_name, tmp_user_password)
-        #self.user.encrypt()
+        # self.user.encrypt()
         # self.user.decrypt()
 
         # download with key
-        #self.user.test_download()
+        # self.user.test_download()
         # work in progress
         # user.get_all_files()
 
@@ -59,21 +60,54 @@ class Evernote:
         # dm.get_dict("-u")
 
         # PARSER return Dictionary with information about parameter and function
-        args = "-u " + tmp_user_name + " -n passwd"
+        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -f TAG"
         par = param_loader_2.ArgumentParser(self, args)
-        args = par.parser()
-        self.function[args["func"]](args)
+        params = par.parser()
+        self.username = params["username"]
+        self.passwd_hash = params["passwd"]
+        print params
+        self.function[params["func"]](params)
 
-        #dm = displaymanager.DisplayManager(self)
-        #dm.print_help(dict())
+        # dm = displaymanager.DisplayManager(self)
+        # dm.print_help(dict())
 
-        #user_data_manager
+        # user_data_manager
 
-    def test(self, args):
-        print(args)
+    #####################
+    # all start methods #
+    #####################
+    def new_user(self, params):
+        token = params["token"]
+        # TODO add METHODE
+
+    def new_pwd(self, params):
+        new_pwd = params["new_pwd"]
+
+    def new_path(self, params):
+        new_path = params["new_path"]
+
+    def show_path(self, params):
+        path = params["path"]
+
+    def show_userdata(self, params):
+        pass
+
+    def show_file(self, params):
+        file = params["file"]
+
+    def download(self, params):
+        pass
+
+    def find(self, params):
+        find_param = params["find"]
+
+    def refresh(self, params):
+        pass
+    ##########################################
+    ##########################################
+
     def setup_logging(self, level=logging.INFO):
         """
-
         :param level:
         """
         formatter = logging.Formatter('%(asctime)s [%(levelname)s] [%(name)s] %(message)s')
