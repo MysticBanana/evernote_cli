@@ -3,6 +3,7 @@ from datetime import datetime
 from evernote.api.client import EvernoteClient
 from evernote.edam.notestore.ttypes import NotesMetadataResultSpec, NoteFilter
 from helper import krypto_manager
+from data import file_loader
 
 
 class EvernoteAccess(EvernoteClient):
@@ -10,6 +11,7 @@ class EvernoteAccess(EvernoteClient):
     def __init__(self, user_data, **kwargs):
         self.user_data = user_data
         self.access_token = self.user_data.user_key
+        self.logger = self.user_data.controller.create_logger("Downloader")
         super(EvernoteAccess, self).__init__(token=self.user_data.user_key, **kwargs)
 
 
@@ -36,68 +38,55 @@ class EvernoteNote(EvernoteAccess):
         self.path = self.user_data.file_path
         self.path = self.path + "/" if self.path[-1] != "/" else self.path
         
-    def download(self):
-        notelist = self.note_store.findNotesMetadata(self.access_token, self.filter, 0, 250, self.meta)
-        booktitlelist = []
+    def download(self, ressources=True):
+        note_list = self.note_store.findNotesMetadata(self.access_token, self.filter, 0, 250, self.meta).notes
 
-        # logger = main_class.create_logger("FileDownloader")
+        # iterate all notebooks
+        for _note in note_list:
+            note = self.note_store.getNote(self.access_token, _note.guid, True, False, True, False)
+            note_book = self.note_store.getNotebook(self.access_token, note.notebookGuid)
 
-        counter = 0
+            # dict for storing metadata in meta.json
+            note_meta = {
+                "title": note.title,
+                "created": "Created: " + datetime.fromtimestamp(note.created / 1000).strftime("%A, %B %d, %Y %H:%M:%S"),
+                "updated": datetime.fromtimestamp(note.updated / 1000).strftime("%A, %B %d, %Y %H:%M:%S"),
+                "tags": self.note_store.getNoteTagNames(note.guid),
+                "attributes": vars(note.attributes),
+                "resources": []
+            }
 
-        for wholenote in notelist.notes:
+            # path for every note in utf-8 encoding
+            note_dir = "{note_book}/{note_name}/".format(note_book=note_book.name, note_name=note.title).decode("utf-8")
 
-            meta_note = ""
+            if ressources and note.resources is not None:
 
-            wholenote = self.note_store.getNote(self.access_token, wholenote.guid, True, False, True, False)
-            # logger.info("Note guid: " + wholenote.guid)
-            # logger.info("Notebook guid: " + str(wholenote.notebookGuid))
-            booktitlelist.append(self.note_store.getNotebook(self.access_token, wholenote.notebookGuid).name)
+                # downloading every resource in note
+                for res_guid in note.resources:
+                    res = self.note_store.getResource(res_guid.guid, True, True, True, True)
 
-            if not os.path.exists(self.path + booktitlelist[counter].decode('utf-8') + '/' + wholenote.title):
-                os.makedirs(self.path + booktitlelist[counter].decode('utf-8') + '/' + wholenote.title)
+                    # TODO: if user wants to overwrite add param here
+                    res_name = res.attributes.fileName
+                    f = file_loader.FileHandler(res_name, "{}{}res/".format(self.path, note_dir), create=True, mode=None,  binary=True)
+                    f.set_all(res.data.body)
+                    f.dump()
 
-            # meta of Note
-            meta_note = "Title: " + wholenote.title + " " + \
-                        "Created: " + datetime.fromtimestamp(wholenote.created / 1000).strftime(
-                "%A, %B %d, %Y %H:%M:%S") + " " + \
-                        "Updated: " + datetime.fromtimestamp(wholenote.updated / 1000).strftime(
-                "%A, %B %d, %Y %H:%M:%S") + "\n"
-            meta_note = meta_note + "Tags: " + str(self.note_store.getNoteTagNames(wholenote.guid)) + "\n"
-            meta_note = meta_note + str(wholenote.attributes) + "\n"
+                    if f.file_hash != res.data.bodyHash:
+                        self.logger.warn("hash of file: {} is not correct".format(res_name))
 
-            if wholenote.resources is not None:
-                for guids in wholenote.resources:
+                    note_meta["resources"].append(vars(res.attributes))
 
-                    # logger.info("File guid: " + guids.guid)
-                    resource = self.note_store.getResource(guids.guid, True, True, True, True)
+            # main content file of note
+            f = file_loader.FileHandler("content", self.path + note_dir, create=True, mode="xml")
+            f.set_all(note.content)
+            f.dump()
 
-                    # path with filename and File extension
-                    file_namepath = self.path + booktitlelist[counter].decode(
-                        'utf-8') + '/' + wholenote.title + '/' + resource.attributes.fileName.decode('utf-8')
+            # stores metadata of note
+            f = file_loader.FileHandler("meta", self.path + note_dir, create=True, mode="json")
+            f.set_all(note_meta)
+            f.dump()
 
-                    if os.path.exists(file_namepath) and resource.data.bodyHash == krypto_manager.md5(file_namepath):
-                        print(file_namepath + " schon da")  # !!!tmp!!!
-                    else:
-                        file_content = resource.data.body  # raw data of File
-                        with open(file_namepath, "wb") as f:  # create file with corresponding File extension
-                            f.write(file_content)
+            self.logger.info("downloaded note: {}".format(note_book.name))
 
-                    if resource.data.bodyHash != krypto_manager.md5(file_namepath):  # Hash check
-                        print("ALARM")  # !!!tmp!!!
-
-                    meta_note = meta_note + str(resource.attributes) + "\n"  # meta of file
-
-            with open(self.path + booktitlelist[counter].decode('utf-8') + '/' + wholenote.title + '/' + 'text.txt',
-                      "w+") as f:
-                f.write(wholenote.content)  # write and download txt of file
-
-            with open(self.path + booktitlelist[counter].decode('utf-8') + '/' + wholenote.title + '/' + 'meta.txt',
-                      "w+") as f:
-                f.write(meta_note)  # write meta.txt with metadata
-
-            counter = counter + 1
-
-# TODO: Tags in Meta funkt nicht aber kp warum
-# TODO: "a mit punkten drueber" in meta nicht richtig / irgendwas mit unicode
 # TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
 # TODO download mit tags (funkt nicht in sandbox)

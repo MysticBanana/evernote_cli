@@ -20,13 +20,14 @@ def file_hash(file_path, hash_type="sha256"):
     with open(file_path, "rb") as _file:
         content = _file.read()
 
-    hash_type = None
-
     if hash_type == "sha256":
         hash_type = hashlib.sha256()
 
     elif hash_type == "md5":
         hash_type = hashlib.md5()
+
+    else:
+        return False
 
     hash_type.update(content)
     return hash_type.digest()

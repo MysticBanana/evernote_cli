@@ -5,7 +5,7 @@ from helper import krypto_manager
 
 class GlobalFileManager:
     def __init__(self, controller):
-        self.main_config = file_loader.FileHandler(file_name=".config", controller=controller)
+        self.main_config = file_loader.FileHandler(file_name=".config", mode="json", controller=controller)
         self.controller = controller
 
     def setup_logging(self):
@@ -19,7 +19,7 @@ class GlobalFileManager:
                 self.logger.warning("File does not exists: " + str(path))
                 os.makedirs(path)
 
-        self.credentials = file_loader.FileHandler(file_name=".credentials", controller=self.controller)
+        self.credentials = file_loader.FileHandler(file_name=".credentials", mode="json", controller=self.controller)
 
     def get_api_key(self):
         return self.main_config.get("key")

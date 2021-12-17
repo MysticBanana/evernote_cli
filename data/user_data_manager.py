@@ -28,7 +28,7 @@ class UserDataManager(object):
         self.user_name = user_name
         self.user_password = password
 
-        self.user_config = file_loader.FileHandler(file_name=".user_info", path=self.user_path, controller=self.controller)
+        self.user_config = file_loader.FileHandler(file_name=".user_info", path=self.user_path, mode="json", controller=self.controller)
         self.user_log = None
         self.user_key = None
         self.password = password
@@ -37,6 +37,12 @@ class UserDataManager(object):
             return
 
         self.init_files()
+
+        # user decryption
+        # if self.encryption_level > 1:
+        #     self.decrypt()
+
+
 
         # self.get_files(self.encrypt)
 
@@ -52,7 +58,7 @@ class UserDataManager(object):
 
 
     def init_files(self):
-        #self.user_log = file_loader.FileHandler(file_name="log", path=self.user_path, controller=self.controller, mode="log")
+        #self.user_log = file_loader.FileHandler(file_name="log", path=self.user_path, controller=self.controller, mode="json", mode="log")
         self.user_key = self.user_config.get("key", None)
         self.encryption_level = 2
 
@@ -85,7 +91,7 @@ class UserDataManager(object):
             k.encrypt(i[0], i[1])
 
         for i in path:
-            os.remove(i[0] + i[1])
+            os.remove(i[0].decode('utf-8') + i[1].decode('utf-8'))
 
     def get_files(self):
 
@@ -154,9 +160,6 @@ class UserDataManager(object):
                 files.extend(map(lambda n: os.path.join(*n), zip([dirpath] * len(filenames), filenames)))
 
         print(files)
-
-    def __del__(self):
-        pass #self.user_config.dump()
 
 
 if __name__ == "__main__":
