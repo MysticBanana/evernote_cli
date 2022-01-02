@@ -119,11 +119,10 @@ class Evernote:
 
     def refresh(self, params):
         pass
-    ##########################################
-    ##########################################
 
     def setup_logging(self, level=logging.INFO):
         """
+        Used to make global configurations for the logger (format etc)
         :param level:
         """
         formatter = logging.Formatter('%(asctime)s [%(levelname)s] [%(name)s] %(message)s')
@@ -141,14 +140,22 @@ class Evernote:
         self.logger.addHandler(self.log_handler)
 
     def get_logger(self):
+        """
+        Returns logging object of Evernote object
+        :return:
+        """
         return self.logger
 
     def get_log_handler(self):
+        """
+        Returns logging handler to create own logger objects in different classes with global configuration
+        :return:
+        """
         return self.log_handler
 
     def create_logger(self, name):
         """
-
+        Return a logger object with the name of the var
         :param name:
         :return:
         """

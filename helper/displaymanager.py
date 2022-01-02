@@ -1,5 +1,5 @@
 import enum
-import param_loader_2
+# import param_loader_2
 
 arguments = {
     "user":
@@ -256,6 +256,8 @@ class DisplayManager:
         self.controller = controller
         self.logger = controller.create_logger("Display")
 
+        self.tab_size = "   "
+
     def default_display(self, display_text):
         self.logger.debug(display_text)
 
@@ -270,32 +272,51 @@ class DisplayManager:
     def get_dict(self, arg="-h"):
         self.help_dict = param_loader_2.ArgumentParser.args_dict
 
-    def print_help(self, helptext):
+    def print_help(self, ret_dict=None, tab_counter=0):
+        ret_dict = ret_dict if ret_dict else arguments
 
-        string_ausgabetext = ""
+        for k, v in ret_dict.items():
 
-        for k, v in arguments.items():
-            for i, o in v.items():
-                if type(o) == dict:
-                    if "opt_str" in o:
-                        string = "{opt_str} <{metavar}> {helptext} \n".format(opt_str=o["opt_str"],
-                                                                              metavar=o["metavar"], helptext=o["help"])
-                        print(string)
-
-                    else:
-                        for o, y in o.iteritems():
-                            if type(y) == dict:
-                                if "opt_str" in y:
-                                    string = "{opt_str} <{metavar}> {helptext} \n".format(opt_str=y["opt_str"],
-                                                                                          metavar=y["metavar"],
-                                                                                          helptext=y["help"])
-                                    print(string)
+            if type(v) == dict:
+                if "opt_str" in v:
+                    string = "{tabs}{opt_str} <{metavar}> {helptext}".format(opt_str=v["opt_str"],
+                                                                             metavar=v["metavar"], helptext=v["help"],
+                                                                             tabs=(self.tab_size * tab_counter))
+                    print(string)
+                else:
+                    self.print_help(v, tab_counter + 1)
 
 class EvernoteException(BaseException):
     class Exceptions(enum.Enum):
         pass
+        token = {
+            "subparser": False,
+            "opt_str": ["token"],
+            "action": None,
+            "nargs": 1,
+            "const": None,
+            "default": None,
+            "type": str,
+            "choices": None,
+            "help": "Your usertoken for Evernote",
+            "metavar": "TOKEN"
+        }
+        string = "{} <{}> {}".format(token["opt_str"], token["metavar"], token["help"])
 
+def _print_help(ret_dict=None, tab_counter=0):
+    ret_dict = ret_dict if ret_dict else arguments
+    tab_size = "   "
 
+    for k, v in ret_dict.items():
+
+        if type(v) == dict:
+            if "opt_str" in v:
+                string = "{tabs}{opt_str} <{metavar}> {helptext}".format(opt_str=v["opt_str"],
+                                                                          metavar=v["metavar"], helptext=v["help"],
+                                                                            tabs=(tab_size*(tab_counter-1)))
+                print(string)
+            else:
+                _print_help(v, tab_counter+1)
 
 if __name__ == "__main__":
-    pass
+    _print_help()
