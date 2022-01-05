@@ -23,6 +23,7 @@ class ArgumentParser():
         "user":
             {
                 "opt_str": ["-u", "--user"],
+                "help": "used in combination with --new or --passwd",
                 "require": {
                     "username": True
                 },
@@ -37,12 +38,15 @@ class ArgumentParser():
                 "passwd":
                     {
                         "opt_str": ["-p", "--passwd"],
+                        "help": "input your stupid password after",
                         "require": {
                             "password": True
                         },
                         "change":
                             {
                                 "opt_str": ["-c", "--change"],
+                                "help": "change stuff ",
+                                "require": {},
                                 "new_pwd":
                                     {
                                         "opt_str": ["-p", "--passwd"],
@@ -72,7 +76,8 @@ class ArgumentParser():
                         "refresh":
                             {
                                 "opt_str": ["-r", "--refresh"],
-                                "help": "synchronize your files with the cloud"
+                                "help": "synchronize your files with the cloud",
+                                "require": {}
                             },
                         "encrypt":
                             {

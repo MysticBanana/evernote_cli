@@ -35,6 +35,13 @@ class Evernote:
 
         # TESTING
         # User login
+
+        dm = displaymanager.DisplayManager(self)
+        a = dm.get_usage_command("-c")
+        b = dm.get_help_tree()
+
+        dm.print_help("-c")
+
         tmp_user_name = "mneuhaus"
         tmp_user_password = "passwd123"
         tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
