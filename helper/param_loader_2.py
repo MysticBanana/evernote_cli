@@ -211,6 +211,8 @@ class ArgumentParser():
                     # Authentication failed
                     self.error_msg(3)
 
+                user = self.controller.global_data_manager.get_user(self.params["username"], self.params["passwd"])
+
                 if nr_of_args < 5:
                     # argument is missing
                     self.error_msg(2, ["<PASSWORD>", "--show, --change, --download, --find, --delete OR --sync"])
@@ -252,7 +254,7 @@ class ArgumentParser():
                 elif self.arg_list[4] in passwd_dict["download"]["opt_str"]:
                     self.params["func"] = "download"
                     if nr_of_args == 5:
-                        self.params["encryption_lvl"] = 0
+                        self.params["encryption_lvl"] = user.encryption_level
                         self.params["overwrite"] = False
                     else:
                         try:
@@ -270,7 +272,7 @@ class ArgumentParser():
                                 self.error_msg(4, [self.arg_list[5]])
                             self.params["overwrite"] = True
                             if nr_of_args == 6:
-                                self.params["encryption_lvl"] = 0
+                                self.params["encryption_lvl"] = user.encryption_level
                             elif nr_of_args >= 7:
                                 try:
                                     encrypt_lvl = int(self.arg_list[6])
@@ -303,12 +305,10 @@ class ArgumentParser():
                             if nr_of_args >= 7:
                                 self.warning_msg(arguments=self.arg_list[6:])
                         except Exception:
-                            self.params["encryption_lvl"] = 0
+                            self.params["encryption_lvl"] = user.encryption_level
                             self.warning_msg(arguments=self.arg_list[5:])
                     else:
-                        self.params["encryption_lvl"] = 0
-
-
+                        self.params["encryption_lvl"] = user.encryption_level
 
                 # when entering ... (-de | --decrypt)
                 elif self.arg_list[4] in passwd_dict["decrypt"]["opt_str"]:

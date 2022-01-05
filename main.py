@@ -31,6 +31,8 @@ class Evernote:
             "decrypt": self.decrypt
         }
 
+
+
         # TESTING
         # User login
         tmp_user_name = "mneuhaus"
@@ -43,16 +45,17 @@ class Evernote:
         # CHECK LOGIN
         check = self.global_data_manager.check_user_hash(tmp_user_name, tmp_password_hash)
         print check
+        self.user = None
 
         # PARSER return Dictionary with information about parameter and function
-        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -e 2 h"
-        #args = "-u " + tmp_user_name + " -n S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494 passwd123"
+        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -d 0"
+        #args = "-u " + tmp_user_name + " -n S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494 " + tmp_user_password
         par = param_loader_2.ArgumentParser(self, args)
         params = par.parser()
-        #self.username = params["username"]
-        #self.passwd = params["passwd"]
+        self.username = params["username"]
+        self.passwd = params["passwd"]
         print params
-        #self.function[params["func"]](params)
+        self.function[params["func"]](params)
 
         #dm = displaymanager.DisplayManager(self)
         #dm.print_help()
@@ -65,25 +68,26 @@ class Evernote:
     def help(self, params):
         """
         outputs help text on the terminal
-        :param params:
-        :return:
+        :param params: a dict containing all parsed arguments
         """
-        pass
+        self.displaymanager.print_help()
 
-    # create new user
     def new_user(self, params):
         """
-        :param params:
-        :return:
+        Create a new user
+        If usertoken equal to None, User is redirected to website
+        :param params: a dict containing all parsed arguments
         """
-        # if token None -> forwarding to website
         token = params["token"]
+        if token == None:
+            # TODO:
+            pass
         self.user = self.global_data_manager.create_user(user_name=self.username, user_password=self.passwd, token=token)
 
-    # change password
     def new_pwd(self, params):
         """
-        :param params:
+        Change Password
+        :param params: a dict containing all parsed arguments
         """
         new_pwd = params["new_pwd"]
         if not self.global_data_manager.is_user(self.username):
@@ -94,23 +98,23 @@ class Evernote:
 
     def new_path(self, params):
         """
-        :param params:
-        :return:
+        change download path
+        :param params: a dict containing all parsed arguments
         """
         new_path = params["new_path"]
         self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.set_custom_path(new_path)
 
-    # download all data
     def download(self, params):
         """
-        :param params:
-        :return:
+        Downloads all files from the accounts
+        :param params: a dict containing all parsed arguments
         """
         self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.test_download()
         self.user.download_user_data()
-        # self.user.encrypt()
+        self.user.encryption_level = params["encryption_lvl"]
+
 
     def encrypt(self, params):
         """
