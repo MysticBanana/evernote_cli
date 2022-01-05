@@ -60,17 +60,17 @@ class Evernote:
         # dm.get_dict("-u")
 
         # PARSER return Dictionary with information about parameter and function
-        args = "-u " + tmp_user_name + " -p " + tmp_user_password +" -d -a"
+        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -d -o"
         #args = "-u " + tmp_user_name + " -n S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494 passwd123"
         par = param_loader_2.ArgumentParser(self, args)
         params = par.parser()
-        self.username = params["username"]
-        self.passwd = params["passwd"]
+        #self.username = params["username"]
+        #self.passwd = params["passwd"]
         print params
-        self.function[params["func"]](params)
+        #self.function[params["func"]](params)
 
-        # dm = displaymanager.DisplayManager(self)
-        # dm.print_help(dict())
+        #dm = displaymanager.DisplayManager(self)
+        #dm.print_help()
 
         # user_data_manager
 
@@ -107,7 +107,10 @@ class Evernote:
 
     def show_file(self, params):
         file = params["file"]
+        self.user = self.global_data_manager.get_user(self.username, self.passwd)
+        self.user.decrypt()
 
+    # download all data
     def download(self, params):
         self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.test_download()
@@ -119,6 +122,8 @@ class Evernote:
 
     def refresh(self, params):
         pass
+    ##########################################
+    ##########################################
 
     def setup_logging(self, level=logging.INFO):
         """

@@ -31,145 +31,41 @@ class ArgumentParser():
         self.args_dict = {
             "help":
                 {
-                    "contains_args": False,
                     "opt_str": ["-h", "--help"],
-                    "help_msg": "Show this help message and exit"
                 },
             "user":
                 {
-                    "contains_args": True,
                     "opt_str": ["-u", "--user"],
-                    "help_msg": "Actions that users need",
-                    "username":
-                        {
-                            "contains_args": False,
-                            "opt_str": ["<USERNAME>"],
-                            "help_msg": "the name of the user in Evernote",
-                        },
                     "new_user":
                         {
-                            "contains_args": True,
                             "opt_str": ["-n", "--new"],
-                            "help_msg": "Creat new user",
-                            "token_arg":
-                                {
-                                    "contains_args": False,
-                                    "opt_str": ["<TOKEN>"],
-                                    "help_msg": "the User-Token for evernote",
-                                },
-                            "passwd_arg":
-                                {
-                                    "contains_args": False,
-                                    "opt_str": ["<PASSWORD>"],
-                                    "help_msg": "the user's self-selected password",
-                                }
                         },
                     "passwd":
                         {
-                            "contains_args": True,
                             "opt_str": ["-p", "--passwd"],
-                            "help_msg": "\bActions that require authentication by password",
-                            "passwd_arg":
-                                {
-                                    "contains_args": False,
-                                    "opt_str": ["<PASSWORD>"],
-                                    "help_msg": "HELPMSG FOR PASSWD_ARG?"
-                                },
-                            "show":
-                                {
-                                    "contains_args": True,
-                                    "opt_str": ["-s", "--show"],
-                                    "help_msg": "HELPMSG FOR SHOW?",
-                                    "file":
-                                        {
-                                            "contains_args": True,
-                                            "opt_str": ["-f", "--file"],
-                                            "help_msg": "HELPMSG FOR SHOW FILE?",
-                                            "path_arg":
-                                                {
-                                                    "contains_args": False,
-                                                    "opt_str": ["<PATH|NOTE|NOTEBOOK>"],
-                                                    "help_msg": "\b\b\bHELPMSG FOR SHOW FILE PATH?",
-                                                }
-                                        },
-                                    "userdata":
-                                        {
-                                            "contains_args": False,
-                                            "opt_str": ["-u", "--userdata"],
-                                            "help_msg": "\bHELPMSG FOR SHOW USERDATA?",
-                                        },
-                                    "path":
-                                        {
-                                            "contains_args": True,
-                                            "opt_str": ["-p", "--path"],
-                                            "help_msg": "HELPMSG FOR SHOW PATH?",
-                                            "path":
-                                                {
-                                                    "contains_args": False,
-                                                    "opt_str": ["<NOTE|NOTEBOOK>"],
-                                                    "help_msg": "\b\bHELPMSG FOR SHOW PATH PATH_ARG?",
-                                                }
-                                        }
-                                },
                             "change":
                                 {
-                                    "contains_args": True,
                                     "opt_str": ["-c", "--change"],
-                                    "help_msg": "\bHELPMSG FOR CHANGE?",
                                     "new_pwd":
                                         {
-                                            "contains_args": True,
-                                            "opt_str": ["-b", "--passwd"],
-                                            "help_msg": "\bHELPMSG FOR CHANGE NEW_PWD?",
-                                            "new_pwd_arg":
-                                                {
-                                                    "contains_args": False,
-                                                    "opt_str": ["<NEW_PWD>"],
-                                                    "help_msg": "HELPMSG FOR CHANGE NEW_PWD <NEW_PWD>?"
-                                                }
+                                            "opt_str": ["-p", "--passwd"],
                                         },
                                     "new_path":
                                         {
-                                            "contains_args": True,
                                             "opt_str": ["-d", "--downloadpath"],
-                                            "help_msg": "\b\bHELPMSG FOR CHANGE NEW_PATH?",
-                                            "new_pwd_arg":
-                                                {
-                                                    "contains_args": False,
-                                                    "opt_str": ["<NEW_PATH>"],
-                                                    "help_msg": "HELPMSG FOR CHANGE NEW_PATH <NEW_PATH>?"
-                                                }
                                         }
                                 },
                             "download":
                                 {
-                                    "contains_args": True,
                                     "opt_str": ["-d", "--download"],
-                                    "help_msg": "\bHELPMSG FOR DOWNLOAD",
-                                    "all":
-                                        {
-                                            "contains_args": False,
-                                            "opt_str": ["-a", "--all"],
-                                            "help_msg": "\bHELPMSG FOR DOWNLOAD ALL"
-                                        }
-                                },
-                            "find":
-                                {
-                                    "contains_args": True,
-                                    "opt_str": ["-f", "--find"],
-                                    "help_msg": "HELPMSG FOR FIND",
-                                    "find_arg":
-                                        {
-                                            "contains_args": False,
-                                            "opt_str": ["<TAG|NOTENAME|NOTEBOOKNAME>"],
-                                            "help_msg": "\b\b\b\b\bHELPMSG FOR FIND ARG",
-                                        }
                                 },
                             "refresh":
                                 {
-                                    "contains_args": False,
                                     "opt_str": ["-r", "--refresh"],
-                                    "help_msg": "\bHELPMSG FOR REFRESH"
+                                },
+                            "encrypt":
+                                {
+                                    "opt_str": ["-e", "--encrypt"],
                                 }
                         }
                 }
@@ -178,8 +74,15 @@ class ArgumentParser():
 
         self.arg_list = args.split()
 
-    # Erstellen von Hilfe-Nachrichten
     def help_msg(self, arg_dict, seperator="", lvl=0):
+        """
+        remove eventually -> DISPLAY MANAGER
+        Used to output a help text
+        :param arg_dict:
+        :param seperator:
+        :param lvl:
+        :return:
+        """
         sep = seperator
         for i in dict(sorted(arg_dict.items(), key=operator.itemgetter(0))):
             if i in ["contains_args", "opt_str", "help_msg", "idx"]:
@@ -191,8 +94,14 @@ class ArgumentParser():
             if arg_dict[i]["contains_args"]:
                 self.help_msg(arg_dict[i], sep + "\t", lvl + 1)
 
-    # Erstellt Error-Messages
     def error_msg(self, error_type, argument=[]):
+        """
+        remove eventually -> DISPLAY MANAGER
+        Used to output a error text
+        :param error_type:
+        :param argument:
+        :return:
+        """
         inp = "Input: " + str(self.arg_list) + "\n"
         msg = self.error[error_type]
         for i in argument:
@@ -202,6 +111,13 @@ class ArgumentParser():
         sys.exit()  # Error Type muss denke ich  geändert werden
 
     def warning_msg(self, warning_typ=None, arguments=[]):
+        """
+        remove eventually -> DISPLAY MANAGER
+        Used to output a warning text
+        :param warning_typ:
+        :param arguments:
+        :return:
+        """
         print "\nWARNING: "
         arg = ""
         for i in arguments:
@@ -209,63 +125,77 @@ class ArgumentParser():
         print "Argument(s) " + arg + " have no use and have not been processed"
 
     def parser(self):
+        """
+        parses the arguments entered by the user
+        :return: Arguments entered by the user
+        """
+        # Check general number of parameters
         nr_of_args = len(self.arg_list)
-        # allg. Anzahl der Parameter prüfen
-        if nr_of_args > 7 or nr_of_args == 0:
+        if  nr_of_args == 0:
             self.error_msg(0 if nr_of_args > 8 else 1, [str(nr_of_args)])
 
-        # Bei Eingabe von "-h"
+        # when entering -h or --help
         if self.arg_list[0] in self.args_dict["help"]["opt_str"]:
             self.params["func"] = "help"
 
-        # Bei Eingabe von "-u <Username> ..."
+        # when entering (-u | --user) <USERNAME> ...
         elif self.arg_list[0] in self.args_dict["user"]["opt_str"]:
             user_dict = self.args_dict["user"]
             try:
                 self.params["username"] = self.arg_list[1]
             except:
+                # argument is missing
                 self.error_msg(2, ["--user", "<USERNAME>"])
 
             if nr_of_args < 3:
+                # argument is missing
                 self.error_msg(2, ["<USERNAME>", "--new OR --passwd"])
 
-            # Bei Eingabe von "-u <Username> -t <Token> <Passwd>"
+            # when entering ... (-n | --new) [<TOKEN>] <PASSWORD> ...
             if self.arg_list[2] in user_dict["new_user"]["opt_str"]:
                 try:
                     if len(self.arg_list) == 5:
                         self.params["token"] = self.arg_list[3]
                         self.params["passwd"] = self.arg_list[4]
+                        if nr_of_args > 5:
+                            self.warning_msg(arguments=self.arg_list[5:])
                     else:
                         self.params["token"] = None
                         self.params["passwd"] = self.arg_list[3]
+                        if nr_of_args > 4:
+                            self.warning_msg(arguments=self.arg_list[4:])
                     self.params["func"] = "new_user"
-                    if nr_of_args > 5:
-                        self.warning_msg(arguments=self.arg_list[5:])
                 except:
-                    self.error_msg(2, ["--token", "<TOKEN> and <PASSWORD>"])
+                    # argument is missing
+                    self.error_msg(2, ["--token", "(<TOKEN> and) <PASSWORD>"])
 
-            # Bei Eingabe von "-u <Username> -p <Passwd> ..."
+            # when entering ... (-p | --passwd) <PASSSWORD> ...
             elif self.arg_list[2] in user_dict["passwd"]["opt_str"]:
                 passwd_dict = user_dict["passwd"]
                 try:
                     passwd_hash = krypto_manager.hash_str(self.arg_list[3])
                     self.params["passwd"] = passwd_hash
                 except:
+                    # argument is missing
                     self.error_msg(2, ["--passwd", "<PASSWORD>"])
 
+                # Check if login data are correct
                 check = self.controller.global_data_manager.check_user_hash(self.params["username"],
                                                                             self.params["passwd"])
                 if not check:
+                    # Authentication failed
                     self.error_msg(3)
 
                 if nr_of_args < 5:
+                    # argument is missing
                     self.error_msg(2, ["<PASSWORD>", "--show, --change, --download, --find, --delete OR --sync"])
-
-                # Bei Eingabe von "-u <Username> -p <Passwd> -s ...
+                '''
+                # when entering ... [-s | --show] ...
                 if self.arg_list[4] in passwd_dict["show"]["opt_str"]:
                     show_dict = passwd_dict["show"]
 
                     if nr_of_args < 6:
+                        # argument is missing
                         self.error_msg(2, ["--show", "--file, --userdata or --path"])
 
                     # Bei Eingabe von "-u <Username> -p <Passwd> -s -f <PATH|NOTE|NOTEBOOK>
@@ -289,65 +219,87 @@ class ArgumentParser():
                             self.error_msg(2, ["--path", "<NOTE|NOTEBOOK>"])
                     else:
                         self.error_msg(4, self.arg_list[5])
+                ''' # show
 
-                # Bei Eingabe von "-u <Username> -p <Passwd> -c ...
-                elif self.arg_list[4] in passwd_dict["change"]["opt_str"]:
+                # when entering ... (-c | --change) ...
+                if self.arg_list[4] in passwd_dict["change"]["opt_str"]:
                     change_dict = passwd_dict["change"]
 
                     if nr_of_args < 6:
-                        self.error_msg(2, ["--change", "--new_pwd or --download_path"])
+                        # argument is missing
+                        self.error_msg(2, ["--change", "--new_pwd or --downloadpath"])
 
-                    # Bei Eingabe von "-u <Username> -p <Passwd> -c -b <NEW_PWD>
+                    # when entering ... (-p | --passwd) <NEW PASSWORD>
                     if self.arg_list[5] in change_dict["new_pwd"]["opt_str"]:
                         try:
                             self.params["new_pwd"] = self.arg_list[6]
                             self.params["func"] = "new_pwd"
                         except:
+                            # argument is missing
                             self.error_msg(2, ["--new_pwd", "<NEW_PWD>"])
+                        if nr_of_args > 8:
+                            self.warning_msg(arguments=self.arg_list[7:])
 
-                    # Bei Eingabe von "-u <Username> -p <Passwd> -c -d <new_path>
+                    # when entering ... (-d | --downloadpath) <NEW PATH>
                     elif self.arg_list[5] in change_dict["new_path"]["opt_str"]:
                         try:
                             self.params["new_path"] = self.arg_list[6]
                             self.params["func"] = "new_path"
                         except:
+                            # argument is missing
                             self.error_msg(2, ["--new_path", "<NEW_PATH>"])
+                        if nr_of_args > 7:
+                            self.warning_msg(arguments=self.arg_list[7:])
                     else:
+                        # False Parameter
                         self.error_msg(4, self.arg_list[5])
-
-                # Bei Eingabe von "-u <Username> -p <Passwd> -d ...
+                # TODO Encrypt levl und overwrite unabhängig machen
+                # when entering ... (-d | --download) [<ENCRYPTION LVL>] [<OVERWRITE>]
                 elif self.arg_list[4] in passwd_dict["download"]["opt_str"]:
-                    download_dict = passwd_dict["download"]
-
-                    if nr_of_args < 6:
-                        self.error_msg(2, ["--download", "--all"])
-
-                    # Bei Eingabe von "-u <Username> -p <Passwd> -d -a
-                    if self.arg_list[5] in download_dict["all"]["opt_str"]:
-                        self.params["func"] = "download"
-                        if nr_of_args > 6:
-                            self.warning_msg(arguments=self.arg_list[6:])
+                    self.params["func"] = "download"
+                    if len(self.arg_list) == 7:
+                        if self.arg_list[5] in [0, 1, 2, 3]:
+                            self.params["encrypt_lvl"] = self.arg_list[5]
+                        else:
+                            # False Parameter
+                            self.error_msg(4, self.arg_list[5])
+                        if self.arg_list[6] in "-o":
+                            self.params["overwrite"] = True
                     else:
-                        self.error_msg(4, self.arg_list[5])
+                        self.params["encrypt_lvl"] = 0
+                        self.params["overwrite"] = False
+                    if nr_of_args > 7:
+                        self.warning_msg(arguments=self.arg_list[6:])
 
                 # Bei Eingabe von "-u <Username> -p <Passwd> -f <TAG|NOTENAME|NOTEBOOKNAME>
-                elif self.arg_list[4] in passwd_dict["find"]["opt_str"]:
-                    try:
-                        self.params["find"] = self.arg_list[5]
-                        self.params["func"] = "find"
-                        if nr_of_args > 6:
-                            self.warning_msg(arguments=self.arg_list[6:])
-                    except:
-                        self.error_msg(2, ["--find", "<TAG|NOTENAME|NOTEBOOKNAME>"])
+                #elif self.arg_list[4] in passwd_dict["find"]["opt_str"]:
+                #    try:
+                #        self.params["find"] = self.arg_list[5]
+                #        self.params["func"] = "find"
+                #       if nr_of_args > 6:
+                #            self.warning_msg(arguments=self.arg_list[6:])
+                #    except:
+                #        self.error_msg(2, ["--find", "<TAG|NOTENAME|NOTEBOOKNAME>"])
 
-                # Bei Eingabe von "-u <Username> -p <Passwd> -r
+
+                # when entering ... (-r | --refresh)
                 elif self.arg_list[4] in passwd_dict["refresh"]["opt_str"]:
                     self.params["func"] = "refresh"
                     if nr_of_args > 5:
                         self.warning_msg(arguments=self.arg_list[5:])
+
+                # when entering ... (-e | --encrypt)
+                elif self.arg_list[4] in passwd_dict["encrypt"]["opt_str"]:
+                    self.params["func"] = "encrypt"
+                    if nr_of_args > 5:
+                        self.warning_msg(arguments=self.arg_list[5:])
+                # when entering ... (-e | --encrypt)
+                elif self.arg_list[4] in passwd_dict["decrypt"]["opt_str"]:
+                    self.params["func"] = "decrypt"
+                    if nr_of_args > 5:
+                        self.warning_msg(arguments=self.arg_list[5:])
                 else:
+                    # false parameter
                     self.error_msg(4, self.arg_list[4])
+
         return self.params
-
-
-
