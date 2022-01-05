@@ -110,33 +110,14 @@ class ArgumentParser():
                "\n If you are using the program for the first time, create a new user with..."
                "\n\t... -u <username> -t <token> <passwd>. "
                "\n Otherwise check if password and username are entered correctly",
-            4: "False Parameter:\n The parameter <rep> does not exist in this context"
+            4: "False Parameter:\n The parameter <rep> does not exist in this context",
+            5: "You are entered <rep>, but there are only the levels 0, 1, 2, 4"
         }
 
 
         self.params = {}
 
         self.arg_list = args.split()
-
-    def help_msg(self, arg_dict, seperator="", lvl=0):
-        """
-        remove eventually -> DISPLAY MANAGER
-        Used to output a help text
-        :param arg_dict:
-        :param seperator:
-        :param lvl:
-        :return:
-        """
-        sep = seperator
-        for i in dict(sorted(arg_dict.items(), key=operator.itemgetter(0))):
-            if i in ["contains_args", "opt_str", "help_msg", "idx"]:
-                continue
-            opt_str = ""
-            for opt in arg_dict[i]["opt_str"]:
-                opt_str += opt + " "
-            print sep + opt_str + "\t" * (9 - lvl) + arg_dict[i]["help_msg"]
-            if arg_dict[i]["contains_args"]:
-                self.help_msg(arg_dict[i], sep + "\t", lvl + 1)
 
     def error_msg(self, error_type, argument=[]):
         """
@@ -150,7 +131,7 @@ class ArgumentParser():
         msg = self.error[error_type]
         for i in argument:
             msg = msg.replace("<rep>", i, 1)
-        err_msg = inp + self.usage + "\n" + msg
+        err_msg = inp + self.usage + "\n" + msg + "\n"
         sys.stderr.write(err_msg)
         sys.exit()  # Error Type muss denke ich  geändert werden
 
@@ -233,37 +214,6 @@ class ArgumentParser():
                 if nr_of_args < 5:
                     # argument is missing
                     self.error_msg(2, ["<PASSWORD>", "--show, --change, --download, --find, --delete OR --sync"])
-                '''
-                # when entering ... [-s | --show] ...
-                if self.arg_list[4] in passwd_dict["show"]["opt_str"]:
-                    show_dict = passwd_dict["show"]
-
-                    if nr_of_args < 6:
-                        # argument is missing
-                        self.error_msg(2, ["--show", "--file, --userdata or --path"])
-
-                    # Bei Eingabe von "-u <Username> -p <Passwd> -s -f <PATH|NOTE|NOTEBOOK>
-                    if self.arg_list[5] in show_dict["file"]["opt_str"]:
-                        try:
-                            self.params["file"] = self.arg_list[6]
-                            self.params["func"] = "show_file"
-                        except:
-                            self.error_msg(2, ["--file", "<PATH|NOTE|NOTEBOOK>"])
-
-                    # Bei Eingabe von "-u <Username> -p <Passwd> -s -u
-                    elif self.arg_list[5] in show_dict["userdata"]["opt_str"]:
-                        self.params["func"] = "show_userdata"
-
-                    # Bei Eingabe von "-u <Username> -p <Passwd> -s -p <NOTE|NOTEBOOK>
-                    elif self.arg_list[5] in show_dict["path"]["opt_str"]:
-                        try:
-                            self.params["path"] = self.arg_list[6]
-                            self.params["func"] = "show_path"
-                        except:
-                            self.error_msg(2, ["--path", "<NOTE|NOTEBOOK>"])
-                    else:
-                        self.error_msg(4, self.arg_list[5])
-                ''' # show
 
                 # when entering ... (-c | --change) ...
                 if self.arg_list[4] in passwd_dict["change"]["opt_str"]:
@@ -297,33 +247,41 @@ class ArgumentParser():
                     else:
                         # False Parameter
                         self.error_msg(4, self.arg_list[5])
-                # TODO Encrypt levl und overwrite unabhängig machen
-                # when entering ... (-d | --download) [<ENCRYPTION LVL>] [<OVERWRITE>]
+
+                # when entering ... (-d | --download) [<OVERWRITE>] [<ENCRYPTION LVL>]
                 elif self.arg_list[4] in passwd_dict["download"]["opt_str"]:
                     self.params["func"] = "download"
-                    if len(self.arg_list) == 7:
-                        if self.arg_list[5] in [0, 1, 2, 3]:
-                            self.params["encrypt_lvl"] = self.arg_list[5]
-                        else:
-                            # False Parameter
-                            self.error_msg(4, self.arg_list[5])
-                        if self.arg_list[6] in "-o":
-                            self.params["overwrite"] = True
-                    else:
-                        self.params["encrypt_lvl"] = 0
+                    if nr_of_args == 5:
+                        self.params["encryption_lvl"] = 0
                         self.params["overwrite"] = False
-                    if nr_of_args > 7:
-                        self.warning_msg(arguments=self.arg_list[6:])
-
-                # Bei Eingabe von "-u <Username> -p <Passwd> -f <TAG|NOTENAME|NOTEBOOKNAME>
-                #elif self.arg_list[4] in passwd_dict["find"]["opt_str"]:
-                #    try:
-                #        self.params["find"] = self.arg_list[5]
-                #        self.params["func"] = "find"
-                #       if nr_of_args > 6:
-                #            self.warning_msg(arguments=self.arg_list[6:])
-                #    except:
-                #        self.error_msg(2, ["--find", "<TAG|NOTENAME|NOTEBOOKNAME>"])
+                    else:
+                        try:
+                            encrypt_lvl = int(self.arg_list[5])
+                            if encrypt_lvl not in [0, 1, 2, 4]:
+                                # False Encryption Level selected
+                                self.error_msg(5, [str(encrypt_lvl)])
+                            self.params["encryption_lvl"] = encrypt_lvl
+                            self.params["overwrite"] = False
+                            if nr_of_args > 6:
+                                self.warning_msg(arguments=self.arg_list[6:])
+                        except Exception:
+                            overwrite = self.arg_list[5]
+                            if overwrite != "-o":
+                                self.error_msg(4, [self.arg_list[5]])
+                            self.params["overwrite"] = True
+                            if nr_of_args == 6:
+                                self.params["encryption_lvl"] = 0
+                            elif nr_of_args >= 7:
+                                try:
+                                    encrypt_lvl = int(self.arg_list[6])
+                                    if encrypt_lvl not in [0, 1, 2, 4]:
+                                        # False Encryption Level selected
+                                        self.error_msg(5, [str(encrypt_lvl)])
+                                    self.params["encryption_lvl"] = encrypt_lvl
+                                    if nr_of_args >= 8:
+                                        self.warning_msg(arguments=self.arg_list[7:])
+                                except Exception:
+                                    self.warning_msg(arguments=self.arg_list[6:])
 
 
                 # when entering ... (-r | --refresh)
@@ -332,16 +290,32 @@ class ArgumentParser():
                     if nr_of_args > 5:
                         self.warning_msg(arguments=self.arg_list[5:])
 
-                # when entering ... (-e | --encrypt)
+                # when entering ... (-e | --encrypt) [<ENCRYPTION LVL>]
                 elif self.arg_list[4] in passwd_dict["encrypt"]["opt_str"]:
                     self.params["func"] = "encrypt"
-                    if nr_of_args > 5:
-                        self.warning_msg(arguments=self.arg_list[5:])
-                # when entering ... (-e | --encrypt)
+                    if nr_of_args >= 6:
+                        try:
+                            encrypt_lvl = int(self.arg_list[5])
+                            if encrypt_lvl not in [0, 1, 2, 4]:
+                                # False Encryption Level selected
+                                self.error_msg(5, [str(encrypt_lvl)])
+                            self.params["encryption_lvl"] = encrypt_lvl
+                            if nr_of_args >= 7:
+                                self.warning_msg(arguments=self.arg_list[6:])
+                        except Exception:
+                            self.params["encryption_lvl"] = 0
+                            self.warning_msg(arguments=self.arg_list[5:])
+                    else:
+                        self.params["encryption_lvl"] = 0
+
+
+
+                # when entering ... (-de | --decrypt)
                 elif self.arg_list[4] in passwd_dict["decrypt"]["opt_str"]:
                     self.params["func"] = "decrypt"
                     if nr_of_args > 5:
                         self.warning_msg(arguments=self.arg_list[5:])
+
                 else:
                     # false parameter
                     self.error_msg(4, self.arg_list[4])

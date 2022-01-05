@@ -21,16 +21,14 @@ class Evernote:
         self.global_data_manager.init_files()
 
         self.function = {
-            "help": None,
+            "help": self.help,
             "new_user": self.new_user,
-            "show_path": self.new_path,
-            "show_userdata": self.show_userdata,
-            "show_file": self.show_file,
             "new_pwd": self.new_pwd,
             "new_path": self.new_path,
             "download": self.download,
-            "find": self.find,
-            "refresh": self.refresh
+            "refresh": self.refresh,
+            "encrypt": self.encrypt,
+            "decrypt": self.decrypt
         }
 
         # TESTING
@@ -46,21 +44,8 @@ class Evernote:
         check = self.global_data_manager.check_user_hash(tmp_user_name, tmp_password_hash)
         print check
 
-        # ENCRYPTING USER
-        # self.user = self.global_data_manager.get_user(tmp_user_name, tmp_user_password)
-        # self.user.encrypt()
-        # self.user.decrypt()
-
-        # download with key
-        # self.user.test_download()
-        # work in progress
-        # user.get_all_files()
-
-        # dm = displaymanager.DisplayManager(self)
-        # dm.get_dict("-u")
-
         # PARSER return Dictionary with information about parameter and function
-        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -d -o"
+        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -e 2 h"
         #args = "-u " + tmp_user_name + " -n S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494 passwd123"
         par = param_loader_2.ArgumentParser(self, args)
         params = par.parser()
@@ -77,15 +62,29 @@ class Evernote:
     #####################
     # all start methods #
     #####################
+    def help(self, params):
+        """
+        outputs help text on the terminal
+        :param params:
+        :return:
+        """
+        pass
 
     # create new user
     def new_user(self, params):
+        """
+        :param params:
+        :return:
+        """
         # if token None -> forwarding to website
         token = params["token"]
         self.user = self.global_data_manager.create_user(user_name=self.username, user_password=self.passwd, token=token)
 
     # change password
     def new_pwd(self, params):
+        """
+        :param params:
+        """
         new_pwd = params["new_pwd"]
         if not self.global_data_manager.is_user(self.username):
             return
@@ -94,34 +93,45 @@ class Evernote:
         self.global_data_manager.credentials.dump()
 
     def new_path(self, params):
+        """
+        :param params:
+        :return:
+        """
         new_path = params["new_path"]
         self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.set_custom_path(new_path)
 
-
-    def show_path(self, params):
-        path = params["path"]
-
-    def show_userdata(self, params):
-        pass
-
-    def show_file(self, params):
-        file = params["file"]
-        self.user = self.global_data_manager.get_user(self.username, self.passwd)
-        self.user.decrypt()
-
     # download all data
     def download(self, params):
+        """
+        :param params:
+        :return:
+        """
         self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.test_download()
         self.user.download_user_data()
         # self.user.encrypt()
 
-    def find(self, params):
-        find_param = params["find"]
+    def encrypt(self, params):
+        """
+        :return:
+        """
+        pass
+
+    def decrypt(self, params):
+        """
+        :param params:
+        :return:
+        """
+        pass
 
     def refresh(self, params):
+        """
+        :param params:
+        :return:
+        """
         pass
+
     ##########################################
     ##########################################
 
