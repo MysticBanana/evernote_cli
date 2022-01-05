@@ -45,7 +45,7 @@ def md5(fname):
 
 class KryptoManager:
     def __init__(self, key):
-        salt = b"sdffadh"
+        salt = b"sdffa2edjdh"
 
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),

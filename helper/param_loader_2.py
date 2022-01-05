@@ -7,7 +7,48 @@ import data.user_data_manager as udm
 
 
 class ArgumentParser():
-    args_dict = dict()
+    args_dict = {
+        "help":
+            {
+                "opt_str": ["-h", "--help"],
+            },
+        "user":
+            {
+                "opt_str": ["-u", "--user"],
+                "new_user":
+                    {
+                        "opt_str": ["-n", "--new"],
+                    },
+                "passwd":
+                    {
+                        "opt_str": ["-p", "--passwd"],
+                        "change":
+                            {
+                                "opt_str": ["-c", "--change"],
+                                "new_pwd":
+                                    {
+                                        "opt_str": ["-p", "--passwd"],
+                                    },
+                                "new_path":
+                                    {
+                                        "opt_str": ["-d", "--downloadpath"],
+                                    }
+                            },
+                        "download":
+                            {
+                                "opt_str": ["-d", "--download"],
+                            },
+                        "refresh":
+                            {
+                                "opt_str": ["-r", "--refresh"],
+                            },
+                        "encrypt":
+                            {
+                                "opt_str": ["-e", "--encrypt"],
+                            }
+                    }
+            }
+    }
 
     def __init__(self, controller, args):
         self.controller = controller
@@ -28,48 +69,7 @@ class ArgumentParser():
             4: "False Parameter:\n The parameter <rep> does not exist in this context"
         }
 
-        self.args_dict = {
-            "help":
-                {
-                    "opt_str": ["-h", "--help"],
-                },
-            "user":
-                {
-                    "opt_str": ["-u", "--user"],
-                    "new_user":
-                        {
-                            "opt_str": ["-n", "--new"],
-                        },
-                    "passwd":
-                        {
-                            "opt_str": ["-p", "--passwd"],
-                            "change":
-                                {
-                                    "opt_str": ["-c", "--change"],
-                                    "new_pwd":
-                                        {
-                                            "opt_str": ["-p", "--passwd"],
-                                        },
-                                    "new_path":
-                                        {
-                                            "opt_str": ["-d", "--downloadpath"],
-                                        }
-                                },
-                            "download":
-                                {
-                                    "opt_str": ["-d", "--download"],
-                                },
-                            "refresh":
-                                {
-                                    "opt_str": ["-r", "--refresh"],
-                                },
-                            "encrypt":
-                                {
-                                    "opt_str": ["-e", "--encrypt"],
-                                }
-                        }
-                }
-        }
+
         self.params = {}
 
         self.arg_list = args.split()

@@ -18,7 +18,6 @@ class UserDataManager(object):
     def __init__(self, controller, path, user_name, password):
         # todo: set option in user_info for encryption_level
 
-
         self.controller = controller
         self.logger = self.controller.create_logger(user_name)
         self.logger.info("Initializing user: {}".format(user_name))
