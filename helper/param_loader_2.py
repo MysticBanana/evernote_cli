@@ -7,44 +7,88 @@ import data.user_data_manager as udm
 
 
 class ArgumentParser():
+    # require = {username: true/false # if false then username is optional
+    # if require = {(username, password): ... # xor
+    # if no require and parameter following then xor these
+
     args_dict = {
         "help":
             {
                 "opt_str": ["-h", "--help"],
+                "help": "shows this menu or helptext for command",
+                "require": {
+                    "parameter": False
+                }
             },
         "user":
             {
                 "opt_str": ["-u", "--user"],
+                "require": {
+                    "username": True
+                },
                 "new_user":
                     {
                         "opt_str": ["-n", "--new"],
+                        "help": "create new user",
+                        "require": {
+                            "token": False
+                        }
                     },
                 "passwd":
                     {
                         "opt_str": ["-p", "--passwd"],
+                        "require": {
+                            "password": True
+                        },
                         "change":
                             {
                                 "opt_str": ["-c", "--change"],
                                 "new_pwd":
                                     {
                                         "opt_str": ["-p", "--passwd"],
+                                        "help": "change password",
+                                        "require": {
+                                            "new password": True
+                                        }
                                     },
                                 "new_path":
                                     {
                                         "opt_str": ["-d", "--downloadpath"],
+                                        "help": "change download path",
+                                        "require": {
+                                            "path": True
+                                        }
                                     }
                             },
                         "download":
                             {
                                 "opt_str": ["-d", "--download"],
+                                "help": "download all files",
+                                "require": {
+                                    "overwrite": False,
+                                    "encryption level": False
+                                }
                             },
                         "refresh":
                             {
                                 "opt_str": ["-r", "--refresh"],
+                                "help": "synchronize your files with the cloud"
                             },
                         "encrypt":
                             {
                                 "opt_str": ["-e", "--encrypt"],
+                                "help": "encrypting your files",
+                                "require": {
+                                    "encryption level": False
+                                }
+                            },
+                        "decrypt":
+                            {
+                                "opt_str": ["-d", "--decrypt"],
+                                "help": "decrypting your files",
+                                "require": {
+                                    "encryption level": False
+                                }
                             }
                     }
             }
