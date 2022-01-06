@@ -10,12 +10,12 @@ from django.views.generic import View
 
 def get_evernote_client(token=None):
     if token:
-        return EvernoteClient(token=token, sandbox=True)
+        return EvernoteClient(token=token, sandbox=False)
     else:
         return EvernoteClient(
             consumer_key=EN_CONSUMER_KEY,
             consumer_secret=EN_CONSUMER_SECRET,
-            sandbox=True
+            sandbox=False
         )
 
 
@@ -56,6 +56,7 @@ def callback(request):
         return redirect('/')
 
     controller.user.user_key = token
+    print(token)
     controller.user.dump_config()
     controller.user.user_config.dump()
     controller.logger.info("setting user key for user: {}".format(controller.user.user_name))
