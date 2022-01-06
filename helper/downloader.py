@@ -18,7 +18,7 @@ class EvernoteAccess(EvernoteClient):
 class EvernoteUser(EvernoteAccess):
     # for getting user specific data from evernote
     def __init__(self, user_data, **kwargs):
-        super(EvernoteUser, self).__init__(user_data, **kwargs)
+        super(EvernoteUser, self).__init__(user_data, sandbox=False, **kwargs)
 
         self.user_store = self.get_user_store()
         self.user_info = self.user_store.getUser()
@@ -29,7 +29,7 @@ class EvernoteUser(EvernoteAccess):
 
 class EvernoteNote(EvernoteAccess):
     def __init__(self, user_data, **kwargs):
-        super(EvernoteNote, self).__init__(user_data, **kwargs)
+        super(EvernoteNote, self).__init__(user_data, sandbox=False, **kwargs)
 
         self.note_store = self.get_note_store()
         self.filter = NoteFilter(ascending=True)
