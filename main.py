@@ -28,7 +28,8 @@ class Evernote:
             "download": self.download,
             "refresh": self.refresh,
             "encrypt": self.encrypt,
-            "decrypt": self.decrypt
+            "decrypt": self.decrypt,
+            "new_encrypt_lvl": self.new_encryption_lvl
         }
 
         # TESTING
@@ -60,7 +61,7 @@ class Evernote:
         self.username = params["username"]
         self.passwd = params["passwd"]
         print params
-        self.function[params["func"]](params)
+        #self.function[params["func"]](params)
 
         #self.user_web_auth()
         c = krypto_manager.CompressManager(self, self.username, self.passwd)
@@ -114,6 +115,15 @@ class Evernote:
         self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.set_custom_path(new_path)
 
+    def new_encryption_lvl(self, params):
+        """
+        change encryption level
+        :param params: a dict containing all parsed arguments
+        """
+        new_encrypt_lvl = params["new_encrypt_lvl"]
+        self.user = self.global_data_manager.get_user(self.username, self.passwd)
+        self.user.set_encryption_lvl(new_encrypt_lvl)
+
     def download(self, params):
         """
         Downloads all files from the accounts
@@ -122,7 +132,7 @@ class Evernote:
         self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.test_download()
         self.user.download_user_data()
-        self.user.encryption_level = params["encryption_lvl"]
+        self.user.set_encryption_lvl(params["encryption_lvl"])
 
     def encrypt(self, params):
         """

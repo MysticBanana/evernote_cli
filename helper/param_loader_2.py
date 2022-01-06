@@ -62,7 +62,15 @@ class ArgumentParser():
                                         "require": {
                                             "path": True
                                         }
-                                    }
+                                    },
+                                "new_encrypt":
+                                    {
+                                        "opt_str": ["-e", "--encrypt"],
+                                        "help": "change download encryption level",
+                                        "require": {
+                                            "encryption lvl": True
+                                        }
+                                    },
                             },
                         "download":
                             {
@@ -249,6 +257,22 @@ class ArgumentParser():
                         except:
                             # argument is missing
                             self.error_msg(2, ["--new_path", "<NEW_PATH>"])
+                        if nr_of_args > 7:
+                            self.warning_msg(arguments=self.arg_list[7:])
+                    # when entering ... (-e | --encrypt) <NEW ENCRYPT LVL>
+                    elif self.arg_list[5] in change_dict["new_encrypt"]["opt_str"]:
+                        try:
+                            encrypt_lvl = int(self.arg_list[6])
+                            if encrypt_lvl in [0, 1, 2, 4]:
+                                self.params["new_encrypt_lvl"] = encrypt_lvl
+                            else:
+                                self.error_msg(5, [str(encrypt_lvl)])
+                            self.params["func"] = "new_encrypt_lvl"
+                        except IndexError:
+                            # argument is missing
+                            self.error_msg(2, ["--encrypt", "<NEW_ENCRYPTION_LVL>"])
+                        except :
+                            self.error_msg(4, self.arg_list[6])
                         if nr_of_args > 7:
                             self.warning_msg(arguments=self.arg_list[7:])
                     else:

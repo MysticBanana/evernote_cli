@@ -133,6 +133,9 @@ class UserDataManager(object):
             # TODO: Error ausgeben
             # TODO: In property umwandeln
 
+    def set_encryption_lvl(self, encrypt_lvl):
+        self.encryption_level = encrypt_lvl
+
     # downloads user data and stores it in the .user_info.json of the respective user.
     # More user data can be downloaded by expanding the content of the downloaded_data variable
     def download_user_data(self):
