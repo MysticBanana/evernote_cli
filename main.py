@@ -54,18 +54,19 @@ class Evernote:
         self.user = None
 
         # PARSER return Dictionary with information about parameter and function
-        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -d 0 "
+        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -c -e 4 "
         #args = "-u " + tmp_user_name + " -n S=s706:U=db74969:E=17eca6df980:C=17e2fef3180:P=185:A=mneuhaus:V=2:H=c0a3120a5067762e029985155fbdeb9a " + tmp_user_password
         par = param_loader_2.ArgumentParser(self, args)
         params = par.parser()
         self.username = params["username"]
         self.passwd = params["passwd"]
         print params
-        #self.function[params["func"]](params)
+        self.function[params["func"]](params)
+        print self.user.encryption_level
 
         #self.user_web_auth()
-        c = krypto_manager.CompressManager(self, self.username, self.passwd)
-        c.compress()
+        #c = krypto_manager.CompressManager(self, self.username, self.passwd)
+        #c.compress()
 
         #dm = displaymanager.DisplayManager(self)
         #dm.print_help()

@@ -54,6 +54,7 @@ class UserDataManager(object):
     def user_token(self, value):
         self.user_config.set("key", str(value))
         self.user_config.set("file_path", self.file_path)
+        self.user_config.set("encrypt_lvl", self.encryption_level)
         self.user_config.dump()
         self.user_key = value
 
@@ -135,6 +136,8 @@ class UserDataManager(object):
 
     def set_encryption_lvl(self, encrypt_lvl):
         self.encryption_level = encrypt_lvl
+        self.user_config.set("encrypt_lvl", self.encryption_level)
+        self.user_config.dump()
 
     # downloads user data and stores it in the .user_info.json of the respective user.
     # More user data can be downloaded by expanding the content of the downloaded_data variable
