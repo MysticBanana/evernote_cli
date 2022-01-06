@@ -8,6 +8,7 @@ import base64
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
+from zipfile import ZipFile
 
 
 def hash_str(string, hash_type="sha256"):
@@ -15,6 +16,7 @@ def hash_str(string, hash_type="sha256"):
         return hashlib.sha256(string).hexdigest()
     elif hash_type == "md5":
         return hashlib.md5(string).hexdigest()
+
 
 def file_hash(file_path, hash_type="sha256"):
     with open(file_path, "rb") as _file:
@@ -85,9 +87,29 @@ class KryptoManager:
             decrypted.write(self.fernet.decrypt(dec_content))
 
 
+class CompressManager():
+    def __init__(self, controller, username, password):
+        self.controller = controller
+        self.user = self.controller.global_data_manager.get_user(username, password)
+        self.path = self.user.file_path
+        self.path_zip = self.user.file_path_zip
+
+    def compress(self):
+        with ZipFile(self.path_zip, "w") as zipObj:
+            zipObj.write(self.path) # zipping dir
+        os.remove(self.path)
+
+    def decompress(self):
+        with ZipFile(self.path_zip, "r") as zipObj:
+            zipObj.extract(self.path)
+        #os.remove(self.path_zip)
+
+
+
 if __name__ == "__main__":
     key = b"password1234"
     # print base64.urlsafe_b64encode(key)
     k = KryptoManager(key)
     # k.encrypt("", "test_file.txt")
-    k.decrypt("", "gAAAAABhtU3TIbc6xf_LXW40a8WkTPQl2HbO3fh8MpRnlIn3HkaNpQrN3Pvm7P87SoWv4HHj6Drkdo6GkhXV_TcUP7zY9DK4fw==.enc")
+    k.decrypt("",
+              "gAAAAABhtU3TIbc6xf_LXW40a8WkTPQl2HbO3fh8MpRnlIn3HkaNpQrN3Pvm7P87SoWv4HHj6Drkdo6GkhXV_TcUP7zY9DK4fw==.enc")

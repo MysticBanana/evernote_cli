@@ -24,6 +24,7 @@ class UserDataManager(object):
 
         self.user_path = path
         self.file_path = "%sfiles/" % self.user_path
+        self.file_path_zip = self.file_path[:len(self.file_path)-1] + ".zip"
         self.user_name = user_name
         self.user_password = password
 
@@ -52,6 +53,7 @@ class UserDataManager(object):
     @user_token.setter
     def user_token(self, value):
         self.user_config.set("key", str(value))
+        self.user_config.set("file_path", self.file_path)
         self.user_config.dump()
         self.user_key = value
 
@@ -121,9 +123,10 @@ class UserDataManager(object):
 
     def set_custom_path(self, path):
         # check if path valid
-        if os.path.isdir(path):
+        if os.path.isdir(path) or path.endswith(".zip"):
             self.user_config.set("file_path", path)
             self.file_path = path
+            self.file_path_zip = path[:len(self.file_path)-1] + ".zip"
             self.user_config.dump()
         else:
             print "Path is no Dir"

@@ -31,8 +31,6 @@ class Evernote:
             "decrypt": self.decrypt
         }
 
-
-
         # TESTING
         # User login
 
@@ -55,14 +53,17 @@ class Evernote:
         self.user = None
 
         # PARSER return Dictionary with information about parameter and function
-        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -d 0"
-        #args = "-u " + tmp_user_name + " -n S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494 " + tmp_user_password
+        #args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -d 0 "
+        args = "-u " + tmp_user_name + " -n S=s1:U=96801:E=17d0a51ba20:C=17d052b5e20:P=185:A=mneuhaus:V=2:H=e1ed7d3b0b930361bf41826d8abd9494 " + tmp_user_password
         par = param_loader_2.ArgumentParser(self, args)
         params = par.parser()
         self.username = params["username"]
         self.passwd = params["passwd"]
         print params
-        self.function[params["func"]](params)
+        #self.function[params["func"]](params)
+
+        c = krypto_manager.CompressManager(self, self.username, self.passwd)
+        c.compress()
 
         #dm = displaymanager.DisplayManager(self)
         #dm.print_help()
@@ -121,7 +122,6 @@ class Evernote:
         self.user.test_download()
         self.user.download_user_data()
         self.user.encryption_level = params["encryption_lvl"]
-
 
     def encrypt(self, params):
         """
