@@ -41,7 +41,7 @@ class Evernote:
 
         dm.print_help("-c")
 
-        tmp_user_name = "mneuhaus"
+        tmp_user_name = ""
         tmp_user_password = "passwd123"
         tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
 

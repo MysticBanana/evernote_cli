@@ -189,7 +189,7 @@ class ArgumentParser():
                 # argument is missing
                 self.error_msg(2, ["<USERNAME>", "--new OR --passwd"])
 
-            # when entering ... (-n | --new) [<TOKEN>] <PASSWORD> ...
+            # when entering ... (-n | --new) [<TOKEN>] <PASSWORD>
             if self.arg_list[2] in user_dict["new_user"]["opt_str"]:
                 try:
                     if len(self.arg_list) == 5:
@@ -344,9 +344,13 @@ class ArgumentParser():
                     self.params["func"] = "decrypt"
                     if nr_of_args > 5:
                         self.warning_msg(arguments=self.arg_list[5:])
-
                 else:
                     # false parameter
-                    self.error_msg(4, self.arg_list[4])
-
+                    self.error_msg(4, [self.arg_list[4]])
+            else:
+                # false parameter
+                self.error_msg(4, [self.arg_list[2]])
+        else:
+            # false parameter
+            self.error_msg(4, [self.arg_list[2]])
         return self.params
