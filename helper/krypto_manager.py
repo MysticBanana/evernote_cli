@@ -107,9 +107,4 @@ class CompressManager():
 
 
 if __name__ == "__main__":
-    key = b"password1234"
-    # print base64.urlsafe_b64encode(key)
-    k = KryptoManager(key)
-    # k.encrypt("", "test_file.txt")
-    k.decrypt("",
-              "gAAAAABhtU3TIbc6xf_LXW40a8WkTPQl2HbO3fh8MpRnlIn3HkaNpQrN3Pvm7P87SoWv4HHj6Drkdo6GkhXV_TcUP7zY9DK4fw==.enc")
+    print hash_str("passwd123")

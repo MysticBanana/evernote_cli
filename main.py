@@ -20,6 +20,8 @@ class Evernote:
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
 
+        self.display_manager = displaymanager.DisplayManager(self)
+
         self.function = {
             "help": self.help,
             "new_user": self.new_user,
@@ -39,7 +41,7 @@ class Evernote:
         a = dm.get_usage_command("-c")
         b = dm.get_help_tree()
 
-        dm.print_help("-c")
+        # dm.print_help("-c")
 
         tmp_user_name = ""
         tmp_user_password = "passwd123"
@@ -54,15 +56,17 @@ class Evernote:
         self.user = None
 
         # PARSER return Dictionary with information about parameter and function
-        args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -c -e 4 "
+        # args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -c -e 4 "
+        args = " ".join(argv)
         #args = "-u " + tmp_user_name + " -n S=s706:U=db74969:E=17eca6df980:C=17e2fef3180:P=185:A=mneuhaus:V=2:H=c0a3120a5067762e029985155fbdeb9a " + tmp_user_password
-        par = param_loader_2.ArgumentParser(self, args)
-        params = par.parser()
+        self.par = param_loader_2.ArgumentParser(self, args)
+        params = self.par.parser()
         self.username = params["username"]
-        self.passwd = params["passwd"]
+        self.passwd = params["passwd"] # hashed
+        self.passwd_hash = krypto_manager.hash_str(tmp_user_password)
         print params
         self.function[params["func"]](params)
-        print self.user.encryption_level
+        # print self.user.encryption_level
 
         #self.user_web_auth()
         #c = krypto_manager.CompressManager(self, self.username, self.passwd)
@@ -81,7 +85,7 @@ class Evernote:
         outputs help text on the terminal
         :param params: a dict containing all parsed arguments
         """
-        self.displaymanager.print_help()
+        self.display_manager.print_help()
 
     def new_user(self, params):
         """
@@ -225,4 +229,8 @@ class Evernote:
 if __name__ == "__main__":
     print(sys.argv[1:])
 
-    e = Evernote(sys.argv[1:])
+    tmp_user_name = "mneuhaus"
+    tmp_user_password = "passwd123"
+
+    e = Evernote("-u {user_name} -p {password} -c -e 4".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    # e = Evernote(sys.argv[1:])
