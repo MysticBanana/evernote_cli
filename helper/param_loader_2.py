@@ -3,7 +3,7 @@ import sys
 import krypto_manager
 import operator
 
-import data.user_data_manager as udm
+import data.user as udm
 
 
 class ArgumentParser():
@@ -195,11 +195,13 @@ class ArgumentParser():
                     if len(self.arg_list) == 5:
                         self.params["token"] = self.arg_list[3]
                         self.params["passwd"] = self.arg_list[4]
+                        self.params["password"] = self.arg_list[3]
                         if nr_of_args > 5:
                             self.warning_msg(arguments=self.arg_list[5:])
                     else:
                         self.params["token"] = None
-                        self.params["passwd"] = self.arg_list[3]
+                        self.params["passwd"] = krypto_manager.hash_str(self.arg_list[3])
+                        self.params["password"] = self.arg_list[3]
                         if nr_of_args > 4:
                             self.warning_msg(arguments=self.arg_list[4:])
                     self.params["func"] = "new_user"
@@ -213,6 +215,7 @@ class ArgumentParser():
                 try:
                     passwd_hash = krypto_manager.hash_str(self.arg_list[3])
                     self.params["passwd"] = passwd_hash
+                    self.params["password"] = self.arg_list[3]
                 except:
                     # argument is missing
                     self.error_msg(2, ["--passwd", "<PASSWORD>"])
@@ -224,7 +227,7 @@ class ArgumentParser():
                     # Authentication failed
                     self.error_msg(3)
 
-                user = self.controller.global_data_manager.get_user(self.params["username"], self.params["passwd"])
+                # user = self.controller.global_data_manager.get_user(self.params["username"], self.params["passwd"])
 
                 if nr_of_args < 5:
                     # argument is missing
@@ -263,7 +266,7 @@ class ArgumentParser():
                     elif self.arg_list[5] in change_dict["new_encrypt"]["opt_str"]:
                         try:
                             encrypt_lvl = int(self.arg_list[6])
-                            if encrypt_lvl in [0, 1, 2, 4]:
+                            if encrypt_lvl in [0, 1, 2, 3, 4]:
                                 self.params["new_encrypt_lvl"] = encrypt_lvl
                             else:
                                 self.error_msg(5, [str(encrypt_lvl)])
@@ -283,7 +286,7 @@ class ArgumentParser():
                 elif self.arg_list[4] in passwd_dict["download"]["opt_str"]:
                     self.params["func"] = "download"
                     if nr_of_args == 5:
-                        self.params["encryption_lvl"] = user.encryption_level
+                        self.params["encryption_lvl"] = -1
                         self.params["overwrite"] = False
                     else:
                         try:
@@ -301,7 +304,7 @@ class ArgumentParser():
                                 self.error_msg(4, [self.arg_list[5]])
                             self.params["overwrite"] = True
                             if nr_of_args == 6:
-                                self.params["encryption_lvl"] = user.encryption_level
+                                self.params["encryption_lvl"] = -1
                             elif nr_of_args >= 7:
                                 try:
                                     encrypt_lvl = int(self.arg_list[6])
@@ -334,10 +337,10 @@ class ArgumentParser():
                             if nr_of_args >= 7:
                                 self.warning_msg(arguments=self.arg_list[6:])
                         except Exception:
-                            self.params["encryption_lvl"] = user.encryption_level
+                            self.params["encryption_lvl"] = -1
                             self.warning_msg(arguments=self.arg_list[5:])
                     else:
-                        self.params["encryption_lvl"] = user.encryption_level
+                        self.params["encryption_lvl"] = -1
 
                 # when entering ... (-de | --decrypt)
                 elif self.arg_list[4] in passwd_dict["decrypt"]["opt_str"]:

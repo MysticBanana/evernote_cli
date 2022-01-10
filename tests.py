@@ -7,9 +7,16 @@ class EvernoteTest(unittest.TestCase):
     def delete_user(self):
         tmp_user_name = "mneuhaus"
         tmp_user_password = "passwd123"
-
         controller = main.Evernote("-u {user_name} -p {password} -rm".format(user_name=tmp_user_name,
                                                                              password=tmp_user_password).split(" "))
+        controller.global_data_manager.remove_user(tmp_user_name)
+
+        tmp_user_name = "test"
+        tmp_user_password = "test"
+        controller = main.Evernote("-u {user_name} -p {password} -rm".format(user_name=tmp_user_name,
+                                                                             password=tmp_user_password).split(" "))
+        controller.global_data_manager.remove_user(tmp_user_name)
+
 
     def test_create(self):
         tmp_user_name = "mneuhaus"
@@ -49,9 +56,6 @@ class EvernoteTest(unittest.TestCase):
         self.assertIsNotNone(controller.user.user_password)
 
 
-
-    def check_changing_encryption(self):
-        pass
 
 
 

@@ -6,45 +6,52 @@ from helper import downloader, krypto_manager
 import file_loader
 from helper import downloader
 
-
-
-class UserDataManager(object):
+class User(object):
     class EncryptionLevel(enum.Enum):
-        DEFAULT = 0
-        COMPRESS = 1
-        ENCRYPT = 2
-        COMPRESS_ENCRYPT = 4
+        DEFAULT = 1
+        COMPRESS = 2
+        ENCRYPT = 3
+        COMPRESS_ENCRYPT = 6
 
     def __init__(self, controller, path, user_name, password):
-        # todo: set option in user_info for encryption_level
+        self._user_key = None
+        self._file_path = ""
+        self._encryption_level = self.EncryptionLevel.DEFAULT
+
+        self.user_name = user_name
+        self._password = password
+        # todo
+        self._password_hash = krypto_manager.hash_str(self._password)
 
         self.controller = controller
+
         self.logger = self.controller.create_logger(user_name)
         self.logger.info("Initializing user: {}".format(user_name))
 
         self.user_path = path
-        self.file_path = "%sfiles/" % self.user_path
-        self.file_path_zip = self.file_path[:len(self.file_path)-1] + ".zip"
-        self.user_name = user_name
-        self.user_password = password
+        # todo filepath auch zu begin mit in die config schreiben
+
+
+        self.decrypt_info()
 
         self.user_config = file_loader.FileHandler(file_name=".user_info", path=self.user_path, mode="json", controller=self.controller)
-        self.user_log = None
-        self.user_key = None
-        self.password = password
-
         if not self.user_config.exists:
+            # todo error handling
+            print "user_config does not exist"
             return
 
-        self.init_files()
+        self._user_key = self.user_config.get("key")
+        self._file_path = self.user_config.get("file_path", None)
+        if self._file_path is None:
+            self._file_path = "%sfiles/" % self.user_path
+        enc_level = self.user_config.get("encrypt_level", None)
+        if enc_level is not None:
+            self.encryption_level = enc_level
 
-        # user decryption
-        # if self.encryption_level > 1:
-        #     self.decrypt()
 
-
-
-        # self.get_files(self.encrypt)
+    @property
+    def file_path_zip(self):
+        return self._file_path[:-1] + ".zip"
 
     @property
     def user_token(self):
@@ -53,11 +60,43 @@ class UserDataManager(object):
     @user_token.setter
     def user_token(self, value):
         self.user_config.set("key", str(value))
-        self.user_config.set("file_path", self.file_path)
-        self.user_config.set("encrypt_lvl", self.encryption_level)
         self.user_config.dump()
         self.user_key = value
 
+    @property
+    def file_path(self):
+        return self._file_path
+
+    @file_path.setter
+    def file_path(self, value):
+        self._file_path = value
+        self.user_config.set("file_path", self.file_path)
+        self.user_config.dump()
+
+    @property
+    def encryption_level(self):
+        return self._encryption_level
+
+    @encryption_level.setter
+    def encryption_level(self, value):
+        self._encryption_level = value
+        # todo work around with enum
+
+
+        self.user_config.set("encrypt_level", self.encryption_level)
+        self.user_config.dump()
+
+    def decrypt_info(self):
+        _file_name = ".user_info.json.enc"
+        self.km = krypto_manager.KryptoManager(key=self._password, salt="user",
+                                               logger=self.controller.create_logger("Krypto"))
+
+        if not os.path.isfile(self.user_path + _file_name):
+            return
+
+        success = self.km.decrypt(file_path=self.user_path, file_name=_file_name, content_only=True)
+        if success:
+            os.remove(self.user_path + _file_name)
 
     def init_files(self):
         #self.user_log = file_loader.FileHandler(file_name="log", path=self.user_path, controller=self.controller, mode="json", mode="log")
@@ -76,7 +115,7 @@ class UserDataManager(object):
     def decrypt(self):
         path = self.get_files()
 
-        k = krypto_manager.KryptoManager(self.user_password)
+        k = krypto_manager.KryptoManager(self._password)
 
         for i in path:
             k.decrypt(i[0], i[1])
@@ -87,7 +126,7 @@ class UserDataManager(object):
     def encrypt(self):
         path = self.get_files()
 
-        k = krypto_manager.KryptoManager(self.user_password)
+        k = krypto_manager.KryptoManager(self._password)
 
         for i in path:
             k.encrypt(i[0], i[1])
@@ -114,20 +153,29 @@ class UserDataManager(object):
         pass
 
     def close(self):
-        if self.encryption_level > self.EncryptionLevel.ENCRYPT:
-            self.encrypt()
-            self.compress()
-        elif self.encryption_level > self.EncryptionLevel.COMPRESS:
-            self.encrypt()
-        elif self.encryption_level > self.EncryptionLevel.DEFAULT:
-            self.compress()
+        self.user_config.dump()
+
+        if self._password is not None:
+            success = self.km.encrypt(self.user_path, file_name=".user_info.json", content_only=True)
+            if success:
+                os.remove(self.user_path + ".user_info.json")
+
+        # if self.encryption_level > self.EncryptionLevel.ENCRYPT:
+        #     self.encrypt()
+        #     self.compress()
+        # elif self.encryption_level > self.EncryptionLevel.COMPRESS:
+        #     self.encrypt()
+        # elif self.encryption_level > self.EncryptionLevel.DEFAULT:
+        #     self.compress()
+
+
+
 
     def set_custom_path(self, path):
         # check if path valid
         if os.path.isdir(path) or path.endswith(".zip"):
             self.user_config.set("file_path", path)
             self.file_path = path
-            self.file_path_zip = path[:len(self.file_path)-1] + ".zip"
             self.user_config.dump()
         else:
             print "Path is no Dir"
@@ -169,10 +217,9 @@ class UserDataManager(object):
 
         print(files)
 
-
 if __name__ == "__main__":
     enc_level = 2
-    if enc_level > UserDataManager.EncryptionLevel.COMPRESS:
+    if enc_level > User.EncryptionLevel.COMPRESS:
         pass
 
 

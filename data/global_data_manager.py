@@ -1,7 +1,7 @@
-from . import file_loader, user_data_manager
+from . import file_loader, user
 import os
 from helper import krypto_manager
-
+import shutil
 
 class GlobalFileManager:
     def __init__(self, controller):
@@ -37,7 +37,7 @@ class GlobalFileManager:
             if path:
                 return ppath
             else:
-                return user_data_manager.UserDataManager(self.controller, ppath, user_name, user_password)
+                return user.User(self.controller, ppath, user_name, user_password)
 
     def is_user(self, user_name):
         if user_name in self.credentials.get_all():
@@ -52,13 +52,16 @@ class GlobalFileManager:
             self.logger.error("user: {} is not in .credentials".format(user_name))
         return False
 
-    def remove_user(self, user_name, user_password):
-        user_password_hash = krypto_manager.hash_str(user_password)
-        check = self.check_user_hash(user_name, user_password_hash)
+    def remove_user(self, user_name):
+        c = self.credentials.get_all()
+        c.pop(user_name, None)
+        self.credentials.set_all(c)
+        self.credentials.dump()
 
-        if check:
-            pass
-
+        try:
+            shutil.rmtree("user_data/{}/".format(user_name))
+        except Exception:
+            print('Error while deleting directory')
 
     def create_user(self, user_name, user_password_hash=None, user_password=None, token=None):
         if user_password_hash is None:
@@ -95,6 +98,7 @@ class GlobalFileManager:
             pass #self.controller.user_web_auth()
         return user
 
+    def close(self):
+        self.main_config.dump()
 
 
-        # create user specific config file

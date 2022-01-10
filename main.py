@@ -1,21 +1,26 @@
 import sys
 import logging
-from data import user_data_manager, global_data_manager
+from data import user, global_data_manager
 import os
 from oauth import views
-from helper import krypto_manager, displaymanager, param_loader_2
+from helper import krypto_manager, displaymanager, param_loader_2, exception
 
 
 class Evernote:
     def __init__(self, argv=None, **params):
         # loads configs
+        # todo keyboard interrupt error abfangen
+
         self.global_data_manager = global_data_manager.GlobalFileManager(self)
 
         self.log_level = params.get("log_level", logging.INFO)
         self.setup_logging(level=self.log_level)
 
         self.logger.info("Starting...")
-        self.logger.info("Loaded .user_info.json")
+        self.logger.info("Loaded .config.json")
+
+        # setup logging for exceptions
+        exception.EvernoteException.logger = self.get_logger()
 
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
@@ -65,21 +70,25 @@ class Evernote:
         self.passwd = params["passwd"] # hashed
         self.passwd_hash = krypto_manager.hash_str(tmp_user_password)
         print params
-        self.function[params["func"]](params)
-        # print self.user.encryption_level
 
-        #self.user_web_auth()
-        #c = krypto_manager.CompressManager(self, self.username, self.passwd)
-        #c.compress()
+        try:
+            self.user = self.global_data_manager.get_user(self.username, params["password"])
+            self.function[params["func"]](params)
+        except Exception as e:
+            self.logger.error("Error while processing parameters")
+            raise exception.EvernoteException(exception.EvernoteException.ErrorReason.DEFAULT,
+                                              "\n username: {username} \nstacktrace: {error}".format(username=self.username, error=e))
 
-        #dm = displaymanager.DisplayManager(self)
-        #dm.print_help()
+        finally:
+            self.global_data_manager.close()
+            if self.user:
+                self.user.close()
 
-        # user_data_manager
 
     #####################
     # all start methods #
     #####################
+
     def help(self, params):
         """
         outputs help text on the terminal
@@ -117,7 +126,7 @@ class Evernote:
         :param params: a dict containing all parsed arguments
         """
         new_path = params["new_path"]
-        self.user = self.global_data_manager.get_user(self.username, self.passwd)
+        # self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.set_custom_path(new_path)
 
     def new_encryption_lvl(self, params):
@@ -126,7 +135,7 @@ class Evernote:
         :param params: a dict containing all parsed arguments
         """
         new_encrypt_lvl = params["new_encrypt_lvl"]
-        self.user = self.global_data_manager.get_user(self.username, self.passwd)
+        # self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.set_encryption_lvl(new_encrypt_lvl)
 
     def download(self, params):
@@ -134,7 +143,7 @@ class Evernote:
         Downloads all files from the accounts
         :param params: a dict containing all parsed arguments
         """
-        self.user = self.global_data_manager.get_user(self.username, self.passwd)
+        # self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.test_download()
         self.user.download_user_data()
         self.user.set_encryption_lvl(params["encryption_lvl"])
@@ -232,5 +241,8 @@ if __name__ == "__main__":
     tmp_user_name = "mneuhaus"
     tmp_user_password = "passwd123"
 
-    e = Evernote("-u {user_name} -p {password} -c -e 4".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
+    # e = Evernote(
+    #     "-u {user_name} -n {token} {password}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
+    e = Evernote("-u {user_name} -p {password} -c -e 3".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     # e = Evernote(sys.argv[1:])

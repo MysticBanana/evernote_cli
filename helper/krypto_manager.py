@@ -17,7 +17,6 @@ def hash_str(string, hash_type="sha256"):
     elif hash_type == "md5":
         return hashlib.md5(string).hexdigest()
 
-
 def file_hash(file_path, hash_type="sha256"):
     with open(file_path, "rb") as _file:
         content = _file.read()
@@ -46,9 +45,10 @@ def md5(fname):
 
 
 class KryptoManager:
-    def __init__(self, key):
-        salt = b"sdffa2edjdh"
+    def __init__(self, key, salt=b"sdffa2edjdh", logger=None):
+        salt = salt
 
+        # todo logger
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
@@ -60,31 +60,54 @@ class KryptoManager:
 
         self.fernet = Fernet(key)
 
-    def encrypt(self, file_path, file_name):
+    def encrypt(self, file_path, file_name, content_only=False):
+        if not os.path.isfile(file_path + file_name):
+            print "no file"
+            return False
+
+        try:
+            if content_only:
+                enc_file_name = file_name
+            else:
+                enc_file_name = self.fernet.encrypt(bytes(file_name))
+
+            with open("{}{}".format(file_path, file_name), "rb") as origin:
+                enc_content = origin.read()
+
+            with open("{}{}.enc".format(file_path, enc_file_name), "wb") as encrypted:
+                encrypted.write(self.fernet.encrypt(bytes(enc_content)))
+
+            return True
+        except Exception as e:
+            print e
+            # todo error handling
+            return False
+
+    def decrypt(self, file_path, file_name, content_only=False):
         if not os.path.isfile(file_path + file_name):
             print "no file"
             return
 
-        enc_file_name = self.fernet.encrypt(bytes(file_name))
+        try:
+            # 'gAAAAABh2x_wvLmzWPMdB8FFYprIvD74Jrt6EBaEz2_FvJEknwU9bof2rrO5MGxarPuJL5zUMBS4W0TX-0fwFRzuwte6C37mQ5W-NTfNXZ8cpuForSkIHjYYs7zYNLMDqvIsHGO75GEwR_09Ofa9olkK-lymZN4bdg=='
+            if content_only:
+                dec_file_name = file_name.replace(".enc", "")
+            else:
+                dec_file_name = self.fernet.decrypt(file_name)
 
-        with open("{}{}".format(file_path, file_name), "rb") as origin:
-            enc_content = origin.read()
+            with open("{}{}".format(file_path, file_name), "rb") as encrypted:
+                dec_content = encrypted.read()
 
-        with open("{}{}.enc".format(file_path, enc_file_name), "wb") as encrypted:
-            encrypted.write(self.fernet.encrypt(bytes(enc_content)))
+            with open("{}{}".format(file_path, dec_file_name), "wb") as decrypted:
+                decrypted.write(self.fernet.decrypt(dec_content))
 
-    def decrypt(self, file_path, file_name):
-        if not os.path.isfile(file_path + file_name):
-            print "no file"
-            return
+            return True
 
-        dec_file_name = self.fernet.decrypt(file_name)
+        except Exception as e:
+            print e
+            # todo error handling
+            return False
 
-        with open("{}{}".format(file_path, file_name), "rb") as encrypted:
-            dec_content = encrypted.read()
-
-        with open("{}{}".format(file_path, dec_file_name), "wb") as decrypted:
-            decrypted.write(self.fernet.decrypt(dec_content))
 
 
 class CompressManager():
