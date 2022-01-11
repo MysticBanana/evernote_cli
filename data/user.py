@@ -1,6 +1,8 @@
 # coding=utf-8
 
 import os
+import zipfile
+
 import enum
 
 import file_loader
@@ -23,7 +25,7 @@ class User(object):
             ENCRYPTION_ERROR = 7
             CONFIG_MISSING = 8
 
-    def __init__(self, controller, path, user_name, password, token=None):
+    def __init__(self, controller, path, user_name, password, token=None, **kwargs):
         self._user_token = token
         self._file_path = ""
         self._encryption_level = 0
@@ -34,7 +36,7 @@ class User(object):
         self._password_hash = krypto_manager.hash_str(self._password)
 
         # if file path does not exists create path for it
-        self._force_mode = False
+        self._force_mode = kwargs.get("force", False)
 
         self.controller = controller
 
@@ -61,8 +63,8 @@ class User(object):
         self.encryption_level = self.user_config.get("encrypt_level", None)
 
         # if encryption level is set -> decrypt
+        self.logger.info("encrypting user files...")
         self.decrypt()
-
 
     @property
     def file_path_zip(self):
@@ -76,8 +78,9 @@ class User(object):
     def user_token(self, value):
         if type(value) != unicode and type(value) != str:
             raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token must be unicode (i messed up)")
-        if len(value) != 96:
-            raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token must have 96 character")
+
+        if (self.controller.sandbox and len(value) != 96) or (not self.controller.sandbox and len(value) != 100) or self.user_name not in value:
+            raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token is not the right format")
 
         self.user_config.set("key", self.encrypt_token(value)).dump()
         self._user_token = value
@@ -94,7 +97,7 @@ class User(object):
             self._file_path = "%sfiles/" % self.user_path
 
         # checks if valid path
-        if os.path.isdir(value) or os.path.isfile("/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode:
+        if os.path.isdir(value) or zipfile.is_zipfile("/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode:
             if self._force_mode:
                 try:
                     os.makedirs(os.path.dirname(value))
@@ -239,20 +242,8 @@ class User(object):
             raise self.UserError(self.UserError.ErrorReason.DEFAULT,
                                  "error while saving user files\nS%s" % e)
 
+        self.logger.info("encrypting user files...")
         self.encrypt()
-
-
-
-    def set_custom_path(self, path):
-        # check if path valid
-        if os.path.isdir(path) or path.endswith(".zip"):
-            self.user_config.set("file_path", path)
-            self.file_path = path
-            self.user_config.dump()
-        else:
-            print "Path is no Dir"
-            # TODO: Error ausgeben
-            # TODO: In property umwandeln
 
     def download_user_data(self):
         """

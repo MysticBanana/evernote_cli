@@ -141,11 +141,11 @@ class CompressManager():
         pass
 
     def compress(self, path, file):
-        with ZipFile("{}/{}.zip".format(path, file), "w") as zipObj:
-            zipObj.write(path) # zipping dir
+        with ZipFile("{}{}.zip".format(path, file), "w") as zipObj:
+            zipObj.write("{}{}/".format(path, file)) # zipping dir
 
     def decompress(self, path, file):
-        with ZipFile("{}/{}.zip".format(path, file), "r") as zipObj:
+        with ZipFile("{}{}.zip".format(path, file), "r") as zipObj:
             zipObj.extractall(path)
 
 

@@ -3,6 +3,7 @@
         "log": "logs/", 
         "user_data": "user_data/"
     }, 
+    "sandbox": true, 
     "user_requirements": [
         ".user_info.json", 
         "files"

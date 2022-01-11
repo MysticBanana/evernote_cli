@@ -15,6 +15,7 @@ class Evernote:
     def __init__(self, argv=None, **params):
         # loads configs
         # todo keyboard interrupt error abfangen
+        self._sandbox = True
 
         self.global_data_manager = global_data_manager.GlobalFileManager(self)
 
@@ -29,6 +30,7 @@ class Evernote:
 
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
+        self._sandbox = self.global_data_manager.main_config.get("sandbox")
         # todo ggf user_data erzeugen etc
 
         self.display_manager = displaymanager.DisplayManager(self)
@@ -86,10 +88,30 @@ class Evernote:
         except Exception as e:
             self.logger.error("error while processing command\n%s" % e)
             raise self.ControllerError(self.ControllerError.ErrorReason.DEFAULT, e)
+        except KeyboardInterrupt:
+            # todo bessere formulierung
+            print "trying to close files"
+            print "interrupt again for fast exit"
+            self.logger.warning("KeyboardInterrupt by user, trying to close all files")
         finally:
             self.global_data_manager.close()
             if self.user is not None:
                 self.user.close()
+
+    @property
+    def sandbox(self):
+        return self._sandbox
+
+    @sandbox.setter
+    def sandbox(self, value):
+        # not not is faster than bool()
+        value = not not value
+
+        if self.global_data_manager:
+            self.global_data_manager.main_config.set("sandbox", value).dump()
+            self._sandbox = value
+
+            self.logger.info("sandbox set to %s" % value)
 
 
     #####################
@@ -251,5 +273,5 @@ if __name__ == "__main__":
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
     # e = Evernote(
     #     "-u {user_name} -n {token} {password}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
-    e = Evernote("-u {user_name} -p {password} -c -e 2".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    e = Evernote("-u {user_name} -p {password} -c -e 0".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     # e = Evernote(sys.argv[1:])

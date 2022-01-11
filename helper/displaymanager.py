@@ -19,7 +19,6 @@ class DisplayManager:
 
     def default_error(self, reason):
         self.logger.error(reason)
-        raise EvernoteException (reason)
 
     def display_dict(self, data):
         # dictionary displayed: "-u --user              help text zu -u"
@@ -51,8 +50,6 @@ class DisplayManager:
 
         for i in self.get_help_tree(command=command):
             print i
-
-
 
     def get_help_tree(self, ret_dict=None, tab_counter=0, command=None):
         ret_dict = ret_dict if ret_dict else self.help_dict
@@ -117,12 +114,6 @@ class DisplayManager:
                             usage_param = ret
 
         return usage_param
-
-
-class EvernoteException(BaseException):
-    class Exceptions(enum.Enum):
-        pass
-
 
 if __name__ == "__main__":
     pass
