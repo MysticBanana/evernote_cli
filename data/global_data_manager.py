@@ -27,7 +27,7 @@ class GlobalFileManager:
     def get_path(self, key=None):
         return self.main_config.get("path")[key] if key else self.main_config.get("path")
 
-    def get_user(self, user_name, user_password, path=False):
+    def get_user(self, user_name, user_password, token=None, path=False):
         """
         returns relative path to user files or returns UserObject
         :rtype:
@@ -37,7 +37,7 @@ class GlobalFileManager:
             if path:
                 return ppath
             else:
-                return user.User(self.controller, ppath, user_name, user_password)
+                return user.User(self.controller, ppath, user_name, user_password, token)
 
     def is_user(self, user_name):
         if user_name in self.credentials.get_all():
@@ -69,6 +69,7 @@ class GlobalFileManager:
 
         if self.is_user(user_name):
             print "VORHANDEN"
+            # todo
             return
 
         path = self.get_path("user_data") + "/" + str(user_name) + "/"
@@ -76,6 +77,7 @@ class GlobalFileManager:
         if os.path.exists(path):
             # if credentials are deleted but files still there
             print "User bereits vorhanden"
+            # todo
             return
 
         os.makedirs(path)
@@ -91,11 +93,7 @@ class GlobalFileManager:
             else:
                 os.makedirs(path+file)
 
-        user = self.get_user(user_name, user_password)
-        if token is not None:
-            user.user_token = token
-        else:
-            pass #self.controller.user_web_auth()
+        user = self.get_user(user_name, user_password, token=token)
         return user
 
     def close(self):

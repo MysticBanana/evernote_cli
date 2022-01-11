@@ -65,7 +65,7 @@ class ArgumentParser():
                                     },
                                 "new_encrypt":
                                     {
-                                        "opt_str": ["-e", "--encrypt"],
+                                        "opt_str": ["-e", "--encrypt_files"],
                                         "help": "change download encryption level",
                                         "require": {
                                             "encryption lvl": True
@@ -87,9 +87,9 @@ class ArgumentParser():
                                 "help": "synchronize your files with the cloud",
                                 "require": {}
                             },
-                        "encrypt":
+                        "encrypt_files":
                             {
-                                "opt_str": ["-e", "--encrypt"],
+                                "opt_str": ["-e", "--encrypt_files"],
                                 "help": "encrypting your files",
                                 "require": {
                                     "encryption level": False
@@ -195,7 +195,7 @@ class ArgumentParser():
                     if len(self.arg_list) == 5:
                         self.params["token"] = self.arg_list[3]
                         self.params["passwd"] = self.arg_list[4]
-                        self.params["password"] = self.arg_list[3]
+                        self.params["password"] = self.arg_list[4]
                         if nr_of_args > 5:
                             self.warning_msg(arguments=self.arg_list[5:])
                     else:
@@ -262,7 +262,7 @@ class ArgumentParser():
                             self.error_msg(2, ["--new_path", "<NEW_PATH>"])
                         if nr_of_args > 7:
                             self.warning_msg(arguments=self.arg_list[7:])
-                    # when entering ... (-e | --encrypt) <NEW ENCRYPT LVL>
+                    # when entering ... (-e | --encrypt_files) <NEW ENCRYPT LVL>
                     elif self.arg_list[5] in change_dict["new_encrypt"]["opt_str"]:
                         try:
                             encrypt_lvl = int(self.arg_list[6])
@@ -273,7 +273,7 @@ class ArgumentParser():
                             self.params["func"] = "new_encrypt_lvl"
                         except IndexError:
                             # argument is missing
-                            self.error_msg(2, ["--encrypt", "<NEW_ENCRYPTION_LVL>"])
+                            self.error_msg(2, ["--encrypt_files", "<NEW_ENCRYPTION_LVL>"])
                         except :
                             self.error_msg(4, self.arg_list[6])
                         if nr_of_args > 7:
@@ -324,9 +324,9 @@ class ArgumentParser():
                     if nr_of_args > 5:
                         self.warning_msg(arguments=self.arg_list[5:])
 
-                # when entering ... (-e | --encrypt) [<ENCRYPTION LVL>]
-                elif self.arg_list[4] in passwd_dict["encrypt"]["opt_str"]:
-                    self.params["func"] = "encrypt"
+                # when entering ... (-e | --encrypt_files) [<ENCRYPTION LVL>]
+                elif self.arg_list[4] in passwd_dict["encrypt_files"]["opt_str"]:
+                    self.params["func"] = "encrypt_files"
                     if nr_of_args >= 6:
                         try:
                             encrypt_lvl = int(self.arg_list[5])

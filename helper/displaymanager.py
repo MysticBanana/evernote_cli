@@ -12,6 +12,8 @@ class DisplayManager:
         self.tab_size = "  "
         self.max_tabs = 5
 
+        # todo fehleingabe text als dict/liste mit enum zum zugreifen
+
     def default_display(self, display_text):
         self.logger.debug(display_text)
 

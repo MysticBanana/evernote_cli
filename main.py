@@ -4,9 +4,14 @@ from data import user, global_data_manager
 import os
 from oauth import views
 from helper import krypto_manager, displaymanager, param_loader_2, exception
+import enum
 
 
 class Evernote:
+    class ControllerError(exception.EvernoteException):
+        class ErrorReason(enum.Enum):
+            DEFAULT = 1
+
     def __init__(self, argv=None, **params):
         # loads configs
         # todo keyboard interrupt error abfangen
@@ -24,6 +29,7 @@ class Evernote:
 
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
+        # todo ggf user_data erzeugen etc
 
         self.display_manager = displaymanager.DisplayManager(self)
 
@@ -34,7 +40,7 @@ class Evernote:
             "new_path": self.new_path,
             "download": self.download,
             "refresh": self.refresh,
-            "encrypt": self.encrypt,
+            "encrypt_files": self.encrypt,
             "decrypt": self.decrypt,
             "new_encrypt_lvl": self.new_encryption_lvl
         }
@@ -74,14 +80,15 @@ class Evernote:
         try:
             self.user = self.global_data_manager.get_user(self.username, params["password"])
             self.function[params["func"]](params)
+        except exception.EvernoteException as e:
+            self.logger.error("error while processing command\n%s" % e)
+            raise e
         except Exception as e:
-            self.logger.error("Error while processing parameters")
-            raise exception.EvernoteException(exception.EvernoteException.ErrorReason.DEFAULT,
-                                              "\n username: {username} \nstacktrace: {error}".format(username=self.username, error=e))
-
+            self.logger.error("error while processing command\n%s" % e)
+            raise self.ControllerError(self.ControllerError.ErrorReason.DEFAULT, e)
         finally:
             self.global_data_manager.close()
-            if self.user:
+            if self.user is not None:
                 self.user.close()
 
 
@@ -127,7 +134,7 @@ class Evernote:
         """
         new_path = params["new_path"]
         # self.user = self.global_data_manager.get_user(self.username, self.passwd)
-        self.user.set_custom_path(new_path)
+        self.user.file_path = new_path
 
     def new_encryption_lvl(self, params):
         """
@@ -136,7 +143,7 @@ class Evernote:
         """
         new_encrypt_lvl = params["new_encrypt_lvl"]
         # self.user = self.global_data_manager.get_user(self.username, self.passwd)
-        self.user.set_encryption_lvl(new_encrypt_lvl)
+        self.user.encryption_level = new_encrypt_lvl
 
     def download(self, params):
         """
@@ -146,7 +153,7 @@ class Evernote:
         # self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.test_download()
         self.user.download_user_data()
-        self.user.set_encryption_lvl(params["encryption_lvl"])
+        self.user.encryption_level = params["encryption_lvl"]
 
     def encrypt(self, params):
         """
@@ -244,5 +251,5 @@ if __name__ == "__main__":
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
     # e = Evernote(
     #     "-u {user_name} -n {token} {password}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
-    e = Evernote("-u {user_name} -p {password} -c -e 3".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    e = Evernote("-u {user_name} -p {password} -c -e 2".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     # e = Evernote(sys.argv[1:])

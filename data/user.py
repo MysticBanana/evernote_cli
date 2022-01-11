@@ -1,52 +1,67 @@
+# coding=utf-8
+
 import os
 import enum
 
-from . import file_loader
-from helper import downloader, krypto_manager
 import file_loader
-from helper import downloader
+from helper import downloader, exception, krypto_manager
 
 class User(object):
+    # check if bits are set
     class EncryptionLevel(enum.Enum):
-        DEFAULT = 1
-        COMPRESS = 2
-        ENCRYPT = 3
-        COMPRESS_ENCRYPT = 6
+        COMPRESS = 0
+        ENCRYPT = 1
 
-    def __init__(self, controller, path, user_name, password):
-        self._user_key = None
+    class UserError(exception.EvernoteException):
+        class ErrorReason(enum.Enum):
+            DEFAULT = 1
+            INVALID_USERNAME = 2
+            INVALID_PASSWORD = 3
+            INVALID_TOKEN = 4
+            INVALID_ENCRYPTION_LEVEL = 5
+            COMPRESSION_ERROR = 6
+            ENCRYPTION_ERROR = 7
+            CONFIG_MISSING = 8
+
+    def __init__(self, controller, path, user_name, password, token=None):
+        self._user_token = token
         self._file_path = ""
-        self._encryption_level = self.EncryptionLevel.DEFAULT
+        self._encryption_level = 0
 
         self.user_name = user_name
         self._password = password
         # todo
         self._password_hash = krypto_manager.hash_str(self._password)
 
+        # if file path does not exists create path for it
+        self._force_mode = False
+
         self.controller = controller
 
         self.logger = self.controller.create_logger(user_name)
         self.logger.info("Initializing user: {}".format(user_name))
 
+        self.km = krypto_manager.CryptoManager(key=self._password, salt="user",
+                                               logger=self.controller.create_logger("Krypto"))
+
         self.user_path = path
         # todo filepath auch zu begin mit in die config schreiben
 
-
-        self.decrypt_info()
+        if self._password is None:
+            raise self.UserError(self.UserError.ErrorReason.ENCRYPTION_ERROR, "can't encrypt_files with empty password")
 
         self.user_config = file_loader.FileHandler(file_name=".user_info", path=self.user_path, mode="json", controller=self.controller)
         if not self.user_config.exists:
-            # todo error handling
-            print "user_config does not exist"
-            return
+            raise self.UserError(self.UserError.ErrorReason.CONFIG_MISSING, "Config: .user_info")
 
-        self._user_key = self.user_config.get("key")
-        self._file_path = self.user_config.get("file_path", None)
-        if self._file_path is None:
-            self._file_path = "%sfiles/" % self.user_path
-        enc_level = self.user_config.get("encrypt_level", None)
-        if enc_level is not None:
-            self.encryption_level = enc_level
+        self.decrypt_token()
+
+        self.user_token = self.user_config.get("key") if not self._user_token else self._user_token
+        self.file_path = self.user_config.get("file_path", None)
+        self.encryption_level = self.user_config.get("encrypt_level", None)
+
+        # if encryption level is set -> decrypt
+        self.decrypt()
 
 
     @property
@@ -55,13 +70,19 @@ class User(object):
 
     @property
     def user_token(self):
-        return self.user_key
+        return self._user_token
 
     @user_token.setter
     def user_token(self, value):
-        self.user_config.set("key", str(value))
-        self.user_config.dump()
-        self.user_key = value
+        if type(value) != unicode and type(value) != str:
+            raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token must be unicode (i messed up)")
+        if len(value) != 96:
+            raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token must have 96 character")
+
+        self.user_config.set("key", self.encrypt_token(value)).dump()
+        self._user_token = value
+
+        self.logger.info("user token set")
 
     @property
     def file_path(self):
@@ -69,9 +90,28 @@ class User(object):
 
     @file_path.setter
     def file_path(self, value):
-        self._file_path = value
-        self.user_config.set("file_path", self.file_path)
-        self.user_config.dump()
+        if value is None:
+            self._file_path = "%sfiles/" % self.user_path
+
+        # checks if valid path
+        if os.path.isdir(value) or os.path.isfile("/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode:
+            if self._force_mode:
+                try:
+                    os.makedirs(os.path.dirname(value))
+                except Exception:
+                    raise self.UserError(file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_CREATING_PATH,
+                                         "path: %s " % value)
+
+            self._file_path = value
+            self.user_config.set("file_path", self.file_path).dump()
+
+            self.logger.info("custom file path changed")
+        else:
+            raise self.UserError(self.UserError.ErrorReason.DEFAULT, "path: %s is no dir\n use --force to create this")
+
+    @property
+    def max_encryption_level(self):
+        return 2**len(self.EncryptionLevel)-1
 
     @property
     def encryption_level(self):
@@ -79,65 +119,91 @@ class User(object):
 
     @encryption_level.setter
     def encryption_level(self, value):
+        if value is None:
+            value = 3
+
+        try:
+            value = int(value)
+        except Exception:
+            raise self.UserError(self.UserError.ErrorReason.INVALID_ENCRYPTION_LEVEL,
+                                 "encryption level must be a number: 0-%s" % self.max_encryption_level)
+
+        if value < 0 or value > self.max_encryption_level:
+            self.logger.warning("Encryption level is not a proper value and gets set to default 0")
+            value = 0
+
         self._encryption_level = value
-        # todo work around with enum
+        self.user_config.set("encrypt_level", self.encryption_level).dump()
+        self.logger.info("encryption level changed")
 
+    def decrypt_token(self):
+        token = self.user_config.get("key", None)
 
-        self.user_config.set("encrypt_level", self.encryption_level)
-        self.user_config.dump()
+        # for other token management
+        # if token is None:
+        #     raise self.UserError(self.UserError.ErrorReason.DEFAULT, "user token not set")
 
-    def decrypt_info(self):
-        _file_name = ".user_info.json.enc"
-        self.km = krypto_manager.KryptoManager(key=self._password, salt="user",
-                                               logger=self.controller.create_logger("Krypto"))
+        if len(str(token)) != 96 and token is not None:
+            # set the new encrypted version
+            self.user_token = self.km.decrypt_str(token)
 
-        if not os.path.isfile(self.user_path + _file_name):
-            return
+    def encrypt_token(self, token=None):
+        if token is not None:
+            return self.km.encrypt_str(token)
 
-        success = self.km.decrypt(file_path=self.user_path, file_name=_file_name, content_only=True)
-        if success:
-            os.remove(self.user_path + _file_name)
+        # if self.user_token != "":
+        #     self.user_token = self.km.encrypt_str(self.user_token)
+        # else:
+        #     raise self.UserError(self.UserError.ErrorReason.ENCRYPTION_ERROR, "user token empty")
 
-    def init_files(self):
-        #self.user_log = file_loader.FileHandler(file_name="log", path=self.user_path, controller=self.controller, mode="json", mode="log")
-        self.user_key = self.user_config.get("key", None)
-        self.encryption_level = 2
-
-        # if user wants a custom download location
-        custom_file_path = self.user_config.get("file_path", "")
-        if custom_file_path:
-            self.file_path = custom_file_path
-            self.logger.info("File location at: {}".format(custom_file_path))
-
-    def dump_config(self):
-        self.user_config.set("key", self.user_key)
-
-    def decrypt(self):
+    def decrypt_files(self):
         path = self.get_files()
 
-        k = krypto_manager.KryptoManager(self._password)
+        k = krypto_manager.CryptoManager(self._password)
 
         for i in path:
+            if ".enc" not in i[1]:
+                continue
             k.decrypt(i[0], i[1])
 
         for i in path:
+            if ".enc" not in i[1]:
+                continue
             os.remove(i[0] + i[1])
 
-    def encrypt(self):
+    def encrypt_files(self):
         path = self.get_files()
 
-        k = krypto_manager.KryptoManager(self._password)
+        k = krypto_manager.CryptoManager(self._password)
 
         for i in path:
+            if ".enc" in i[1]:
+                continue
             k.encrypt(i[0], i[1])
 
         for i in path:
+            if ".enc" in i[1]:
+                continue
             os.remove(i[0].decode('utf-8') + i[1].decode('utf-8'))
 
+    def decrypt(self):
+        # todo add try catch
+        # handle encryption level
+        if bool(self.encryption_level & (1 << self.EncryptionLevel.ENCRYPT.value)):
+            self.decrypt_files()
+        if bool(self.encryption_level & (1 << self.EncryptionLevel.COMPRESS.value)):
+                self.decompress_files()
+
+    def encrypt(self):
+        # todo add try catch
+        # handle encryption level
+        # todo catch if dir is already a zip and not compress
+        if bool(self.encryption_level & (1 << self.EncryptionLevel.ENCRYPT.value)):
+            self.encrypt_files()
+        if bool(self.encryption_level & (1 << self.EncryptionLevel.COMPRESS.value)):
+            self.compress_files()
+
     def get_files(self):
-
-        # k = krypto_manager.KryptoManager(self.user_password)
-
         list_of_files = []
 
         for root, dirs, files in os.walk(self.file_path):
@@ -146,28 +212,34 @@ class User(object):
 
         return list_of_files
 
-    def compress(self):
-        pass
+    def compress_files(self):
+        # todo catch n permission error
+        path = "/".join(self.file_path.split("/")[:-2]) + "/"
+        if os.path.isdir(self.file_path):
+            c = krypto_manager.CompressManager()
+            c.compress(path, "files")
+        else:
+            raise self.UserError(self.UserError.ErrorReason.COMPRESSION_ERROR, "path is no dir")
 
-    def decompress(self):
+    def decompress_files(self):
+        path = "/".join(self.file_path.split("/")[:-2]) + "/"
+        if os.path.isfile("%sfiles.zip" % path):
+            c = krypto_manager.CompressManager()
+            c.decompress(path, "files")
+        else:
+            raise self.UserError(self.UserError.ErrorReason.COMPRESSION_ERROR, "path is no file")
+
+    def save_files(self):
         pass
 
     def close(self):
-        self.user_config.dump()
+        try:
+            self.save_files()
+        except Exception as e:
+            raise self.UserError(self.UserError.ErrorReason.DEFAULT,
+                                 "error while saving user files\nS%s" % e)
 
-        if self._password is not None:
-            success = self.km.encrypt(self.user_path, file_name=".user_info.json", content_only=True)
-            if success:
-                os.remove(self.user_path + ".user_info.json")
-
-        # if self.encryption_level > self.EncryptionLevel.ENCRYPT:
-        #     self.encrypt()
-        #     self.compress()
-        # elif self.encryption_level > self.EncryptionLevel.COMPRESS:
-        #     self.encrypt()
-        # elif self.encryption_level > self.EncryptionLevel.DEFAULT:
-        #     self.compress()
-
+        self.encrypt()
 
 
 
@@ -182,14 +254,11 @@ class User(object):
             # TODO: Error ausgeben
             # TODO: In property umwandeln
 
-    def set_encryption_lvl(self, encrypt_lvl):
-        self.encryption_level = encrypt_lvl
-        self.user_config.set("encrypt_lvl", self.encryption_level)
-        self.user_config.dump()
-
-    # downloads user data and stores it in the .user_info.json of the respective user.
-    # More user data can be downloaded by expanding the content of the downloaded_data variable
     def download_user_data(self):
+        """
+        downloads user data and stores it in the .user_info.json of the respective user.
+        More user data can be downloaded by expanding the content of the downloaded_data variable
+        """
         downloaded_data = ["id", "username", "email", "name", "timezone", "created", "updated", "deleted"]
         d_user = downloader.EvernoteUser(self)
         user_info = d_user.get_user_info()
@@ -204,7 +273,6 @@ class User(object):
     def test_download(self):
         d = downloader.EvernoteNote(self)
         d.download()
-        # downloader.downloadstart(self.user_key)
 
     def get_all_files(self):
         files = []

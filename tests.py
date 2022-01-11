@@ -1,7 +1,7 @@
 import unittest
 import main
 
-
+# todo check for more than one run -> create user -> change something -> run download
 class EvernoteTest(unittest.TestCase):
 
     def delete_user(self):

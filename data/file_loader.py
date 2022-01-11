@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 
 import json
 import os
@@ -14,12 +16,12 @@ sys.setdefaultencoding('UTF8')
 class FileHandler:
     class FileHandlerException(exception.EvernoteException):
         class ErrorReason(enum.Enum):
-            DEFAULT = 1,
-            FILE_DOES_NOT_EXIST = 2,
-            FILE_NO_PERMISSION = 3,
-            ERROR_WRITING_IN_FILE = 4,
-            ERROR_READING_FILE = 5
-
+            DEFAULT = 1
+            FILE_NO_PERMISSION = 3
+            WRONG_FILE_FORMAT = 4
+            ERROR_WRITING_IN_FILE = 5
+            ERROR_READING_FILE = 6
+            ERROR_CREATING_PATH = 7
 
     def __init__(self, file_name, path=None, create=False, exists_ok=False, *args, **params):
         """
@@ -65,7 +67,11 @@ class FileHandler:
                 raise self.FileHandlerException(self.FileHandlerException.ErrorReason.FILE_DOES_NOT_EXIST)
             else:
                 if not os.path.exists(os.path.dirname(self._path)):
-                    os.makedirs(os.path.dirname(self._path))
+                    try:
+                        os.makedirs(os.path.dirname(self._path))
+                    except Exception:
+                        self.FileHandlerException(self.FileHandlerException.ErrorReason.ERROR_CREATING_PATH,
+                                                  "path %s" % self._path)
 
                 with open(self._path, "w"):
                     pass
@@ -108,7 +114,11 @@ class FileHandler:
         stores json data in dict
         """
         with open(self._path, "r") as file:
-            self._file_data = json.load(file)
+            try:
+                self._file_data = json.load(file)
+            except Exception as e:
+                raise self.FileHandlerException(self.FileHandlerException.ErrorReason.WRONG_FILE_FORMAT,
+                                                "Error parsing the file %s" % self._path)
             
     def load_default(self):
         """
@@ -134,6 +144,8 @@ class FileHandler:
             self._file_data[str(key)] = file_data
         else:
             self._file_data = file_data
+
+        return self
 
     def add_element(self, key, e):
         """
@@ -163,7 +175,11 @@ class FileHandler:
         saving data into json
         """
         with open(self._path, "w") as file:
-            json.dump(self._file_data, file, ensure_ascii=False, indent=4)
+            try:
+                json.dump(self._file_data, file, ensure_ascii=False, indent=4)
+            except Exception as e:
+                raise self.FileHandlerException(self.FileHandlerException.ErrorReason.WRONG_FILE_FORMAT,
+                                                "Error parsing the file %s" % self._path)
 
     def write_default(self):
         """
@@ -196,3 +212,6 @@ class FileHandler:
 
     def __str__(self):
         return "File: {}".format(self._path) if self.exists else False
+
+    def __del__(self):
+        self.dump()

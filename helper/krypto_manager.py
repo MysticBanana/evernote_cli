@@ -4,11 +4,15 @@ import os
 import stdiomask as stdiomask
 from cryptography.fernet import Fernet
 import base64
+import enum
 
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 from zipfile import ZipFile
+
+from helper import exception
+
 
 
 def hash_str(string, hash_type="sha256"):
@@ -44,7 +48,16 @@ def md5(fname):
     return hash
 
 
-class KryptoManager:
+class CryptoManager:
+    class CryptographyError(exception.EvernoteException):
+        class ErrorReason(enum.Enum):
+            DEFAULT = 1,
+            FILE_DOES_NOT_EXIST = 2,
+            ERROR_WRITING_IN_FILE = 3,
+            ERROR_READING_FILE = 4,
+            DECRYPTION_ERROR = 5,
+            ENCRYPTION_ERROR = 6
+
     def __init__(self, key, salt=b"sdffa2edjdh", logger=None):
         salt = salt
 
@@ -83,6 +96,20 @@ class KryptoManager:
             # todo error handling
             return False
 
+    def encrypt_str(self, text):
+        try:
+            return self.fernet.encrypt(bytes(text))
+        except Exception as e:
+            raise self.CryptographyError(self.CryptographyError.ErrorReason.ENCRYPTION_ERROR,
+                                         "Error while encrypting string\n %s" % e)
+
+    def decrypt_str(self, text):
+        try:
+            return self.fernet.decrypt(bytes(text))
+        except Exception as e:
+            raise self.CryptographyError(self.CryptographyError.ErrorReason.DECRYPTION_ERROR,
+                                         "Error while decrypting string\n %s" % e)
+
     def decrypt(self, file_path, file_name, content_only=False):
         if not os.path.isfile(file_path + file_name):
             print "no file"
@@ -109,23 +136,17 @@ class KryptoManager:
             return False
 
 
-
 class CompressManager():
-    def __init__(self, controller, username, password):
-        self.controller = controller
-        self.user = self.controller.global_data_manager.get_user(username, password)
-        self.path = self.user.file_path
-        self.path_zip = self.user.file_path_zip
+    def __init__(self, logger=None):
+        pass
 
-    def compress(self):
-        with ZipFile(self.path_zip, "w") as zipObj:
-            zipObj.write(self.path) # zipping dir
-        os.remove(self.path)
+    def compress(self, path, file):
+        with ZipFile("{}/{}.zip".format(path, file), "w") as zipObj:
+            zipObj.write(path) # zipping dir
 
-    def decompress(self):
-        with ZipFile(self.path_zip, "r") as zipObj:
-            zipObj.extract(self.path)
-        #os.remove(self.path_zip)
+    def decompress(self, path, file):
+        with ZipFile("{}/{}.zip".format(path, file), "r") as zipObj:
+            zipObj.extractall(path)
 
 
 
