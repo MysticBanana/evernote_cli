@@ -51,15 +51,6 @@ class Evernote:
         # setup django
         views.Auth.controller = self
 
-        # TESTING
-        # User login
-
-        dm = displaymanager.DisplayManager(self)
-        a = dm.get_usage_command("-c")
-        b = dm.get_help_tree()
-
-        # dm.print_help("-c")
-
         tmp_user_name = ""
         tmp_user_password = "passwd123"
         tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
@@ -81,6 +72,9 @@ class Evernote:
         self.username = params["username"]
         self.passwd = params["passwd"] # hashed
         self.passwd_hash = krypto_manager.hash_str(tmp_user_password)
+
+        # test
+        self.user_web_auth()
         print params
 
         c = krypto_manager.CompressManager()
@@ -119,6 +113,10 @@ class Evernote:
             self._sandbox = value
 
             self.logger.info("sandbox set to %s" % value)
+
+    @property
+    def max_encryption_level(self):
+        return 2 ** len(user.User.EncryptionLevel) - 1
 
 
     #####################
