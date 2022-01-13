@@ -250,7 +250,7 @@ class User(object):
         More user data can be downloaded by expanding the content of the downloaded_data variable
         """
         downloaded_data = ["id", "username", "email", "name", "timezone", "created", "updated", "deleted"]
-        d_user = downloader.EvernoteUser(self)
+        d_user = downloader.EvernoteUser(self.controller, self)
         user_info = d_user.get_user_info()
         user_config = self.user_config.get_all()
         user_config[self.user_name] = {}
@@ -261,7 +261,7 @@ class User(object):
         self.user_config.dump()
 
     def test_download(self):
-        d = downloader.EvernoteNote(self)
+        d = downloader.EvernoteNote(self.controller, self)
         d.download()
 
     def get_all_files(self):
