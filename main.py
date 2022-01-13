@@ -48,6 +48,9 @@ class Evernote:
             "new_encrypt_lvl": self.new_encryption_lvl
         }
 
+        # setup django
+        views.Auth.controller = self
+
         # TESTING
         # User login
 
@@ -258,7 +261,6 @@ class Evernote:
         exit()
 
     def user_web_auth(self):
-        views.Auth.controller = self
         os.environ.setdefault("DJANGO_SETTINGS_MODULE", "evernote_oauth.settings")
         from django.core.management import execute_from_command_line
         execute_from_command_line(sys.argv[:1] + ["runserver"])

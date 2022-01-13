@@ -8,14 +8,16 @@ from config import EN_CONSUMER_KEY, EN_CONSUMER_SECRET
 from django.views.generic import View
 
 
-def get_evernote_client(token=None):
+def get_evernote_client(token=None, controller=None):
+    sandbox = True if not controller else controller.sandbox
+
     if token:
-        return EvernoteClient(token=token, sandbox=False)
+        return EvernoteClient(token=token, sandbox=sandbox)
     else:
         return EvernoteClient(
             consumer_key=EN_CONSUMER_KEY,
             consumer_secret=EN_CONSUMER_SECRET,
-            sandbox=False
+            sandbox=sandbox
         )
 
 
@@ -27,7 +29,7 @@ class Auth(View):
     controller = None
 
     def get(self, request):
-        client = get_evernote_client()
+        client = get_evernote_client(controller=self.controller)
         callbackUrl = 'http://%s%s' % (
             request.get_host(), reverse('evernote_callback'))
         request_token = client.get_request_token(callbackUrl)
@@ -55,7 +57,7 @@ def callback(request):
     except KeyError:
         return redirect('/')
 
-    controller.user.user_key = token
+    controller.user.user_token = token
     print(token)
     controller.user.dump_config()
     controller.user.user_config.dump()
