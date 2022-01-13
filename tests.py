@@ -3,7 +3,7 @@ import main
 
 # todo check for more than one run -> create user -> change something -> run download
 class EvernoteTest(unittest.TestCase):
-
+    '''
     def delete_user(self):
         tmp_user_name = "mneuhaus"
         tmp_user_password = "passwd123"
@@ -16,7 +16,7 @@ class EvernoteTest(unittest.TestCase):
         controller = main.Evernote("-u {user_name} -p {password} -rm".format(user_name=tmp_user_name,
                                                                              password=tmp_user_password).split(" "))
         controller.global_data_manager.remove_user(tmp_user_name)
-
+    '''
 
     def test_create(self):
         tmp_user_name = "mneuhaus"
@@ -39,9 +39,6 @@ class EvernoteTest(unittest.TestCase):
                                                                                  password=tmp_user_password,
                                                                                  token=token).split(" "))
         self.assertEqual(controller.user.user_token, token)
-
-
-
 
     def normal(self):
         tmp_user_name = "mneuhaus"

@@ -111,7 +111,9 @@ class User(object):
         else:
             raise self.UserError(self.UserError.ErrorReason.DEFAULT, "path: %s is no dir\n use --force to create this")
 
-
+    @property
+    def max_encryption_level(self):
+        return 2 ** len(self.EncryptionLevel) - 1
 
     @property
     def encryption_level(self):

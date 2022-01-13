@@ -51,7 +51,7 @@ class Evernote:
         # setup django
         views.Auth.controller = self
 
-        tmp_user_name = ""
+        tmp_user_name = "mneuhaus"
         tmp_user_password = "passwd123"
         tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
 
@@ -64,7 +64,7 @@ class Evernote:
         self.user = None
 
         # PARSER return Dictionary with information about parameter and function
-        #args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -c -e 1 "
+        #args = "-u mneuhaus -p passwd123 -c -f -e 8 h"
         args = " ".join(argv)
         #args = "-u " + tmp_user_name + " -n S=s706:U=db74969:E=17eca6df980:C=17e2fef3180:P=185:A=mneuhaus:V=2:H=c0a3120a5067762e029985155fbdeb9a " + tmp_user_password
         self.par = param_loader_2.ArgumentParser(self, args)
@@ -74,14 +74,17 @@ class Evernote:
         self.passwd_hash = krypto_manager.hash_str(tmp_user_password)
 
         # test
-        self.user_web_auth()
+       # self.user_web_auth()
         print params
 
-        c = krypto_manager.CompressManager()
-        c.decompress("D:\Python\Softwareprojekt\evernote-cli\user_data\mneuhaus", "files")
+        #c = krypto_manager.CompressManager()
+        #c.decompress("D:\Python\Softwareprojekt\evernote-cli\user_data\mneuhaus", "files")
 
         try:
-            self.user = self.global_data_manager.get_user(self.username, params["password"])
+            if not params["func"] == "help":
+                self.username = params["username"]
+                self.passwd = params["passwd"]  # hashed
+                self.user = self.global_data_manager.get_user(self.username, params["passwd"])
             self.function[params["func"]](params)
         except exception.EvernoteException as e:
             self.logger.error("error while processing command\n%s" % e)
@@ -128,7 +131,7 @@ class Evernote:
         outputs help text on the terminal
         :param params: a dict containing all parsed arguments
         """
-        self.display_manager.print_help()
+        self.display_manager.print_help(params)
 
     def new_user(self, params):
         """
