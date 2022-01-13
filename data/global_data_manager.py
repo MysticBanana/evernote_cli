@@ -1,12 +1,19 @@
 from . import file_loader, user
 import os
-from helper import krypto_manager
+from helper import krypto_manager, exception
 import shutil
+import enum
 
 class GlobalFileManager:
+    class FileManagerError(exception.EvernoteException):
+        class ErrorReason(enum.Enum):
+            DEFAULT = 1
+
+
     def __init__(self, controller):
         self.main_config = file_loader.FileHandler(file_name=".config", mode="json", controller=controller)
         self.controller = controller
+        self.credentials = None
 
     def setup_logging(self):
         self.logger = self.controller.create_logger("DataLoader")
@@ -40,11 +47,22 @@ class GlobalFileManager:
                 return user.User(self.controller, ppath, user_name, user_password, token)
 
     def is_user(self, user_name):
+        """
+        Checks if user is in .credentials, no check if user files exist
+        :param user_name: username
+        :return: True if exists
+        """
         if user_name in self.credentials.get_all():
             return True
         return False
 
     def check_user_hash(self, user_name, password_hash):
+        """
+
+        :param user_name: username
+        :param password_hash: hash of password
+        :return:
+        """
         up = self.credentials.get(user_name, None)
         if password_hash == up:
             return True
@@ -53,6 +71,12 @@ class GlobalFileManager:
         return False
 
     def remove_user(self, user_name):
+        """
+        Removes the user directory from user_data and removes entry in .credentials
+        :param user_name: username
+        """
+        self.logger.warning("deleting user: %s" % user_name)
+
         c = self.credentials.get_all()
         c.pop(user_name, None)
         self.credentials.set_all(c)
@@ -61,23 +85,22 @@ class GlobalFileManager:
         try:
             shutil.rmtree("user_data/{}/".format(user_name))
         except Exception:
-            print('Error while deleting directory')
+            self.logger.error("error while deleting user")
+            self.FileManagerError(self.FileManagerError.ErrorReason.DEFAULT, "error while deleting user: %s" % user_name)
+
 
     def create_user(self, user_name, user_password_hash=None, user_password=None, token=None):
         if user_password_hash is None:
             user_password_hash = krypto_manager.hash_str(user_password)
 
         if self.is_user(user_name):
-            print "VORHANDEN"
-            # todo
+            self.logger.warning("user already exists")
             return
 
         path = self.get_path("user_data") + "/" + str(user_name) + "/"
 
         if os.path.exists(path):
-            # if credentials are deleted but files still there
-            print "User bereits vorhanden"
-            # todo
+            self.logger.warning("user already exists")
             return
 
         os.makedirs(path)

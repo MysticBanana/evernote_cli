@@ -32,7 +32,6 @@ class User(object):
 
         self.user_name = user_name
         self._password = password
-        # todo
         self._password_hash = krypto_manager.hash_str(self._password)
 
         # if file path does not exists create path for it
@@ -47,7 +46,6 @@ class User(object):
                                                logger=self.controller.create_logger("Krypto"))
 
         self.user_path = path
-        # todo filepath auch zu begin mit in die config schreiben
 
         if self._password is None:
             raise self.UserError(self.UserError.ErrorReason.ENCRYPTION_ERROR, "can't encrypt_files with empty password")

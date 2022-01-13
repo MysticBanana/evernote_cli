@@ -37,17 +37,6 @@ def file_hash(file_path, hash_type="sha256"):
     hash_type.update(content)
     return hash_type.digest()
 
-
-def md5(fname):
-    image_path = fname
-    with open(image_path, 'rb') as image_file:
-        image = image_file.read()
-    md5 = hashlib.md5()
-    md5.update(image)
-    hash = md5.digest()
-    return hash
-
-
 class CryptoManager:
     class CryptographyError(exception.EvernoteException):
         class ErrorReason(enum.Enum):
@@ -116,7 +105,6 @@ class CryptoManager:
             return
 
         try:
-            # 'gAAAAABh2x_wvLmzWPMdB8FFYprIvD74Jrt6EBaEz2_FvJEknwU9bof2rrO5MGxarPuJL5zUMBS4W0TX-0fwFRzuwte6C37mQ5W-NTfNXZ8cpuForSkIHjYYs7zYNLMDqvIsHGO75GEwR_09Ofa9olkK-lymZN4bdg=='
             if content_only:
                 dec_file_name = file_name.replace(".enc", "")
             else:

@@ -8,13 +8,14 @@ import enum
 
 
 class Evernote:
+    # todo dynamicly with __file__
+    NAME = "evernote.py"
+
     class ControllerError(exception.EvernoteException):
         class ErrorReason(enum.Enum):
             DEFAULT = 1
 
     def __init__(self, argv=None, **params):
-        # loads configs
-        # todo keyboard interrupt error abfangen
         self._sandbox = True
 
         self.global_data_manager = global_data_manager.GlobalFileManager(self)

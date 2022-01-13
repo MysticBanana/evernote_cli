@@ -20,19 +20,17 @@ class DisplayManager:
     def default_error(self, reason):
         self.logger.error(reason)
 
-    def display_dict(self, data):
-        # dictionary displayed: "-u --user              help text zu -u"
-        pass
-
     def print_help(self, command=None):
+
         usage = self.get_usage_command(command)
+
+        # used to create usage strings
         optional = "[%s]"
         user_input = "<{}>"
         exclusive = "({})"
         _exclusive = " | "
 
-        # todo evernote name
-        output = "Usage: $%s" % "evenote"
+        output = "Usage: $%s" % self.controller.NAME
         for i in usage:
             output += " " + i[0][0]
             if type(i[1]) == str:
@@ -52,6 +50,13 @@ class DisplayManager:
             print i
 
     def get_help_tree(self, ret_dict=None, tab_counter=0, command=None):
+        """
+        Returns a tree dict starting from root or from "command" parameter in the origin tree
+        :param ret_dict: recursive dict to return
+        :param tab_counter: add tab / space character to the string and counting the depth
+        :param command: if none returns the complete dict as a string, if name of a parameter returns a dict tree starting there
+        :return:
+        """
         ret_dict = ret_dict if ret_dict else self.help_dict
         lines = []
 
@@ -78,14 +83,16 @@ class DisplayManager:
         return [i for row in lines for i in row]
 
     def get_usage_command(self,command=None, ret_dict=None):
+        """
+        creates a usage string based on the parameter tree. If none returns the default string, if not returns usage
+        from the parameter with all required parameters
+        """
+
         usage = ""
         usage_param = []
 
         if command is None:
-            # todo: define a var that holds the programm name!!
-            program_name = "evernote"
-            usage = "$ %s [-h] [-u <username> (-n [<token>] <password> | -p <password>) --command] " % program_name
-
+            usage = "$ %s [-h] [-u <username> (-n [<token>] <password> | -p <password>) --command] " % self.controller.NAME
             return usage
 
         ret_dict = ret_dict if ret_dict else self.help_dict
