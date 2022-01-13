@@ -99,10 +99,16 @@ class FileHandler:
 
     @property
     def path(self):
+        """
+        getter for the path
+        """
         return self._path
 
     @property
     def exists(self):
+        """
+        is True if the path is a file
+        """
         return os.path.isfile(self._path)
 
     @property

@@ -96,7 +96,6 @@ class User(object):
             value = "%sfiles/" % self.user_path
 
         # checks if valid path
-        # todo can raise error:
         if os.path.isdir(value) or zipfile.is_zipfile("/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode:
             if self._force_mode:
                 try:
