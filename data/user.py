@@ -92,9 +92,11 @@ class User(object):
     @file_path.setter
     def file_path(self, value):
         if value is None:
-            self._file_path = "%sfiles/" % self.user_path
+            self.logger.info("file_path setter is none")
+            value = "%sfiles/" % self.user_path
 
         # checks if valid path
+        # todo can raise error:
         if os.path.isdir(value) or zipfile.is_zipfile("/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode:
             if self._force_mode:
                 try:
