@@ -10,6 +10,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 from zipfile import ZipFile
+import shutil
 
 from helper import exception
 
@@ -129,13 +130,15 @@ class CompressManager():
         pass
 
     def compress(self, path, file):
-        with ZipFile("{}{}.zip".format(path, file), "w") as zipObj:
-            zipObj.write("{}{}/".format(path, file)) # zipping dir
+        complet_path = "{}/{}".format(path, file)
+        shutil.make_archive(complet_path, "zip", complet_path)
+        shutil.rmtree("{}/{}".format(path, file))
 
     def decompress(self, path, file):
-        with ZipFile("{}{}.zip".format(path, file), "r") as zipObj:
-            zipObj.extractall(path)
-
+        complet_path = "{}/{}".format(path, file)
+        with ZipFile("{}.zip".format(complet_path), "r") as zipObj:
+            zipObj.extractall(complet_path)
+        os.remove("{}.zip".format(complet_path))
 
 
 if __name__ == "__main__":

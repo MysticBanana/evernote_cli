@@ -127,7 +127,6 @@ class ArgumentParser():
             5: "You are entered <rep>, but there are only the levels 0, 1, 2, 4"
         }
 
-
         self.params = {}
 
         self.arg_list = args.split()
@@ -355,5 +354,5 @@ class ArgumentParser():
                 self.error_msg(4, [self.arg_list[2]])
         else:
             # false parameter
-            self.error_msg(4, [self.arg_list[2]])
+            self.error_msg(4, [self.arg_list[1]])
         return self.params

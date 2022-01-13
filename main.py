@@ -73,7 +73,7 @@ class Evernote:
         self.user = None
 
         # PARSER return Dictionary with information about parameter and function
-        # args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -c -e 4 "
+        #args = "-u " + tmp_user_name + " -p " + tmp_user_password + " -c -e 1 "
         args = " ".join(argv)
         #args = "-u " + tmp_user_name + " -n S=s706:U=db74969:E=17eca6df980:C=17e2fef3180:P=185:A=mneuhaus:V=2:H=c0a3120a5067762e029985155fbdeb9a " + tmp_user_password
         self.par = param_loader_2.ArgumentParser(self, args)
@@ -82,6 +82,9 @@ class Evernote:
         self.passwd = params["passwd"] # hashed
         self.passwd_hash = krypto_manager.hash_str(tmp_user_password)
         print params
+
+        c = krypto_manager.CompressManager()
+        c.decompress("D:\Python\Softwareprojekt\evernote-cli\user_data\mneuhaus", "files")
 
         try:
             self.user = self.global_data_manager.get_user(self.username, params["password"])
