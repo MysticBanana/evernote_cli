@@ -11,7 +11,6 @@ class EvernoteException(BaseException):
     class ErrorReason(enum.Enum):
         DEFAULT = 1
 
-
     def __init__(self, error_type, desc = None):
         # todo print full stacktrace
         self.error_type = error_type

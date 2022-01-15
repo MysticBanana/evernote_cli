@@ -154,8 +154,8 @@ class Evernote:
         if not self.global_data_manager.is_user(self.username):
             return
         new_pwd_hash = krypto_manager.hash_str(new_pwd)
-        self.global_data_manager.credentials.set(self.username, new_pwd_hash)
-        self.global_data_manager.credentials.dump()
+        self.global_data_manager._credentials.set(self.username, new_pwd_hash)
+        self.global_data_manager._credentials.dump()
 
     def new_path(self, params):
         """

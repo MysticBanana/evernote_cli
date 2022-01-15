@@ -5,6 +5,9 @@ import shutil
 import enum
 
 class GlobalFileManager:
+    CONSUMER_KEY = None
+    CONSUMER_SECRET = None
+
     class FileManagerError(exception.EvernoteException):
         class ErrorReason(enum.Enum):
             DEFAULT = 1
@@ -13,7 +16,7 @@ class GlobalFileManager:
     def __init__(self, controller):
         self.main_config = file_loader.FileHandler(file_name=".config", mode="json", controller=controller)
         self.controller = controller
-        self.credentials = None
+        self._credentials = None
 
     def setup_logging(self):
         self.logger = self.controller.create_logger("DataLoader")
@@ -26,7 +29,10 @@ class GlobalFileManager:
                 self.logger.warning("File does not exists: " + str(path))
                 os.makedirs(path)
 
-        self.credentials = file_loader.FileHandler(file_name=".credentials", mode="json", controller=self.controller)
+        self.CONSUMER_KEY = self.main_config.get("consumer_key")
+        self.CONSUMER_SECRET = self.main_config.get("consumer_secret")
+
+        self._credentials = file_loader.FileHandler(file_name=".credentials", mode="json", controller=self.controller)
 
     def get_api_key(self):
         return self.main_config.get("key")
@@ -52,7 +58,7 @@ class GlobalFileManager:
         :param user_name: username
         :return: True if exists
         """
-        if user_name in self.credentials.get_all():
+        if user_name in self._credentials.get_all():
             return True
         return False
 
@@ -63,7 +69,7 @@ class GlobalFileManager:
         :param password_hash: hash of password
         :return:
         """
-        up = self.credentials.get(user_name, None)
+        up = self._credentials.get(user_name, None)
         if password_hash == up:
             return True
         if up is None:
@@ -77,10 +83,10 @@ class GlobalFileManager:
         """
         self.logger.warning("deleting user: %s" % user_name)
 
-        c = self.credentials.get_all()
+        c = self._credentials.get_all()
         c.pop(user_name, None)
-        self.credentials.set_all(c)
-        self.credentials.dump()
+        self._credentials.set_all(c)
+        self._credentials.dump()
 
         try:
             shutil.rmtree("user_data/{}/".format(user_name))
@@ -104,8 +110,8 @@ class GlobalFileManager:
             return
 
         os.makedirs(path)
-        self.credentials.set(user_name, str(user_password_hash))
-        self.credentials.dump()
+        self._credentials.set(user_name, str(user_password_hash))
+        self._credentials.dump()
 
         req = self.main_config.get("user_requirements")
         for file in req:

@@ -7,5 +7,7 @@
     "user_requirements": [
         ".user_info.json", 
         "files"
-    ]
+    ],
+    "consumer_key": "mneuhaus",
+    "consumer_secret": "a0d6022ff08c56b6"
 }
