@@ -122,7 +122,7 @@ class User(object):
     @encryption_level.setter
     def encryption_level(self, value):
         if value is None:
-            value = 3
+            value = 0
 
         try:
             value = int(value)

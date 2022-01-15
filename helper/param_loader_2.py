@@ -99,7 +99,7 @@ class ArgumentParser():
                             },
                         "decrypt":
                             {
-                                "opt_str": ["-d", "--decrypt"],
+                                "opt_str": ["-de", "--decrypt"],
                                 "help": "decrypting your files",
                                 "require": {
                                     "encryption level": False
@@ -202,13 +202,13 @@ class ArgumentParser():
                     if len(self.arg_list) == 5:
                         self.params["token"] = self.arg_list[3]
                         self.params["passwd"] = self.arg_list[4]
-                        self.params["password"] = self.arg_list[4]
+                        self.params["passwd_hash"] = krypto_manager.hash_str(self.arg_list[4])
                         if nr_of_args > 5:
                             self.warning_msg(arguments=self.arg_list[5:])
                     else:
                         self.params["token"] = None
-                        self.params["passwd"] = krypto_manager.hash_str(self.arg_list[3])
-                        self.params["password"] = self.arg_list[3]
+                        self.params["passwd_hash"] = krypto_manager.hash_str(self.arg_list[3])
+                        self.params["passwd"] = self.arg_list[3]
                         if nr_of_args > 4:
                             self.warning_msg(arguments=self.arg_list[4:])
                     self.params["func"] = "new_user"
@@ -221,15 +221,15 @@ class ArgumentParser():
                 passwd_dict = user_dict["passwd"]
                 try:
                     passwd_hash = krypto_manager.hash_str(self.arg_list[3])
-                    self.params["passwd"] = passwd_hash
-                    self.params["password"] = self.arg_list[3]
+                    self.params["passwd_hash"] = passwd_hash
+                    self.params["passwd"] = self.arg_list[3]
                 except:
                     # argument is missing
                     self.error_msg(2, ["--passwd", "<PASSWORD>"])
 
                 # Check if login data are correct
                 check = self.controller.global_data_manager.check_user_hash(self.params["username"],
-                                                                            self.params["passwd"])
+                                                                            self.params["passwd_hash"])
                 if not check:
                     # Authentication failed
                     self.error_msg(3)
@@ -304,7 +304,9 @@ class ArgumentParser():
                     self.params["encryption_lvl"] = -1
                     self.params["overwrite"] = False
                     self.params["force"] = False
-                    if nr_of_args == 6:
+                    if nr_of_args == 5:
+                        pass
+                    elif nr_of_args == 6:
                         if self.arg_list[5] == "-f":
                             self.params["force"] = True
                         elif self.arg_list[5] == "-o":
