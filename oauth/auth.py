@@ -1,6 +1,6 @@
 # https://github.com/Jaymon/enno/blob/master/enno/__main__.py
 
-import exceptions
+from helper import exception
 import subprocess
 
 import enum
@@ -16,7 +16,7 @@ class Auth:
     CONSUMER_SECRET = None
     SANDBOX = True
 
-    class AuthError(exceptions.Exception):
+    class AuthError(exception.EvernoteException):
         class ErrorReason(enum.Enum):
             DEFAULT = 1
 
@@ -27,42 +27,52 @@ class Auth:
         self.logger = kwargs.get("logger", None)
         self.controller = controller
 
+        # access token user needs for oauth
         self.access_token = None
 
         if self.logger is None:
             raise self.AuthError(self.AuthError.ErrorReason.DEFAULT, "no logger defined")
 
         request_token = dict()
+        # callback from the evernote server
         def callback(request):
+            self.logger.info("successfully got the user access token")
             access_token = client.get_access_token(
                 request_token['oauth_token'],
                 request_token['oauth_token_secret'],
                 request.query.get('oauth_verifier', '')
             )
 
-            # todo
             self.access_token = access_token
             return access_token
 
-        self.logger.info("")
+        self.logger.info("trying to start webserver...")
         self.server = server.BasicServer(callback, logger=self.controller.create_logger("HTTPServer"))
         self.server.start()
+        self.logger.info("webserver successfully started")
 
+        self.logger.info("getting the request token from evernote server")
+
+        # evernote client for to authorize for oauth
         client = EvernoteClient(
             consumer_key=self.CONSUMER_KEY,
             consumer_secret=self.CONSUMER_SECRET,
             sandbox=self.SANDBOX
         )
-
         request_token = client.get_request_token(self.server.url)
         auth_url = client.get_authorize_url(request_token)
 
-        # windows error
+        self.logger.info("calling browser for authentication")
+
+        # windows error, linux works
         # subprocess.call(["open", auth_url])
+
+        # call webbrowser to open url for oauth authentication
         try:
             webbrowser.open(auth_url)
             self.server.handle_request()
         except Exception as e:
-            print e
+            raise self.AuthError(None, "can not open the browser for access token")
 
+        self.logger.info("stopping webserver")
         self.server.stop()

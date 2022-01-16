@@ -18,6 +18,8 @@ class Evernote:
 
     def __init__(self, argv=None, **params):
         self._sandbox = True
+        self._testing = True
+        self._easter_egg = False
 
         self.global_data_manager = global_data_manager.GlobalFileManager(self)
 
@@ -30,10 +32,15 @@ class Evernote:
         # setup logging for exceptions
         exception.EvernoteException.logger = self.get_logger()
 
+
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
-        self._sandbox = self.global_data_manager.main_config.get("sandbox")
-        # todo ggf user_data erzeugen etc
+        self._sandbox = self.global_data_manager.main_config.get("sandbox", True)
+        self._testing = self.global_data_manager.main_config.get("testing", True)
+        self._easter_egg = self.global_data_manager.main_config.get("cringe", False)
+
+        exception.EvernoteException.testing = self._testing
+        exception.EvernoteException.fun_mode = self._easter_egg
 
         self.display_manager = displaymanager.DisplayManager(self)
 
@@ -51,8 +58,6 @@ class Evernote:
             "input_error": self.input_error
         }
 
-        # setup django
-        views.Auth.controller = self
 
         #tmp_user_name = "mneuhaus"
         #tmp_user_password = "passwd123"
@@ -231,12 +236,12 @@ class Evernote:
         """
         formatter = logging.Formatter('%(asctime)s [%(levelname)s] [%(name)s] %(message)s')
 
-        path = self.global_data_manager.get_path("log") + "logfile.log"
-        if not os.path.exists(path):
+        path = self.global_data_manager.get_path("log")
+        if not os.path.isdir(path):
             os.makedirs(os.path.dirname(path))
-            with open(path, "w"):
+            with open(path + "logfile.log", "w"):
                 pass
-        self.log_handler = logging.FileHandler(path)
+        self.log_handler = logging.FileHandler(path + "logfile.log")
         self.log_handler.setFormatter(formatter)
 
         self.logger = logging.getLogger("Main")
@@ -296,5 +301,5 @@ if __name__ == "__main__":
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
     # e = Evernote(
     #     "-u {user_name} -n {token} {password}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
-    e = Evernote("-u {user_name} -p {password} -c -e 8".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    e = Evernote("-u {user_name} -p {password} -c -e 2".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     # e = Evernote(sys.argv[1:])

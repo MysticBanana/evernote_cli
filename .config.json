@@ -1,10 +1,11 @@
 {
+    "testing": true, 
     "consumer_secret": "a0d6022ff08c56b6", 
+    "sandbox": true, 
     "path": {
         "log": "logs/", 
         "user_data": "user_data/"
     }, 
-    "sandbox": true, 
     "consumer_key": "mneuhaus", 
     "user_requirements": [
         ".user_info.json", 

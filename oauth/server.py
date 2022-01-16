@@ -2,9 +2,14 @@ import SocketServer
 import socket
 import SimpleHTTPServer
 from threading import Thread
-
+from helper import exception
+import enum
 
 class CallbackHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    class CallbackError(exception.EvernoteException):
+        class ErrorReason(enum.Enum):
+            DEFAULT = 1
+
     @property
     def query(self):
         query = {}
@@ -50,22 +55,24 @@ class CallbackHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 ret = self.server.callback(self)
             except KeyError:
                 if not self.headers_sent:
-                    self.send_error(501, "Unsupported method {}".format(self.command))
+                    self.server.logger.error("501 Unsupported method {}".format(self.command))
+                    # self.send_error(501, "Unsupported method {}".format(self.command))
                 return
 
         except Exception as e:
             if not self.headers_sent:
-                self.send_error(500, "{} - {}".format(e.__class__.__name__, e))
+                self.server.logger.error("500 {} - {}".format(e.__class__.__name__, e))
+                # self.send_error(500, "{} - {}".format(e.__class__.__name__, e))
 
         else:
             if ret is None or ret == "" or ret == 0:
                 if not self.headers_sent:
-                    self.send_response(204)
+                    # self.send_response(204)
                     self.end_headers()
 
             else:
                 if not self.headers_sent:
-                    self.send_response(200)
+                    # self.send_response(200)
                     self.end_headers()
 
                 self.wfile.write(ret)
@@ -78,6 +85,10 @@ class BasicServer(SocketServer.TCPServer):
     # https://github.com/python/cpython/blob/2.7/Lib/BaseHTTPServer.py#L102
 
     allow_reuse_address = 1  # Seems to make sense in testing environment
+
+    class ServerError(exception.EvernoteException):
+        class ErrorReason(enum.Enum):
+            DEFAULT = 1
 
     @property
     def url(self):
@@ -105,11 +116,13 @@ class BasicServer(SocketServer.TCPServer):
                 self.logger.warning("thread already exists")
             return False
 
+        self.logger.info("starting server...")
         self.thread = Thread(target=self.serve_forever)
         self.thread.daemon = True
         self.thread.start()
 
     def stop(self):
         if self.thread is not None:
+            self.logger.info("stopping server")
             self.shutdown()
             self.thread = None

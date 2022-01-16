@@ -61,6 +61,7 @@ class CryptoManager:
 
         self.fernet = Fernet(key)
 
+    # todo error catching
     def encrypt(self, file_path, file_name, content_only=False):
         if not os.path.isfile(file_path + file_name):
             print "no file"

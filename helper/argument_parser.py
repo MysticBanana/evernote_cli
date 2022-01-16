@@ -320,7 +320,7 @@ class ArgumentParser:
                 if key == "encrypt_lvl" or key == "new_encrypt_lvl":
                     print val
                     print self.controller.max_encryption_level
-                    if 0 <= val or val <= self.controller.max_encryption_level:
+                    if 0 > val > self.controller.max_encryption_level:
                         # False Encryption Level selected
                         self.add_input_check_error(key, val)
 

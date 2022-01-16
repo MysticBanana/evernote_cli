@@ -6,7 +6,7 @@ import zipfile
 import enum
 
 import file_loader
-from helper import downloader, exception, krypto_manager
+from helper import downloader, exception, krypto_manager, decorator
 
 class User(object):
     # check if bits are set
@@ -24,6 +24,8 @@ class User(object):
             COMPRESSION_ERROR = 6
             ENCRYPTION_ERROR = 7
             CONFIG_MISSING = 8
+            DOWNLOAD_ERROR = 9
+
 
     def __init__(self, controller, path, user_name, password, token=None, **kwargs):
         self._user_token = token
@@ -77,8 +79,8 @@ class User(object):
         if type(value) != unicode and type(value) != str:
             raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token must be unicode (i messed up)")
 
-        # todo change valid controll
-        if (self.controller.sandbox and len(value) != 96) or (not self.controller.sandbox and len(value) != 100) or self.user_name not in value:
+        if len(value) < 50 > 250 or \
+                self.controller.global_data_manager.CONSUMER_KEY not in value:
             raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token is not the right format")
 
         self.user_config.set("key", self.encrypt_token(value)).dump()
@@ -139,6 +141,7 @@ class User(object):
         self.user_config.set("encrypt_level", self.encryption_level).dump()
         self.logger.info("encryption level changed")
 
+    @decorator.exception_handler(UserError, "dectypting token", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def decrypt_token(self):
         token = self.user_config.get("key", None)
 
@@ -150,6 +153,7 @@ class User(object):
             # set the new encrypted version
             self.user_token = self.km.decrypt_str(token)
 
+    @decorator.exception_handler(UserError, "encrypting token", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def encrypt_token(self, token=None):
         if token is not None:
             return self.km.encrypt_str(token)
@@ -159,6 +163,7 @@ class User(object):
         # else:
         #     raise self.UserError(self.UserError.ErrorReason.ENCRYPTION_ERROR, "user token empty")
 
+    @decorator.exception_handler(UserError, "dectypting files", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def decrypt_files(self):
         path = self.get_files()
 
@@ -174,6 +179,7 @@ class User(object):
                 continue
             os.remove(i[0] + i[1])
 
+    @decorator.exception_handler(UserError, "encrypting files", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def encrypt_files(self):
         path = self.get_files()
 
@@ -190,7 +196,6 @@ class User(object):
             os.remove(i[0].decode('utf-8') + i[1].decode('utf-8'))
 
     def decrypt(self):
-        # todo add try catch
         # handle encryption level
         if bool(self.encryption_level & (1 << self.EncryptionLevel.ENCRYPT.value)):
             self.decrypt_files()
@@ -198,9 +203,7 @@ class User(object):
                 self.decompress_files()
 
     def encrypt(self):
-        # todo add try catch
         # handle encryption level
-        # todo catch if dir is already a zip and not compress
         if bool(self.encryption_level & (1 << self.EncryptionLevel.ENCRYPT.value)):
             self.encrypt_files()
         if bool(self.encryption_level & (1 << self.EncryptionLevel.COMPRESS.value)):
@@ -215,8 +218,8 @@ class User(object):
 
         return list_of_files
 
+    @decorator.exception_handler(UserError, "compressing files", error_reason=UserError.ErrorReason.COMPRESSION_ERROR)
     def compress_files(self):
-        # todo catch n permission error
         path = "/".join(self.file_path.split("/")[:-2]) + "/"
         if os.path.isdir(self.file_path):
             c = krypto_manager.CompressManager()
@@ -224,6 +227,7 @@ class User(object):
         else:
             raise self.UserError(self.UserError.ErrorReason.COMPRESSION_ERROR, "path is no dir")
 
+    @decorator.exception_handler(UserError, "decompressing files", error_reason=UserError.ErrorReason.COMPRESSION_ERROR)
     def decompress_files(self):
         path = "/".join(self.file_path.split("/")[:-2]) + "/"
         if os.path.isfile("%sfiles.zip" % path):
@@ -245,6 +249,7 @@ class User(object):
         self.logger.info("encrypting user files...")
         self.encrypt()
 
+    @decorator.exception_handler(UserError, "downloading user data", error_reason=UserError.ErrorReason.DOWNLOAD_ERROR)
     def download_user_data(self):
         """
         downloads user data and stores it in the .user_info.json of the respective user.
@@ -261,6 +266,7 @@ class User(object):
         self.user_config.set_all(user_config)
         self.user_config.dump()
 
+    @decorator.exception_handler(UserError, "downloading notes", error_reason=UserError.ErrorReason.DOWNLOAD_ERROR)
     def test_download(self):
         d = downloader.EvernoteNote(self.controller, self)
         d.download()
@@ -268,6 +274,8 @@ class User(object):
     def get_all_files(self):
         files = []
         dirlist = [self.user_path]
+
+        # todo @tom utf-8 codierung hinzufügen! (existiert übrigens schon die gleiche methode)
 
         while len(dirlist) > 0:
             for (dirpath, dirnames, filenames) in os.walk(dirlist.pop()):
