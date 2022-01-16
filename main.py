@@ -2,7 +2,6 @@ import sys
 import logging
 from data import user, global_data_manager
 import os
-from oauth import views
 from helper import krypto_manager, displaymanager, argument_parser, exception
 import enum
 import oauth.auth
@@ -301,7 +300,7 @@ if __name__ == "__main__":
     tmp_user_password = "test"
 
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
-    e = Evernote(
-          "-u {user_name} -n {password} ".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    # e = Evernote(
+    #       "-u {user_name} -n {password} ".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     #e = Evernote("-u {user_name} -p {password} -rm".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     e = Evernote(sys.argv[1:])
