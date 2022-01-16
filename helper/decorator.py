@@ -12,7 +12,8 @@ def exception_handler(error=exception.EvernoteException, desc="", error_reason=N
             try:
                 return func(*args, **kwargs)
             except Exception as e:
-                raise error(error_reason or e, desc)
+                if stop:
+                    raise error(error_reason or e, desc)
 
         return inner
     return decorator
