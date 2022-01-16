@@ -41,7 +41,7 @@ class User(object):
 
         self.controller = controller
 
-        self.logger = self.controller.create_logger(user_name)
+        self.logger = self.controller.create_logger("USER | %s" % user_name)
         self.logger.info("Initializing user: {}".format(user_name))
 
         self.km = krypto_manager.CryptoManager(key=self._password, salt="user",
