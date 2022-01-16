@@ -99,12 +99,11 @@ class Evernote:
                 self.password_hash = params["password_hash"]  # hashed
                 self.user = self.global_data_manager.get_user(self.username, self.password)
             self.function[params["func"]](params)
-        #except exception.EvernoteException as e:
-        #    self.logger.error("error while processing command\n%s" % e)
-        #    raise e
+        except exception.EvernoteException as e:
+            self.logger.error("error while processing command\n%s" % e)
+            raise e
         except Exception as e:
             self.logger.error("error while processing command\n%s" % e)
-            #raise self.ControllerError(self.ControllerError.ErrorReason.DEFAULT, e)
             raise e
         except KeyboardInterrupt:
             # todo bessere formulierung
