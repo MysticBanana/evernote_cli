@@ -1,17 +1,17 @@
+import base64
 import hashlib
 import os
+import shutil
+from zipfile import ZipFile
 
-from cryptography.fernet import Fernet
-import base64
 import enum
-
+from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.backends import default_backend
-from zipfile import ZipFile
-import shutil
 
 from helper import exception
+
 
 def hash_str(string, hash_type="sha256"):
     if hash_type == "sha256":

@@ -1,10 +1,12 @@
-import sys
 import logging
-from data import user, global_data_manager
 import os
-from helper import krypto_manager, displaymanager, argument_parser, exception
+import sys
+
 import enum
+
 import oauth.auth
+from data import user, global_data_manager
+from helper import krypto_manager, displaymanager, argument_parser, exception
 
 
 class Evernote:
