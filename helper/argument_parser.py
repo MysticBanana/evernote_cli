@@ -305,13 +305,14 @@ class ArgumentParser:
                 break
             next_param, end = self.get_next_params(next_param)
 
-        # add password hash to self.params
-        self.params["password_hash"] = krypto_manager.hash_str(self.params["password"])
 
-        #User Input Check
-        params = copy.deepcopy(self.params)
 
-        if not self.params["func"] == "new_user":
+        if not self.params["func"] in ["new_user", "help"]:
+            # add password hash to self.params
+            self.params["password_hash"] = krypto_manager.hash_str(self.params["password"])
+
+            # User Input Check
+            params = copy.deepcopy(self.params)
             # Check if login data are correct
             check = self.controller.global_data_manager.check_user_hash(self.params["username"], self.params["password_hash"])
             if not check:

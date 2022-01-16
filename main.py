@@ -61,10 +61,10 @@ class Evernote:
         }
 
 
-        #tmp_user_name = "mneuhaus"
-        #tmp_user_password = "passwd123"
-        #tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
-        #token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
+        # tmp_user_name = "mneuhaus"
+        # tmp_user_password = "passwd123"
+        # tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
+        # token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
 
         # CREATING USER
         #self.global_data_manager.create_user(tmp_user_name, tmp_password_hash)
@@ -75,9 +75,9 @@ class Evernote:
         self.user = None
 
         # PARSER return Dictionary with information about parameter and function
-        #args = "-u {user_name} -n {token} {password}".format(user_name=tmp_user_name,
+        # args = "-u {user_name} -n {password} {token} ".format(user_name=tmp_user_name,
         #                                                     password=tmp_user_password,
-         #                                                    token=token)
+        #                                                     token=token)
         args = " ".join(argv)
         #args = "-u " + tmp_user_name + " -n passwd123 S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
         self.par = argument_parser.ArgumentParser(self, args)
@@ -305,5 +305,5 @@ if __name__ == "__main__":
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
     # e = Evernote(
     #       "-u {user_name} -n {password} ".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    #e = Evernote("-u {user_name} -p {password} -rm".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    e = Evernote(sys.argv[1:])
+    e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    #e = Evernote(sys.argv[1:])
