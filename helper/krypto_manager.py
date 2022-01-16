@@ -1,7 +1,6 @@
 import hashlib
 import os
 
-import stdiomask as stdiomask
 from cryptography.fernet import Fernet
 import base64
 import enum

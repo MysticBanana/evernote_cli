@@ -97,7 +97,8 @@ class Evernote:
                 self.username = params["username"]
                 self.password = params["password"]
                 self.password_hash = params["password_hash"]  # hashed
-                self.user = self.global_data_manager.get_user(self.username, self.password)
+                if not params["func"] == "new_user":
+                    self.user = self.global_data_manager.get_user(self.username, self.password)
             self.function[params["func"]](params)
         except exception.EvernoteException as e:
             self.logger.error("error while processing command\n%s" % e)
