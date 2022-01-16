@@ -5,6 +5,7 @@ import os
 from oauth import views
 from helper import krypto_manager, displaymanager, argument_parser, exception
 import enum
+import oauth.auth
 
 
 class Evernote:
@@ -192,7 +193,7 @@ class Evernote:
         # self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.test_download()
         self.user.download_user_data()
-        self.user.encryption_level = params["encrypt_lvl"]
+        self.user.encryption_level = params["encryption_lvl"]
 
     def encrypt(self, params):
         """
@@ -280,10 +281,10 @@ class Evernote:
         exit()
 
     def user_web_auth(self):
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "evernote_oauth.settings")
-        from django.core.management import execute_from_command_line
-        execute_from_command_line(sys.argv[:1] + ["runserver"])
-
+        self.auth = oauth.auth.Auth(controller=self, CONSUMER_KEY=self.global_data_manager.CONSUMER_KEY,
+                                    CONSUMER_SECRET=self.global_data_manager.CONSUMER_SECRET, SANDBOX=self.sandbox,
+                                    logger=self.create_logger("OAuth"))
+        return self.auth.access_token
 
 # main
 if __name__ == "__main__":

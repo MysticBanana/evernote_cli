@@ -77,6 +77,7 @@ class User(object):
         if type(value) != unicode and type(value) != str:
             raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token must be unicode (i messed up)")
 
+        # todo change valid controll
         if (self.controller.sandbox and len(value) != 96) or (not self.controller.sandbox and len(value) != 100) or self.user_name not in value:
             raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token is not the right format")
 

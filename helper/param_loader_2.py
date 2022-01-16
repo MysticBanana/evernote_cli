@@ -347,17 +347,21 @@ class ArgumentParser():
                         else:
                             self.error_msg(4, [self.arg_list[5]])
                     else:
-                        if self.arg_list[5] == "-f" and self.arg_list[6] == "-o" :
-                            self.params["force"] = True
-                            self.params["overwrite"] = True
-                            try:
-                                encrypt_lvl = int(self.arg_list[7])
-                                if 0 <= encrypt_lvl <= self.controller.max_encryption_level:
-                                    # False Encryption Level selected
-                                    self.error_msg(5, [str(encrypt_lvl)])
-                                self.params["encryption_lvl"] = encrypt_lvl
-                            except Exception:
-                                self.error_msg(4, [self.arg_list[7]])
+                        # todo remove try just temp
+                        try:
+                            if self.arg_list[5] == "-f" and self.arg_list[6] == "-o" :
+                                self.params["force"] = True
+                                self.params["overwrite"] = True
+                                try:
+                                    encrypt_lvl = int(self.arg_list[7])
+                                    if 0 <= encrypt_lvl <= self.controller.max_encryption_level:
+                                        # False Encryption Level selected
+                                        self.error_msg(5, [str(encrypt_lvl)])
+                                    self.params["encryption_lvl"] = encrypt_lvl
+                                except Exception:
+                                    self.error_msg(4, [self.arg_list[7]])
+                        except:
+                            pass
                         if nr_of_args > 8:
                             self.warning_msg(arguments=self.arg_list[8:])
 
