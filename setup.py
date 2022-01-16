@@ -10,7 +10,7 @@ install_modules = ["evernote", "cryptography", "enum", "enum32", "httplib2", "ip
 
 setuptools.setup(
     name="evernote_cli",
-    version="1.0",
+    version="1.0.1",
     author="Secret",
     author_email="no-reply@hs-mittweida.de",
     description="Package to create Hive",
