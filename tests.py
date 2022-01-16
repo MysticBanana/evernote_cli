@@ -23,7 +23,7 @@ class EvernoteTest(unittest.TestCase):
         tmp_user_password = "passwd123"
         token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
 
-        controller = main.Evernote("-u {user_name} -n {token} {password}".format(user_name=tmp_user_name,
+        controller = main.Evernote("-u {user_name} -n {password} {token}".format(user_name=tmp_user_name,
                                                                                  password=tmp_user_password,
                                                                                  token=token).split(" "))
         self.assertEqual(controller.user.user_token, token)

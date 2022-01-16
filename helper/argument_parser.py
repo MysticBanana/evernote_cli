@@ -222,6 +222,7 @@ class ArgumentParser:
 
     def add_input_check_error(self, input_typ, user_input):
         if not self.wrong_input:
+            self.wrong_input = True
             self.params = {"func": "input_error", "err_types": []}
         self.params["err_types"].append((input_typ, user_input))
 

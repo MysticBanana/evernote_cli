@@ -54,6 +54,7 @@ class Evernote:
             "encrypt_files": self.encrypt,
             "decrypt": self.decrypt,
             "new_encrypt_lvl": self.new_encryption_lvl,
+            "remove": self.remove,
             "error": self.error,
             "input_error": self.input_error
         }
@@ -154,9 +155,8 @@ class Evernote:
         :param params: a dict containing all parsed arguments
         """
         token = params["token"]
-        if token == None:
-            # TODO:
-            pass
+        if not token:
+            token = self.user_web_auth()
         self.user = self.global_data_manager.create_user(user_name=self.username, user_password=self.password, token=token)
 
     def new_pwd(self, params):
@@ -218,6 +218,9 @@ class Evernote:
         :return:
         """
         pass
+
+    def remove(self, params):
+        self.global_data_manager.remove_user(params["username"])
 
     def error(self, params):
         print "error"
@@ -294,11 +297,11 @@ class Evernote:
 if __name__ == "__main__":
     print(sys.argv[1:])
 
-    tmp_user_name = "mneuhaus"
-    tmp_user_password = "passwd123"
+    tmp_user_name = "test"
+    tmp_user_password = "test"
 
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
-    # e = Evernote(
-    #     "-u {user_name} -n {token} {password}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
-    e = Evernote("-u {user_name} -p {password} -c -e 2".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    # e = Evernote(sys.argv[1:])
+    e = Evernote(
+          "-u {user_name} -n {password} ".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    #e = Evernote("-u {user_name} -p {password} -rm".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    e = Evernote(sys.argv[1:])
