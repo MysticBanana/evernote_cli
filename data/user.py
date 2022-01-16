@@ -76,6 +76,11 @@ class User(object):
 
     @user_token.setter
     def user_token(self, value):
+        try:
+            value = unicode(value)
+        except Exception:
+            raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "can not convert token my bad")
+
         if type(value) != unicode and type(value) != str:
             raise self.UserError(self.UserError.ErrorReason.INVALID_TOKEN, "token must be unicode (i messed up)")
 
@@ -163,7 +168,7 @@ class User(object):
         # else:
         #     raise self.UserError(self.UserError.ErrorReason.ENCRYPTION_ERROR, "user token empty")
 
-    @decorator.exception_handler(UserError, "dectypting files", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
+    @decorator.exception_handler(UserError, "decrypting files", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def decrypt_files(self):
         path = self.get_files()
 
