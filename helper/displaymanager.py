@@ -58,20 +58,24 @@ class DisplayManager:
         _exclusive = " | "
 
         output = "Usage: $%s" % self.controller.NAME
-        for i in usage:
-            output += " " + i[0][0]
-            if type(i[1]) == str:
-                output = i[1] + ":\n" + output
+        if command is not None:
+            for i in usage:
+                output += " " + i[0][0]
+                if type(i[1]) == str:
+                    output = i[1] + ":\n" + output
 
-                if type(i[2]) == dict:
-                    output += " " + exclusive.format(_exclusive.join(i[2].values()))
-                continue
+                    if type(i[2]) == dict:
+                        output += " " + exclusive.format(_exclusive.join(i[2].keys()))
+                    continue
 
-            if len(i) > 1:
-                for para in i[1]:
-                    output += " " + user_input.format((para if i[1][para] else optional % para))
+                if len(i) > 1:
+                    for para in i[1]:
+                        output += " " + user_input.format((para if i[1][para] else optional % para))
 
-        print output + "\n"
+            print output + "\n"
+        else:
+            print output + usage + "\n"
+
 
         for i in self.get_help_tree(command=command):
             print i
@@ -119,7 +123,7 @@ class DisplayManager:
         usage_param = []
 
         if command is None:
-            usage = "$ %s [-h] [-u <username> (-n [<token>] <password> | -p <password>) --command] " % self.controller.NAME
+            usage = "[-h] [-u <username> (-n [<token>] <password> | -p <password>) --command] "
             return usage
 
         ret_dict = ret_dict if ret_dict else self.help_dict

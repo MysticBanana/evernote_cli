@@ -224,8 +224,12 @@ class Evernote:
         outputs help text on the terminal
         :param params: a dict containing all parsed arguments
         """
-        self.display_manager.print_help(params)
 
+        p = params["param"]
+        if type(p) == list:
+            self.display_manager.print_help(p[0])
+        else:
+            self.display_manager.print_help(p)
     def new_user(self, params):
         """
         Create a new user
@@ -330,7 +334,8 @@ if __name__ == "__main__":
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
     # e = Evernote(
     #       "-u {user_name} -n {password} {token}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
-    e = Evernote("-u {user_name} -p {password} -c -e 0".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    # e = Evernote("-u {user_name} -p {password} -c -e 0".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    e = Evernote("-h -u".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     # e = Evernote(
     #     "-u {user_name} -p {password} -d".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     # e = Evernote(sys.argv[1:])
