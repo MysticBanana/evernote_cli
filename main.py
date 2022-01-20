@@ -33,7 +33,6 @@ class Evernote:
         # setup logging for exceptions
         exception.EvernoteException.logger = self.get_logger()
 
-        self.user = None
 
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
@@ -61,12 +60,39 @@ class Evernote:
             "input_error": self.input_error
         }
 
+
+        # tmp_user_name = "mneuhaus"
+        # tmp_user_password = "passwd123"
+        # tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
+        # token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
+
+        # CREATING USER
+        #self.global_data_manager.create_user(tmp_user_name, tmp_password_hash)
+
+        # CHECK LOGIN
+        #check = self.global_data_manager.check_user_hash(tmp_user_name, tmp_password_hash)
+       # print check
+        self.user = None
+
+        # PARSER return Dictionary with information about parameter and function
+        # args = "-u {user_name} -n {password} {token} ".format(user_name=tmp_user_name,
+        #                                                     password=tmp_user_password,
+        #                                                     token=token)
         args = " ".join(argv)
         #args = "-u " + tmp_user_name + " -n passwd123 S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
         self.par = argument_parser.ArgumentParser(self, args)
         self.par.parser()
+        #self.username = params["username"]
+        #self.passwd = params["passwd"] # hashed
+        #self.passwd_hash = krypto_manager.hash_str(tmp_user_password)
+
+        # test
+       # self.user_web_auth()
         params = self.par.params
         print params
+
+        #c = krypto_manager.CompressManager()
+        #c.decompress("D:\Python\Softwareprojekt\evernote-cli\user_data\mneuhaus", "files"
 
         try:
             if not params["func"] in ["help", "error", "input_error"]:
@@ -251,6 +277,8 @@ class Evernote:
         # todo set encryption level before and add "force" too here need your help @tom
         self.user.test_download()
         self.user.download_user_data()
+        if not params["encrypt_lvl"] == None:
+            self.user.encryption_level = params["encrypt_lvl"]
 
         el = params.get("encryption_lvl", None)
         if el:

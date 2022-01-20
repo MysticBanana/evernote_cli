@@ -128,6 +128,7 @@ class User(object):
             self.user_config.set("file_path", self.file_path).dump()
 
             self.logger.info("custom file path changed")
+        # TODO --force einbauen
         else:
             raise self.UserError(self.UserError.ErrorReason.DEFAULT, "path: %s is no dir\n use --force or --overwrite to create it")
 
