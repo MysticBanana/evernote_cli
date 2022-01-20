@@ -60,18 +60,6 @@ class Evernote:
             "input_error": self.input_error
         }
 
-
-        # tmp_user_name = "mneuhaus"
-        # tmp_user_password = "passwd123"
-        # tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
-        # token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
-
-        # CREATING USER
-        #self.global_data_manager.create_user(tmp_user_name, tmp_password_hash)
-
-        # CHECK LOGIN
-        #check = self.global_data_manager.check_user_hash(tmp_user_name, tmp_password_hash)
-       # print check
         self.user = None
 
         # PARSER return Dictionary with information about parameter and function
@@ -199,7 +187,8 @@ class Evernote:
         # self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.test_download()
         self.user.download_user_data()
-        self.user.encryption_level = params["encryption_lvl"]
+        if not params["encrypt_lvl"] == None:
+            self.user.encryption_level = params["encrypt_lvl"]
 
     def encrypt(self, params):
         """
@@ -299,11 +288,11 @@ class Evernote:
 if __name__ == "__main__":
     print(sys.argv[1:])
 
-    tmp_user_name = "test"
+    tmp_user_name = "tom"
     tmp_user_password = "test"
 
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
-    # e = Evernote(
-    #       "-u {user_name} -n {password} ".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    e = Evernote(
+          "-u {user_name} -n {password} {token}  ".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
+    # e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     #e = Evernote(sys.argv[1:])
