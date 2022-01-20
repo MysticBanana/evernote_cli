@@ -65,6 +65,7 @@ class DisplayManager:
                     output = i[1] + ":\n" + output
 
                     if type(i[2]) == dict:
+                        # todo mit <>
                         output += " " + exclusive.format(_exclusive.join(i[2].keys()))
                     continue
 

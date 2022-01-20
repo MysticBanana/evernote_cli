@@ -119,7 +119,8 @@ class User(object):
         if os.path.isdir(value) or zipfile.is_zipfile("/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode or self._overwrite or self.defaults["create_download_path"]:
             if self._force_mode or self._overwrite or self.defaults["create_download_path"]:
                 try:
-                    os.makedirs(os.path.dirname(value))
+                    if not os.path.isdir(value):
+                        os.makedirs(os.path.dirname(value))
                 except Exception:
                     raise self.UserError(file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_CREATING_PATH,
                                          "path: %s " % value)
