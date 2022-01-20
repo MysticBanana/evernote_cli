@@ -20,6 +20,33 @@ class DisplayManager:
     def default_error(self, reason):
         self.logger.error(reason)
 
+    def get_user_input(self, text):
+        """
+        If you need a request from user yes/no use this
+        """
+
+        # check for multiple different inputs by user
+        decision = {
+            "yes": ["yes", "y", "true", "yee", "yes i want", "true"],
+            "no": ["no", "n", "nope", "shut up", "false", ""]
+        }
+
+        max_wrong_input = 3
+        input_counter = 0
+        while input_counter < max_wrong_input:
+            # py 2 require raw_input
+            reply = raw_input("{text} (yes|no) [default=no]: ".format(text=text))
+
+            if reply in decision["yes"]:
+                return True
+            elif reply in decision["no"]:
+                return False
+            print "Type 'yes' or 'no' please \n After {} using default=no or try parameter --force".format(max_wrong_input-input_counter)
+
+            input_counter += 1
+
+        return False
+
     def print_help(self, command=None):
 
         usage = self.get_usage_command(command)

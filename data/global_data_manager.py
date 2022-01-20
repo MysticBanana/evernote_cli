@@ -40,7 +40,7 @@ class GlobalFileManager:
     def get_path(self, key=None):
         return self.main_config.get("path")[key] if key else self.main_config.get("path")
 
-    def get_user(self, user_name, user_password, token=None, path=False):
+    def get_user(self, user_name, user_password, token=None, path=False, *args, **kwargs):
         """
         returns relative path to user files or returns UserObject
         :rtype:
@@ -50,7 +50,7 @@ class GlobalFileManager:
             if path:
                 return ppath
             else:
-                return user.User(self.controller, ppath, user_name, user_password, token)
+                return user.User(self.controller, ppath, user_name, user_password, token, **kwargs)
 
     def is_user(self, user_name):
         """

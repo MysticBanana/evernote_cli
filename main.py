@@ -33,6 +33,7 @@ class Evernote:
         # setup logging for exceptions
         exception.EvernoteException.logger = self.get_logger()
 
+        self.user = None
 
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
@@ -54,60 +55,34 @@ class Evernote:
             "refresh": self.refresh,
             "encrypt_files": self.encrypt,
             "decrypt": self.decrypt,
-            "new_encrypt_lvl": self.new_encryption_lvl,
+            "new_encrypt": self.new_encryption_lvl,
             "remove": self.remove,
             "error": self.error,
             "input_error": self.input_error
         }
 
-
-        # tmp_user_name = "mneuhaus"
-        # tmp_user_password = "passwd123"
-        # tmp_password_hash = krypto_manager.hash_str(tmp_user_password)
-        # token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
-
-        # CREATING USER
-        #self.global_data_manager.create_user(tmp_user_name, tmp_password_hash)
-
-        # CHECK LOGIN
-        #check = self.global_data_manager.check_user_hash(tmp_user_name, tmp_password_hash)
-       # print check
-        self.user = None
-
-        # PARSER return Dictionary with information about parameter and function
-        # args = "-u {user_name} -n {password} {token} ".format(user_name=tmp_user_name,
-        #                                                     password=tmp_user_password,
-        #                                                     token=token)
         args = " ".join(argv)
         #args = "-u " + tmp_user_name + " -n passwd123 S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
         self.par = argument_parser.ArgumentParser(self, args)
         self.par.parser()
-        #self.username = params["username"]
-        #self.passwd = params["passwd"] # hashed
-        #self.passwd_hash = krypto_manager.hash_str(tmp_user_password)
-
-        # test
-       # self.user_web_auth()
         params = self.par.params
         print params
-
-        #c = krypto_manager.CompressManager()
-        #c.decompress("D:\Python\Softwareprojekt\evernote-cli\user_data\mneuhaus", "files"
 
         try:
             if not params["func"] in ["help", "error", "input_error"]:
                 self.username = params["username"]
                 self.password = params["password"]
-                self.password_hash = params["password_hash"]  # hashed
                 if not params["func"] == "new_user":
-                    self.user = self.global_data_manager.get_user(self.username, self.password)
+                    self.user = self.global_data_manager.get_user(self.username, self.password,
+                                                                  force_mode=params.get("force", False),
+                                                                  overwrite=params.get("overwrite", False))
             self.function[params["func"]](params)
         except exception.EvernoteException as e:
             self.logger.error("error while processing command\n%s" % e)
-            raise e
+            raise self.ControllerError(e)
         except Exception as e:
             self.logger.error("error while processing command\n%s" % e)
-            raise e
+            raise self.ControllerError(e)
         except KeyboardInterrupt:
             # todo bessere formulierung
             print "trying to close files"
@@ -118,6 +93,80 @@ class Evernote:
             if self.user is not None:
                 self.user.close()
 
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.user is not None:
+            self.logger.warning("stopped program unexpected, trying to save all files")
+            try:
+                self.user.close()
+            except Exception as e:
+                self.logger.error("error while saving user files")
+            finally:
+                self.logger.info("stopped programm successfully")
+
+    def setup_logging(self, level=logging.INFO):
+        """
+        Used to make global configurations for the logger (format etc)
+        :param level:
+        """
+        formatter = logging.Formatter('%(asctime)s [%(levelname)s] [%(name)s] %(message)s')
+
+        path = self.global_data_manager.get_path("log")
+        fpath = path + "logfile.log"
+
+        # check for exist
+        if not os.path.isdir(path):
+            os.makedirs(os.path.dirname(path))
+            with open(fpath, "w"):
+                pass
+
+        # if logfile gets too big delete
+        if os.path.isfile(fpath):
+            if os.path.getsize(fpath) > 40000:
+                with open(fpath, "w+"):
+                    pass
+
+        # setup log handler with correct format
+        self.log_handler = logging.FileHandler(fpath)
+        self.log_handler.setFormatter(formatter)
+
+        self.logger = logging.getLogger("Main")
+        self.logger.setLevel(level)
+        self.logger.addHandler(self.log_handler)
+
+    def get_logger(self):
+        """
+        Returns logging object of Evernote object
+        :return:
+        """
+        return self.logger
+
+    def get_log_handler(self):
+        """
+        Returns logging handler to create own logger objects in different classes with global configuration
+        :return:
+        """
+        return self.log_handler
+
+    def create_logger(self, name):
+        """
+        Return a logger object with the name of the var
+        :param name:
+        :return:
+        """
+        logger = logging.getLogger(name)
+        logger.setLevel(self.log_level)
+        logger.addHandler(self.log_handler)
+        return logger
+
+    def user_web_auth(self):
+        """
+        Runs a local TCP server to handle the callback from evernote website
+        :return: user access token to authenticate
+        """
+        self.auth = oauth.auth.Auth(controller=self, CONSUMER_KEY=self.global_data_manager.CONSUMER_KEY,
+                                    CONSUMER_SECRET=self.global_data_manager.CONSUMER_SECRET, SANDBOX=self.sandbox,
+                                    logger=self.create_logger("OAuth"))
+        return self.auth.access_token
 
     @property
     def sandbox(self):
@@ -136,6 +185,7 @@ class Evernote:
 
     @property
     def max_encryption_level(self):
+        # used for validation in user input
         return 2 ** len(user.User.EncryptionLevel) - 1
 
 
@@ -197,9 +247,14 @@ class Evernote:
         :param params: a dict containing all parsed arguments
         """
         # self.user = self.global_data_manager.get_user(self.username, self.passwd)
+
+        # todo set encryption level before and add "force" too here need your help @tom
         self.user.test_download()
         self.user.download_user_data()
-        self.user.encryption_level = params["encryption_lvl"]
+
+        el = params.get("encryption_lvl", None)
+        if el:
+            self.user.encryption_level = el
 
     def encrypt(self, params):
         """
@@ -224,86 +279,30 @@ class Evernote:
     def remove(self, params):
         self.global_data_manager.remove_user(params["username"])
 
+    # todo remove
     def error(self, params):
         print "error"
 
+    # todo remove
     def input_error(self, params):
         print "input error"
 
     ##########################################
     ##########################################
 
-    def setup_logging(self, level=logging.INFO):
-        """
-        Used to make global configurations for the logger (format etc)
-        :param level:
-        """
-        formatter = logging.Formatter('%(asctime)s [%(levelname)s] [%(name)s] %(message)s')
 
-        path = self.global_data_manager.get_path("log")
-        if not os.path.isdir(path):
-            os.makedirs(os.path.dirname(path))
-            with open(path + "logfile.log", "w"):
-                pass
-        self.log_handler = logging.FileHandler(path + "logfile.log")
-        self.log_handler.setFormatter(formatter)
-
-        self.logger = logging.getLogger("Main")
-        self.logger.setLevel(level)
-        self.logger.addHandler(self.log_handler)
-
-    def get_logger(self):
-        """
-        Returns logging object of Evernote object
-        :return:
-        """
-        return self.logger
-
-    def get_log_handler(self):
-        """
-        Returns logging handler to create own logger objects in different classes with global configuration
-        :return:
-        """
-        return self.log_handler
-
-    def create_logger(self, name):
-        """
-        Return a logger object with the name of the var
-        :param name:
-        :return:
-        """
-        logger = logging.getLogger(name)
-        logger.setLevel(self.log_level)
-        logger.addHandler(self.log_handler)
-        return logger
-
-    def exit_error(self, error_message=None):
-        """
-        Call this function when error appeared. Prints error to commandline and logs in log files
-        :param error_message:
-        """
-        # close and exit all services now
-
-        if hasattr(self, "logger"):
-            self.logger.error(msg=error_message)
-        print error_message
-        exit()
-
-    def user_web_auth(self):
-        self.auth = oauth.auth.Auth(controller=self, CONSUMER_KEY=self.global_data_manager.CONSUMER_KEY,
-                                    CONSUMER_SECRET=self.global_data_manager.CONSUMER_SECRET, SANDBOX=self.sandbox,
-                                    logger=self.create_logger("OAuth"))
-        return self.auth.access_token
 
 # main
 if __name__ == "__main__":
     print(sys.argv[1:])
 
-    tmp_user_name = "test"
+    tmp_user_name = "mneuhaus"
     tmp_user_password = "test"
 
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
     # e = Evernote(
-    #       "-u {user_name} -n {password} ".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    #e = Evernote(sys.argv[1:])
+    #       "-u {user_name} -n {password} {token}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
+    e = Evernote("-u {user_name} -p {password} -c -e 0".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    # e = Evernote(
+    #     "-u {user_name} -p {password} -d".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
+    # e = Evernote(sys.argv[1:])

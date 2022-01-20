@@ -65,10 +65,20 @@ class EvernoteNote(EvernoteAccess):
                 # downloading every resource in note
                 for res_guid in note.resources:
                     res = self.note_store.getResource(res_guid.guid, True, True, True, True)
-
-                    # TODO: if user wants to overwrite add param here
                     res_name = res.attributes.fileName
-                    f = file_loader.FileHandler(res_name, "{}{}res/".format(self.path, note_dir), create=True, mode=None,  binary=True)
+
+                    overwrite = self.user_data.get_default("overwrite_files")
+                    if self.user_data.overwrite:
+                        overwrite = True
+
+                    if not overwrite:
+                        if self.user_data.force_mode:
+                            self.logger.info("File {} already exist, skipping --force".format(res_name))
+                            continue
+                        else:
+                            overwrite = self.controller.display_manager.get_user_input("The file {} already exists. Do you want to overwrite?".format(res_name))
+
+                    f = file_loader.FileHandler(res_name, "{}{}res/".format(self.path, note_dir), create=True, mode=None, binary=True, overwrite=overwrite)
                     f.set_all(res.data.body)
                     f.dump()
 

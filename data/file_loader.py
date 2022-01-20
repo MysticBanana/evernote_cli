@@ -40,6 +40,7 @@ class FileHandler:
 
         # file ending
         self._mode = params.get("mode", "")
+        self._overwrite = params.get("overwrite", False)
 
         # open in binary mode
         self._binary = params.get("binary", False)
@@ -80,6 +81,11 @@ class FileHandler:
                     self.logger.warning("Created file: {}".format(self._path))
 
                 return
+
+        if self._overwrite:
+            with open(self._path, "w"):
+                pass
+            return
 
         if self.logger:
             self.logger.info("Loading file: {}".format(self._path))

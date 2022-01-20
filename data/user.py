@@ -26,6 +26,11 @@ class User(object):
             CONFIG_MISSING = 8
             DOWNLOAD_ERROR = 9
 
+    # default values for settings
+    defaults = {
+        "overwrite_files": False,
+        "create_download_path": False
+    }
 
     def __init__(self, controller, path, user_name, password, token=None, **kwargs):
         self._user_token = token
@@ -37,7 +42,8 @@ class User(object):
         self._password_hash = krypto_manager.hash_str(self._password)
 
         # if file path does not exists create path for it
-        self._force_mode = kwargs.get("force", False)
+        self._force_mode = kwargs.get("force_mode", False)
+        self._overwrite = kwargs.get("overwrite", False) # replace with just force maybe?
 
         self.controller = controller
 
@@ -46,7 +52,6 @@ class User(object):
 
         self.km = krypto_manager.CryptoManager(key=self._password, salt="user",
                                                logger=self.controller.create_logger("Krypto"))
-
         self.user_path = path
 
         if self._password is None:
@@ -61,6 +66,13 @@ class User(object):
         self.user_token = self.user_config.get("key") if not self._user_token else self._user_token
         self.file_path = self.user_config.get("file_path", None)
         self.encryption_level = self.user_config.get("encrypt_level", None)
+
+        # defaults
+        d = self.user_config.get("file_path", None)
+        if d is None:
+            self.defaults = d
+        else:
+            self.user_config.set("defaults", self.defaults)
 
         # if encryption level is set -> decrypt
         self.logger.info("encrypting user files...")
@@ -104,8 +116,8 @@ class User(object):
             value = "%sfiles/" % self.user_path
 
         # checks if valid path
-        if os.path.isdir(value) or zipfile.is_zipfile("/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode:
-            if self._force_mode:
+        if os.path.isdir(value) or zipfile.is_zipfile("/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode or self._overwrite or self.defaults["create_download_path"]:
+            if self._force_mode or self._overwrite or self.defaults["create_download_path"]:
                 try:
                     os.makedirs(os.path.dirname(value))
                 except Exception:
@@ -117,7 +129,7 @@ class User(object):
 
             self.logger.info("custom file path changed")
         else:
-            raise self.UserError(self.UserError.ErrorReason.DEFAULT, "path: %s is no dir\n use --force to create this")
+            raise self.UserError(self.UserError.ErrorReason.DEFAULT, "path: %s is no dir\n use --force or --overwrite to create it")
 
     @property
     def max_encryption_level(self):
@@ -146,14 +158,20 @@ class User(object):
         self.user_config.set("encrypt_level", self.encryption_level).dump()
         self.logger.info("encryption level changed")
 
-    @decorator.exception_handler(UserError, "dectypting token", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
+    @property
+    def overwrite(self):
+        return self._overwrite
+
+    @property
+    def force_mode(self):
+        return self._force_mode
+
+    def get_default(self, default):
+        return self.defaults.get(default, False)
+
+    @decorator.exception_handler(UserError, "decrypting token", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def decrypt_token(self):
         token = self.user_config.get("key", None)
-
-        # for other token management
-        # if token is None:
-        #     raise self.UserError(self.UserError.ErrorReason.DEFAULT, "user token not set")
-
         if len(str(token)) != 96 and token is not None:
             # set the new encrypted version
             self.user_token = self.km.decrypt_str(token)
@@ -162,11 +180,6 @@ class User(object):
     def encrypt_token(self, token=None):
         if token is not None:
             return self.km.encrypt_str(token)
-
-        # if self.user_token != "":
-        #     self.user_token = self.km.encrypt_str(self.user_token)
-        # else:
-        #     raise self.UserError(self.UserError.ErrorReason.ENCRYPTION_ERROR, "user token empty")
 
     @decorator.exception_handler(UserError, "decrypting files", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def decrypt_files(self):
@@ -202,10 +215,10 @@ class User(object):
 
     def decrypt(self):
         # handle encryption level
+        if bool(self.encryption_level & (1 << self.EncryptionLevel.COMPRESS.value)):
+            self.decompress_files()
         if bool(self.encryption_level & (1 << self.EncryptionLevel.ENCRYPT.value)):
             self.decrypt_files()
-        if bool(self.encryption_level & (1 << self.EncryptionLevel.COMPRESS.value)):
-                self.decompress_files()
 
     def encrypt(self):
         # handle encryption level
@@ -288,10 +301,3 @@ class User(object):
                 files.extend(map(lambda n: os.path.join(*n), zip([dirpath] * len(filenames), filenames)))
 
         print(files)
-
-if __name__ == "__main__":
-    enc_level = 2
-    if enc_level > User.EncryptionLevel.COMPRESS:
-        pass
-
-

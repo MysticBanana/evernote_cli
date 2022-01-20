@@ -3,6 +3,7 @@ import hashlib
 import os
 import shutil
 from zipfile import ZipFile
+from time import sleep
 
 import enum
 from cryptography.fernet import Fernet
@@ -136,6 +137,9 @@ class CompressManager():
         complet_path = "{}/{}".format(path, file)
         with ZipFile("{}.zip".format(complet_path), "r") as zipObj:
             zipObj.extractall(complet_path)
+
+        # need a sleep otherwise raise error because file isnt closed
+        sleep(1)
         os.remove("{}.zip".format(complet_path))
 
 
