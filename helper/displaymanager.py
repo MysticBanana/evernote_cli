@@ -27,7 +27,7 @@ class DisplayManager:
 
         # check for multiple different inputs by user
         decision = {
-            "yes": ["yes", "y", "true", "yee", "yes i want", "true"],
+            "yes": ["yes", "y", "true", "yee", "yes i want"],
             "no": ["no", "n", "nope", "shut up", "false", ""]
         }
 
