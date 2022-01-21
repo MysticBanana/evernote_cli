@@ -41,7 +41,8 @@ class DisplayManager:
                 return True
             elif reply in decision["no"]:
                 return False
-            print "Type 'yes' or 'no' please \n After {} using default=no or try parameter --force".format(max_wrong_input-input_counter)
+            print "Type 'yes' or 'no' please \n After {} using default=no or try parameter --force".format(
+                max_wrong_input - input_counter)
 
             input_counter += 1
 
@@ -77,7 +78,6 @@ class DisplayManager:
         else:
             print output + usage + "\n"
 
-
         for i in self.get_help_tree(command=command):
             print i
 
@@ -98,12 +98,13 @@ class DisplayManager:
                     if "help" not in v:
                         continue
 
-                    tabs = "\t"*(5-tab_counter)
+                    tabs = "\t" * (5 - tab_counter)
                     if command: tab_counter = 0
                     string = "{spaces}{opt_str} | {opt_str_long} {tabs} {helptext}".format(opt_str=v["opt_str"][0],
-                                                                                    opt_str_long=v["opt_str"][1],
-                                                                                    helptext=v["help"],
-                                                                                    spaces=(self.tab_size * tab_counter),
+                                                                                           opt_str_long=v["opt_str"][1],
+                                                                                           helptext=v["help"],
+                                                                                           spaces=(
+                                                                                                   self.tab_size * tab_counter),
                                                                                            tabs=tabs)
 
                     ret = self.get_help_tree(v, tab_counter + 1, command)
@@ -114,7 +115,7 @@ class DisplayManager:
 
         return [i for row in lines for i in row]
 
-    def get_usage_command(self,command=None, ret_dict=None):
+    def get_usage_command(self, command=None, ret_dict=None):
         """
         creates a usage string based on the parameter tree. If none returns the default string, if not returns usage
         from the parameter with all required parameters
@@ -153,6 +154,31 @@ class DisplayManager:
                             usage_param = ret
 
         return usage_param
+
+
+class UserError(enum.Enum):
+    TOO_MANY_ARGUMENT = 1
+    TOO_FEW_ARGUMENT = 2
+    MISSING_ARGUMENT = 3
+    MISSING_PARAMETER = 4
+    AUTHENTICATION_FAILED = 5
+    FALSE_PARAMETER = 6
+    FALSE_ENCRYPTION_LEVEL = 7
+
+
+error = {
+    UserError.TOO_MANY_ARGUMENT: "Too many arguments! Expected at most 8 arguments, got <rep>",  # not used atm
+    UserError.TOO_FEW_ARGUMENT: "Too few arguments! At least one argument expected",
+    UserError.MISSING_ARGUMENT: "At least one argument is missing!",
+    UserError.MISSING_PARAMETER: "Parameter is missing!",
+    UserError.AUTHENTICATION_FAILED: "Authentication failed!"
+                                     " Check if password and username are correct."
+                                     " If you are using the program for the first time, create a new user with:"
+                                     "    '-u <username> -n <passwd>' "
+                                     " Tried [<rep>, <rep>]",
+    UserError.FALSE_PARAMETER: "The parameter is incorrect! Parameter <rep> does not exist in this context",
+    UserError.FALSE_ENCRYPTION_LEVEL: "Incorrect encryption level! Expected level 0 to <rep>, got <rep>"
+}
 
 if __name__ == "__main__":
     pass
