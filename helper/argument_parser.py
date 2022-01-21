@@ -8,10 +8,10 @@ $ evernote ...
     -u | -- user <Username> ...
         -n | --new <Passwd> [<Token>]
         -p | --passwd <Passwd> ...
-            -c | --change [-f]...
-                -p | --passwd <New_Passwd>
-                -d | --downloadpath <New_path>
-                -e | --encrypt <New encrypion lvl>
+            -c | --change ...
+                -p | --passwd <New_Passwd> [-f]
+                -d | --downloadpath <New_path> [-f]
+                -e | --encrypt <New encrypion lvl> [-f]
             -d | --download [-f] [<Overwrite>] [<Encryption_Lvl>]
             -e | --encrypt [<Encryption_Lvl>]
             -de | --decrypt
@@ -20,199 +20,200 @@ $ evernote ...
 '''
 
 class ArgumentParser:
-
+    arguments = {
+        "help":
+            {
+                "opt_str": ["-h", "--help"],
+                "help": "shows this menu or helptext for command",
+                "func": True,
+                "func_name": "help",
+                "require": {
+                    "parameter": False,
+                },
+                "next_args": {
+                    "none_opt": None,
+                    "opt": [("param", str)]
+                },
+                "next_params": None
+            },
+        "user":
+            {
+                "opt_str": ["-u", "--user"],
+                "help": "used in combination with --new or --passwd",
+                "func": False,
+                "func_name": None,
+                "require": {
+                    "username": True
+                },
+                "next_args": {
+                    "none_opt": ["username"],
+                    "opt": None
+                },
+                "next_params":
+                    {
+                        "new_user":
+                            {
+                                "opt_str": ["-n", "--new"],
+                                "help": "create new user",
+                                "func": True,
+                                "func_name": "new_user",
+                                "require": {
+                                    "token": False
+                                },
+                                "next_args": {
+                                    "none_opt": ["password"],
+                                    "opt": [("token", str)]
+                                },
+                                "next_params": None
+                            },
+                        "passwd":
+                            {
+                                "opt_str": ["-p", "--passwd"],
+                                "help": "input your stupid password after",
+                                "func": False,
+                                "func_name": None,
+                                "require": {
+                                    "password": True
+                                },
+                                "next_args": {
+                                    "none_opt": ["password"],
+                                    "opt": None
+                                },
+                                "next_params":
+                                    {
+                                        "change":
+                                            {
+                                                "opt_str": ["-c", "--change"],
+                                                "help": "change stuff ",
+                                                "func": False,
+                                                "func_name": None,
+                                                "require": {},
+                                                "next_args": None,
+                                                "next_params":
+                                                    {
+                                                        "new_pwd":
+                                                            {
+                                                                "opt_str": ["-p", "--passwd"],
+                                                                "help": "change password",
+                                                                "func": True,
+                                                                "func_name": "new_pwd",
+                                                                "require": {
+                                                                    "new password": True,
+                                                                    "force": False
+                                                                },
+                                                                "next_args": {
+                                                                    "none_opt": ["new_password"],
+                                                                    "opt": [("force", "-f")]
+                                                                },
+                                                                "next_params": None
+                                                            },
+                                                        "new_path":
+                                                            {
+                                                                "opt_str": ["-d", "--downloadpath"],
+                                                                "help": "change download path",
+                                                                "func": True,
+                                                                "func_name": "new_path",
+                                                                "require": {
+                                                                    "path": True,
+                                                                    "force": False
+                                                                },
+                                                                "next_args": {
+                                                                    "none_opt": ["new_path"],
+                                                                    "opt": [("force", "-f")]
+                                                                },
+                                                                "next_params": None
+                                                            },
+                                                        "new_encrypt":
+                                                            {
+                                                                "opt_str": ["-e", "--encrypt_files"],
+                                                                "help": "change download encryption level",
+                                                                "func": True,
+                                                                "func_name": "new_encrypt",
+                                                                "require": {
+                                                                    "encryption lvl": True,
+                                                                    "force": False
+                                                                },
+                                                                "next_args": {
+                                                                    "none_opt": [("new_encrypt_lvl", int)],
+                                                                    "opt": [("force", "-f")]
+                                                                },
+                                                                "next_params": None
+                                                            },
+                                                    }
+                                            },
+                                        "download":
+                                            {
+                                                "opt_str": ["-d", "--download"],
+                                                "help": "download all files",
+                                                "func": True,
+                                                "func_name": "download",
+                                                "require": {
+                                                    "force": False,
+                                                    "overwrite": False,
+                                                    "encryption level": False
+                                                },
+                                                "next_args": {
+                                                    "none_opt": None,
+                                                    "opt": [("force", "-f"), ("overwrite", "-o"), ("encrypt_lvl", int)]
+                                                },
+                                                "next_params": None
+                                            },
+                                        "encrypt":
+                                            {
+                                                "opt_str": ["-e", "--encrypt"],
+                                                "help": "encrypting your files",
+                                                "func": True,
+                                                "func_name": "encrypt",
+                                                "require": {
+                                                    "encryption level": False
+                                                },
+                                                "next_args": {
+                                                    "none_opt": None,
+                                                    "opt": [("encrypt_lvl", int)]
+                                                },
+                                                "next_params": None
+                                            },
+                                        "decrypt":
+                                            {
+                                                "opt_str": ["-de", "--decrypt"],
+                                                "help": "decrypting your files",
+                                                "func": True,
+                                                "func_name": "decrypt",
+                                                "require": {
+                                                    "encryption level": False
+                                                },
+                                                "next_args": None,
+                                                "next_params": None
+                                            },
+                                        "refresh":
+                                            {
+                                                "opt_str": ["-r", "--refresh"],
+                                                "help": "synchronize your files with the cloud",
+                                                "func": True,
+                                                "func_name": "refresh",
+                                                "require": {},
+                                                "next_args": None,
+                                                "next_params": None
+                                            },
+                                        "remove":
+                                            {
+                                                "opt_str": ["-rm", "--remove"],
+                                                "help": "remove user",
+                                                "func": True,
+                                                "func_name": "remove",
+                                                "require": {},
+                                                "next_args": None,
+                                                "next_params": None
+                                            }
+                                    }
+                            }
+                    }
+            }
+    }
     def __init__(self, controller, args):
         self.controller = controller
 
         self.arg_list = args.split()
-        self.arguments = {
-            "help":
-                {
-                    "opt_str": ["-h", "--help"],
-                    "help": "shows this menu or helptext for command",
-                    "func": True,
-                    "func_name": "help",
-                    "require": {
-                        "parameter": False,
-                    },
-                    "next_args": {
-                        "none_opt" : None,
-                        "opt": [("param", str)]
-                    },
-                    "next_params" : None
-                },
-            "user":
-                {
-                    "opt_str": ["-u", "--user"],
-                    "help": "used in combination with --new or --passwd",
-                    "func": False,
-                    "func_name": None,
-                    "require": {
-                        "username": True
-                    },
-                    "next_args": {
-                        "none_opt": ["username"],
-                        "opt": None
-                    },
-                    "next_params":
-                        {
-                            "new_user":
-                                {
-                                    "opt_str": ["-n", "--new"],
-                                    "help": "create new user",
-                                    "func": True,
-                                    "func_name": "new_user",
-                                    "require": {
-                                        "token": False
-                                    },
-                                    "next_args": {
-                                        "none_opt": ["password"],
-                                        "opt": [("token", str)]
-                                    },
-                                    "next_params": None
-                                },
-                            "passwd":
-                                {
-                                    "opt_str": ["-p", "--passwd"],
-                                    "help": "input your stupid password after",
-                                    "func": False,
-                                    "func_name": None,
-                                    "require": {
-                                        "password": True
-                                    },
-                                    "next_args": {
-                                        "none_opt": ["password"],
-                                        "opt": None
-                                    },
-                                    "next_params":
-                                        {
-                                            "change":
-                                                {
-                                                    "opt_str": ["-c", "--change"],
-                                                    "help": "change stuff ",
-                                                    "func": False,
-                                                    "func_name": None,
-                                                    "require": {
-                                                        "force": False
-                                                    },
-                                                    "next_args": None,
-                                                    "next_params":
-                                                        {
-                                                            "new_pwd":
-                                                                {
-                                                                    "opt_str": ["-p", "--passwd"],
-                                                                    "help": "change password",
-                                                                    "func": True,
-                                                                    "func_name": "new_pwd",
-                                                                    "require": {
-                                                                        "new password": True
-                                                                    },
-                                                                    "next_args": {
-                                                                        "none_opt": ["new_password"],
-                                                                        "opt": [("force", "-f")]
-                                                                    },
-                                                                    "next_params": None
-                                                                },
-                                                            "new_path":
-                                                                {
-                                                                    "opt_str": ["-d", "--downloadpath"],
-                                                                    "help": "change download path",
-                                                                    "func": True,
-                                                                    "func_name": "new_path",
-                                                                    "require": {
-                                                                        "path": True
-                                                                    },
-                                                                    "next_args": {
-                                                                        "none_opt": ["new_path"],
-                                                                        "opt": [("force", "-f")]
-                                                                    },
-                                                                    "next_params": None
-                                                                },
-                                                            "new_encrypt":
-                                                                {
-                                                                    "opt_str": ["-e", "--encrypt_files"],
-                                                                    "help": "change download encryption level",
-                                                                    "func": True,
-                                                                    "func_name": "new_encrypt",
-                                                                    "require": {
-                                                                        "encryption lvl": True
-                                                                    },
-                                                                    "next_args": {
-                                                                        "none_opt": [("new_encrypt_lvl", int)],
-                                                                        "opt": [("force", "-f")]
-                                                                    },
-                                                                    "next_params": None
-                                                                },
-                                                        }
-                                                },
-                                            "download":
-                                                {
-                                                    "opt_str": ["-d", "--download"],
-                                                    "help": "download all files",
-                                                    "func": True,
-                                                    "func_name": "download",
-                                                    "require": {
-                                                        "overwrite": False,
-                                                        "encryption level": False
-                                                    },
-                                                    "next_args": {
-                                                        "none_opt": None,
-                                                        "opt": [("force", "-f"),("overwrite", "-o"),("encrypt_lvl", int)]
-                                                    },
-                                                    "next_params": None
-                                                },
-                                            "encrypt":
-                                                {
-                                                    "opt_str": ["-e", "--encrypt"],
-                                                    "help": "encrypting your files",
-                                                    "func": True,
-                                                    "func_name": "encrypt",
-                                                    "require": {
-                                                        "encryption level": False
-                                                    },
-                                                    "next_args": {
-                                                        "none_opt": None,
-                                                        "opt": [("encrypt_lvl", int)]
-                                                    },
-                                                    "next_params": None
-                                                },
-                                            "decrypt":
-                                                {
-                                                    "opt_str": ["-de", "--decrypt"],
-                                                    "help": "decrypting your files",
-                                                    "func": True,
-                                                    "func_name": "decrypt",
-                                                    "require": {
-                                                        "encryption level": False
-                                                    },
-                                                    "next_args": None,
-                                                    "next_params": None
-                                                },
-                                            "refresh":
-                                                {
-                                                    "opt_str": ["-r", "--refresh"],
-                                                    "help": "synchronize your files with the cloud",
-                                                    "func": True,
-                                                    "func_name": "refresh",
-                                                    "require": {},
-                                                    "next_args": None,
-                                                    "next_params": None
-                                                },
-                                            "remove":
-                                                {
-                                                    "opt_str": ["-rm", "--remove"],
-                                                    "help": "remove user",
-                                                    "func": True,
-                                                    "func_name": "remove",
-                                                    "require": {},
-                                                    "next_args": None,
-                                                    "next_params": None
-                                                }
-                                        }
-                                }
-                        }
-                }
-        }
         self.params = {}
 
         self.wrong_input = False
@@ -320,9 +321,10 @@ class ArgumentParser:
                     if key == "encrypt_lvl" or key == "new_encrypt_lvl":
                         print val
                         print self.controller.max_encryption_level
-                        if 0 > val > self.controller.max_encryption_level:
-                            # False Encryption Level selected
-                            self.add_input_check_error(key, val)
+                        if not val == None:
+                            if not 0 <= val <= self.controller.max_encryption_level:
+                                # False Encryption Level selected
+                                self.add_input_check_error(key, [val])
 
         if not len(self.arg_list) == 0:
             self.warning("{} wurde ignoriert".format(self.arg_list))

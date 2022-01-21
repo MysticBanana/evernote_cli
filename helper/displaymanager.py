@@ -1,5 +1,5 @@
 import enum
-import param_loader_2
+import argument_parser
 
 
 class DisplayManager:
@@ -7,7 +7,7 @@ class DisplayManager:
         self.controller = controller
         self.logger = controller.create_logger("Display")
 
-        self.help_dict = param_loader_2.ArgumentParser.args_dict
+        self.help_dict = argument_parser.ArgumentParser.arguments
 
         self.tab_size = "  "
         self.max_tabs = 5
