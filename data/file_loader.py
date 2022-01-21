@@ -230,7 +230,9 @@ class FileHandler:
         return self
 
     def __str__(self):
+        # if class gets printed
         return "File: {}".format(self._path) if self.exists else False
 
     def __del__(self):
+        # called when class gets destroyed to save file
         self.dump()
