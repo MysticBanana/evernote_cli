@@ -169,6 +169,8 @@ class FileHandler:
             return
         self._file_data[str(key)].append(e)
 
+        return self
+
     def dump(self):
         """
         Calls methode for saving data
@@ -193,6 +195,7 @@ class FileHandler:
                 raise self.FileHandlerException(self.FileHandlerException.ErrorReason.WRONG_FILE_FORMAT,
                                                 "Error parsing the file %s" % self._path)
 
+
     def write_default(self):
         """
         saving data as plaintext
@@ -213,6 +216,8 @@ class FileHandler:
         """
         self._file_data = file_data
 
+        return self
+
     def write(self, text):
         """
         appending text string to file_data, no check right file mode (not saving)
@@ -221,6 +226,8 @@ class FileHandler:
         if self._mode == "json":
             self.logger.warning("Tried to write plaintext into json")
         self._file_data += text
+
+        return self
 
     def __str__(self):
         return "File: {}".format(self._path) if self.exists else False

@@ -91,13 +91,11 @@ class EvernoteNote(EvernoteAccess):
 
             # main content file of note
             f = file_loader.FileHandler("content", self.path + note_dir, create=True, mode="xml")
-            f.set_all(note.content)
-            f.dump()
+            f.set_all(note.content).dump()
 
             # stores metadata of note
             f = file_loader.FileHandler("meta", self.path + note_dir, create=True, mode="json")
-            f.set_all(note_meta)
-            f.dump()
+            f.set_all(note_meta).dump()
 
             self.logger.info("downloaded note: {}".format(note_book.name))
 
