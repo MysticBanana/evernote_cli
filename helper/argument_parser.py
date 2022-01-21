@@ -2,6 +2,8 @@
 import krypto_manager
 import copy
 
+import displaymanager
+
 '''
 $ evernote ...
     -h | --help
@@ -18,6 +20,7 @@ $ evernote ...
             -r | --refresh
             -rm | --remove
 '''
+
 
 class ArgumentParser:
     arguments = {
@@ -210,6 +213,7 @@ class ArgumentParser:
                     }
             }
     }
+
     def __init__(self, controller, args):
         self.controller = controller
 
@@ -221,14 +225,16 @@ class ArgumentParser:
     def error(self, msg):
         self.params = {"func": "error", "err_typ": msg}
 
-    def add_input_check_error(self, input_typ, user_input):
+    def add_input_check_error(self, input_typ, arguments=[]):
         if not self.wrong_input:
             self.wrong_input = True
             self.params = {"func": "input_error", "err_types": []}
-        self.params["err_types"].append((input_typ, user_input))
+        for i in arguments:
+            input_typ = input_typ.replace("<rep>", i, 1)
+        self.params["err_types"].append(input_typ)
 
     def warning(self, msg):
-        print "Warning: {}".format(msg)
+        print (msg)
 
     def get_next_params(self, arguments):
         next_params, next_arg = None, None
@@ -244,13 +250,14 @@ class ArgumentParser:
                     self.params["func"] = arguments[key]["func_name"]
                 else:
                     end = False
-                if not arguments[key]["next_args"] == None:
-                    if not arguments[key]["next_args"]["none_opt"] == None:
-                        self.get_args(arguments[key]["next_args"]["none_opt"]) # TODO implement
-                    if not arguments[key]["next_args"]["opt"] == None:
+                if not arguments[key]["next_args"] is None:
+                    if not arguments[key]["next_args"]["none_opt"] is None:
+                        self.get_args(arguments[key]["next_args"]["none_opt"])  # TODO implement
+                    if not arguments[key]["next_args"]["opt"] is None:
                         self.get_opt_args(arguments[key]["next_args"]["opt"])
         if not correct_param:
-            self.error("{} is wrong".format(param))
+            self.add_input_check_error(displaymanager.error[displaymanager.UserError.FALSE_PARAMETER], [param])
+
             return None, True
         return next_params, end
 
@@ -258,9 +265,9 @@ class ArgumentParser:
         try:
             for arg in args:
                 if len(self.arg_list) == 0:
-                    self.error("Parameter fehlen")
+                    self.add_input_check_error(displaymanager.error[displaymanager.UserError.MISSING_PARAMETER])
                     break
-                if type(arg) == type((1,1)):
+                if type(arg) == type((1, 1)):
                     try:
                         self.params[arg[0]] = int(self.arg_list.pop(0))
                     except:
@@ -268,7 +275,7 @@ class ArgumentParser:
                     continue
                 self.params[arg] = self.arg_list.pop(0)
         except:
-            self.error("Parameter fehlen")
+            self.add_input_check_error(displaymanager.error[displaymanager.UserError.MISSING_PARAMETER])
 
     def get_opt_args(self, opt_args):
         for arg, typ in opt_args:
@@ -294,15 +301,14 @@ class ArgumentParser:
         nr_of_args = len(self.arg_list)
         # Check general number of parameters
         if nr_of_args == 0:
-            # TODO: ERROR ersetzen
-            self.error("Keine Parameter")
+            self.add_input_check_error(displaymanager.error[displaymanager.UserError.TOO_FEW_ARGUMENT])
             return
         end = False
         next_param = self.arguments
 
         while not end:
             if len(self.arg_list) == 0:
-                self.error("es fehlen parameter")
+                self.add_input_check_error(displaymanager.error[displaymanager.UserError.MISSING_ARGUMENT])
                 break
             next_param, end = self.get_next_params(next_param)
 
@@ -313,10 +319,12 @@ class ArgumentParser:
                 # User Input Check
                 params = copy.deepcopy(self.params)
                 # Check if login data are correct
-                check = self.controller.global_data_manager.check_user_hash(self.params["username"], self.params["password_hash"])
+                check = self.controller.global_data_manager.check_user_hash(self.params["username"],
+                                                                            self.params["password_hash"])
                 if not check:
                     # Authentication failed
-                    self.add_input_check_error("authentication", [self.params["username"], self.params["password"]])
+                    self.add_input_check_error(displaymanager.error[displaymanager.UserError.AUTHENTICATION_FAILED],
+                                               [self.params["username"], self.params["password"]])
                 for key, val in params.items():
                     if key == "encrypt_lvl" or key == "new_encrypt_lvl":
                         print val
@@ -324,7 +332,9 @@ class ArgumentParser:
                         if not val == None:
                             if not 0 <= val <= self.controller.max_encryption_level:
                                 # False Encryption Level selected
-                                self.add_input_check_error(key, [val])
+                                self.add_input_check_error(
+                                    displaymanager.error[displaymanager.UserError.FALSE_ENCRYPTION_LEVEL],
+                                    [str(self.controller.max_encryption_level), str(val)])
 
         if not len(self.arg_list) == 0:
-            self.warning("{} wurde ignoriert".format(self.arg_list))
+            self.warning("Warning! {} was ignored".format(self.arg_list))
