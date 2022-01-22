@@ -1,7 +1,6 @@
 # coding=utf-8
 import krypto_manager
 import copy
-
 import displaymanager
 
 '''
@@ -219,6 +218,7 @@ class ArgumentParser:
 
         self.arg_list = args.split()
         self.params = {}
+        self.logger = controller.create_logger("argument_parser")
 
         self.wrong_input = False
 
@@ -231,9 +231,11 @@ class ArgumentParser:
             self.params = {"func": "input_error", "err_types": []}
         for i in arguments:
             input_typ = input_typ.replace("<rep>", i, 1)
+        self.logger.error(input_typ)
         self.params["err_types"].append(input_typ)
 
     def warning(self, msg):
+        self.logger.warning(msg)
         print (msg)
 
     def get_next_params(self, arguments):
