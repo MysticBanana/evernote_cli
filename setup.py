@@ -6,7 +6,7 @@ import sys
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-install_modules = ["evernote", "cryptography", "enum", "enum32", "httplib2", "ipaddress", "oauth2", "stdiomask", "Fernet"]
+install_modules = ["evernote", "cryptography", "enum34", "httplib2", "ipaddress", "oauth2", "stdiomask"]
 
 setuptools.setup(
     name="evernote_cli",
