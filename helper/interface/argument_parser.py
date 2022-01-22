@@ -1,7 +1,7 @@
 # coding=utf-8
-import krypto_manager
+import helper.krypto_manager
 import copy
-import displaymanager
+import helper.interface.displaymanager
 
 '''
 $ evernote ...
@@ -23,6 +23,7 @@ $ evernote ...
 
 class ArgumentParser:
     arguments = {
+        # todo add --version
         "help":
             {
                 "opt_str": ["-h", "--help"],
@@ -213,6 +214,9 @@ class ArgumentParser:
             }
     }
 
+    # for generating help menu
+    optional_params = [""]
+
     def __init__(self, controller, args):
         self.controller = controller
 
@@ -258,7 +262,8 @@ class ArgumentParser:
                     if not arguments[key]["next_args"]["opt"] is None:
                         self.get_opt_args(arguments[key]["next_args"]["opt"])
         if not correct_param:
-            self.add_input_check_error(displaymanager.error[displaymanager.UserError.FALSE_PARAMETER], [param])
+            self.add_input_check_error(
+                helper.interface.displaymanager.error[helper.interface.displaymanager.UserError.FALSE_PARAMETER], [param])
 
             return None, True
         return next_params, end
@@ -267,7 +272,9 @@ class ArgumentParser:
         try:
             for arg in args:
                 if len(self.arg_list) == 0:
-                    self.add_input_check_error(displaymanager.error[displaymanager.UserError.MISSING_PARAMETER])
+                    self.add_input_check_error(
+                        helper.interface.displaymanager.error[
+                            helper.interface.displaymanager.UserError.MISSING_PARAMETER])
                     break
                 if type(arg) == type((1, 1)):
                     try:
@@ -277,7 +284,8 @@ class ArgumentParser:
                     continue
                 self.params[arg] = self.arg_list.pop(0)
         except:
-            self.add_input_check_error(displaymanager.error[displaymanager.UserError.MISSING_PARAMETER])
+            self.add_input_check_error(
+                helper.interface.displaymanager.error[helper.interface.displaymanager.UserError.MISSING_PARAMETER])
 
     def get_opt_args(self, opt_args):
         for arg, typ in opt_args:
@@ -303,20 +311,22 @@ class ArgumentParser:
         nr_of_args = len(self.arg_list)
         # Check general number of parameters
         if nr_of_args == 0:
-            self.add_input_check_error(displaymanager.error[displaymanager.UserError.TOO_FEW_ARGUMENT])
+            self.add_input_check_error(
+                helper.interface.displaymanager.error[helper.interface.displaymanager.UserError.TOO_FEW_ARGUMENT])
             return
         end = False
         next_param = self.arguments
 
         while not end:
             if len(self.arg_list) == 0:
-                self.add_input_check_error(displaymanager.error[displaymanager.UserError.MISSING_ARGUMENT])
+                self.add_input_check_error(
+                    helper.interface.displaymanager.error[helper.interface.displaymanager.UserError.MISSING_ARGUMENT])
                 break
             next_param, end = self.get_next_params(next_param)
 
         if not self.params["func"] in ["help", "error", "input_error"]:
             # add password hash to self.params
-            self.params["password_hash"] = krypto_manager.hash_str(self.params["password"])
+            self.params["password_hash"] = helper.krypto_manager.hash_str(self.params["password"])
             check = self.controller.global_data_manager.check_user_hash(self.params["username"],
                                                                         self.params["password_hash"])
             user_exists = self.controller.global_data_manager.is_user(self.params["username"])
@@ -326,8 +336,10 @@ class ArgumentParser:
                 # Check if login data are correct
                 if not check:
                     # Authentication failed
-                    self.add_input_check_error(displaymanager.error[displaymanager.UserError.AUTHENTICATION_FAILED],
-                                               [self.params["username"], self.params["password"]])
+                    self.add_input_check_error(
+                        helper.interface.displaymanager.error[
+                            helper.interface.displaymanager.UserError.AUTHENTICATION_FAILED],
+                        [self.params["username"], self.params["password"]])
                 for key, val in params.items():
                     if key == "encrypt_lvl" or key == "new_encrypt_lvl":
                         print val
@@ -336,7 +348,8 @@ class ArgumentParser:
                             if not 0 <= val <= self.controller.max_encryption_level:
                                 # False Encryption Level selected
                                 self.add_input_check_error(
-                                    displaymanager.error[displaymanager.UserError.FALSE_ENCRYPTION_LEVEL],
+                                    helper.interface.displaymanager.error[
+                                        helper.interface.displaymanager.UserError.FALSE_ENCRYPTION_LEVEL],
                                     [str(self.controller.max_encryption_level), str(val)])
             else:
                 if user_exists:

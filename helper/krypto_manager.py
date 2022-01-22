@@ -191,4 +191,4 @@ class CompressManager():
 
 
 if __name__ == "__main__":
-    print hash_str("passwd123")
+    print hash_str("test")

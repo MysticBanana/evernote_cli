@@ -1,5 +1,24 @@
 import enum
-import argument_parser
+from helper.interface import argument_parser
+
+
+class HelpMenu:
+    _usage_str = ""
+    _description = ""
+    _option_str = ""
+
+    # todo
+    _name = "evernote.py"
+
+    def __init__(self):
+        pass
+
+    def __str__(self):
+        return "Usage: {}\n\n" \
+               "{:<5}\n\n" \ 
+               "Commands\n" \
+               "{:<5}".format(self._usage_str, self._description, self._option_str)
+
 
 
 class DisplayManager:
@@ -98,14 +117,27 @@ class DisplayManager:
                     if "help" not in v:
                         continue
 
-                    tabs = "\t" * (5 - tab_counter)
+                    tabs = "\t" * (6 - (len(v["opt_str"])+tab_counter*len(self.tab_size))//4)
                     if command: tab_counter = 0
-                    string = "{spaces}{opt_str} | {opt_str_long} {tabs} {helptext}".format(opt_str=v["opt_str"][0],
-                                                                                           opt_str_long=v["opt_str"][1],
-                                                                                           helptext=v["help"],
-                                                                                           spaces=(
-                                                                                                   self.tab_size * tab_counter),
-                                                                                           tabs=tabs)
+                    # string = "{spaces}{opt_str} | {opt_str_long} {tabs} {helptext}".format(opt_str=v["opt_str"][0],
+                    #                                                                        opt_str_long=v["opt_str"][1],
+                    #                                                                        helptext=v["help"],
+                    #                                                                        spaces=(
+                    #                                                                                self.tab_size * tab_counter),
+                    #                                                                        tabs=tabs)
+
+                    # string = "{:<2 {opt_short} | {opt_long}} {:>20 {help}}".format(opt_long=v["opt_str"][1],
+                    #                                                                         opt_short=v["opt_str"][0],
+                    #                                                                                   help=v["help"])
+
+                    opt = "{0[0]} | {0[1]}".format(v["opt_str"])
+                    space = self.tab_size*tab_counter
+
+                    string = "{:<15}".format(space+opt)
+
+
+                    # string = "{:{spaces}}   {:<5}".format(v["opt_str"][0], v["help"],
+                    #                                                    spaces=(tab_counter*2), anti_space=(tab_counter*2))
 
                     if v.get("next_params", None) is not None:
                         ret = self.get_help_tree(v["next_params"], tab_counter + 1, command)

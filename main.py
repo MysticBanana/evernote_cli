@@ -6,7 +6,8 @@ import enum
 
 import oauth.auth
 from data import user, global_data_manager
-from helper import krypto_manager, displaymanager, argument_parser, exception
+from helper import krypto_manager, exception
+from helper.interface import argument_parser, displaymanager
 
 
 class Evernote:
@@ -225,6 +226,8 @@ class Evernote:
         :param params: a dict containing all parsed arguments
         """
         token = params["token"]
+
+        #todo again
         if token == -1:
             return
         elif not token:
@@ -319,11 +322,11 @@ class Evernote:
 if __name__ == "__main__":
     print(sys.argv[1:])
 
-    tmp_user_name = "NeuerName"
+    tmp_user_name = "tom"
     tmp_user_password = "test"
 
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
     e = Evernote(
-          "-u {user_name} -p password -c -p {password}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
+          "-h".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
     # e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     #e = Evernote(sys.argv[1:])
