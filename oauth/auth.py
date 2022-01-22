@@ -69,7 +69,7 @@ class Auth:
 
         # call webbrowser to open url for oauth authentication
         try:
-            webbrowser.open(auth_url)
+            test = webbrowser.open(auth_url)
             self.server.handle_request()
         except Exception as e:
             raise self.AuthError(None, "can not open the browser for access token")

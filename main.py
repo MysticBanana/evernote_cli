@@ -225,8 +225,13 @@ class Evernote:
         :param params: a dict containing all parsed arguments
         """
         token = params["token"]
-        if not token:
+        if token == -1:
+            return
+        elif not token:
             token = self.user_web_auth()
+            if not token:
+                print "Bad request syntax: try again!"
+                return
         self.user = self.global_data_manager.create_user(user_name=self.username, user_password=self.password, token=token)
 
     def new_pwd(self, params):
@@ -234,12 +239,13 @@ class Evernote:
         Change Password
         :param params: a dict containing all parsed arguments
         """
-        new_pwd = params["new_pwd"]
+        new_pwd = params["new_password"]
         if not self.global_data_manager.is_user(self.username):
             return
         new_pwd_hash = krypto_manager.hash_str(new_pwd)
         self.global_data_manager._credentials.set(self.username, new_pwd_hash)
         self.global_data_manager._credentials.dump()
+        self.user.km = krypto_manager.CryptoManager(key=new_pwd, salt="user", logger=self.create_logger("Krypto"))
 
     def new_path(self, params):
         """
@@ -313,11 +319,11 @@ class Evernote:
 if __name__ == "__main__":
     print(sys.argv[1:])
 
-    tmp_user_name = "tom"
+    tmp_user_name = "NeuerName"
     tmp_user_password = "test"
 
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
     e = Evernote(
-          "-h -d ".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
+          "-u {user_name} -p password -c -p {password}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
     # e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
     #e = Evernote(sys.argv[1:])

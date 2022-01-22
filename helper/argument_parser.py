@@ -1,7 +1,6 @@
 # coding=utf-8
 import krypto_manager
 import copy
-
 import displaymanager
 
 '''
@@ -219,6 +218,7 @@ class ArgumentParser:
 
         self.arg_list = args.split()
         self.params = {}
+        self.logger = controller.create_logger("argument_parser")
 
         self.wrong_input = False
 
@@ -231,9 +231,11 @@ class ArgumentParser:
             self.params = {"func": "input_error", "err_types": []}
         for i in arguments:
             input_typ = input_typ.replace("<rep>", i, 1)
+        self.logger.error(input_typ)
         self.params["err_types"].append(input_typ)
 
     def warning(self, msg):
+        self.logger.warning(msg)
         print (msg)
 
     def get_next_params(self, arguments):
@@ -315,12 +317,13 @@ class ArgumentParser:
         if not self.params["func"] in ["help", "error", "input_error"]:
             # add password hash to self.params
             self.params["password_hash"] = krypto_manager.hash_str(self.params["password"])
+            check = self.controller.global_data_manager.check_user_hash(self.params["username"],
+                                                                        self.params["password_hash"])
+            user_exists = self.controller.global_data_manager.is_user(self.params["username"])
             if not self.params["func"] in ["new_user"]:
                 # User Input Check
                 params = copy.deepcopy(self.params)
                 # Check if login data are correct
-                check = self.controller.global_data_manager.check_user_hash(self.params["username"],
-                                                                            self.params["password_hash"])
                 if not check:
                     # Authentication failed
                     self.add_input_check_error(displaymanager.error[displaymanager.UserError.AUTHENTICATION_FAILED],
@@ -335,6 +338,10 @@ class ArgumentParser:
                                 self.add_input_check_error(
                                     displaymanager.error[displaymanager.UserError.FALSE_ENCRYPTION_LEVEL],
                                     [str(self.controller.max_encryption_level), str(val)])
+            else:
+                if user_exists:
+                    self.params["token"] = -1
+                    self.warning("{} exists".format(self.params["username"]))
 
         if not len(self.arg_list) == 0:
             self.warning("Warning! {} was ignored".format(self.arg_list))
