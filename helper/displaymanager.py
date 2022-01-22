@@ -89,7 +89,7 @@ class DisplayManager:
         :param command: if none returns the complete dict as a string, if name of a parameter returns a dict tree starting there
         :return:
         """
-        ret_dict = ret_dict if ret_dict else self.help_dict
+        ret_dict = ret_dict if ret_dict is not None else self.help_dict
         lines = []
 
         for k, v in ret_dict.items():
@@ -107,7 +107,11 @@ class DisplayManager:
                                                                                                    self.tab_size * tab_counter),
                                                                                            tabs=tabs)
 
-                    ret = self.get_help_tree(v, tab_counter + 1, command)
+                    if v.get("next_params", None) is not None:
+                        ret = self.get_help_tree(v["next_params"], tab_counter + 1, command)
+                    else:
+                        ret = []
+
                     if command is None or command in v["opt_str"]:
                         ret.insert(0, string)
 
