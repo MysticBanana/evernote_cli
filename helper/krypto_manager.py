@@ -121,6 +121,7 @@ class CryptoManager:
             raise self.CryptographyError(self.CryptographyError.ErrorReason.ENCRYPTION_ERROR,
                                          "Error while encrypting string\n %s" % e)
 
+    # TODO decorator
     def decrypt_str(self, text):
         """
         Decryption of a string
