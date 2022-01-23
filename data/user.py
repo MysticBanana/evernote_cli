@@ -251,7 +251,7 @@ class User(object):
     @decorator.exception_handler(UserError, "decompressing files", error_reason=UserError.ErrorReason.COMPRESSION_ERROR)
     def decompress_files(self):
         path = "/".join(self.file_path.split("/")[:-2]) + "/"
-        if os.path.isfile("%sfiles.zip" % path):
+        if os.path.isfile("{path}files.zip".format(path=path)):
             c = krypto_manager.CompressManager()
             c.decompress(path, "files")
         else:

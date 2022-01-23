@@ -181,13 +181,13 @@ class CompressManager():
         :param path: path to file (not necessary to end with '/')
         :param file: filename
         """
-        complet_path = "{}/{}".format(path, file)
-        with ZipFile("{}.zip".format(complet_path), "r") as zipObj:
-            zipObj.extractall(complet_path)
+        complete_path = "{}/{}".format(path, file)
+        with ZipFile("{}.zip".format(complete_path), "r") as zipObj:
+            zipObj.extractall(complete_path)
 
         # need a sleep otherwise raise error because file isnt closed
         sleep(1)
-        os.remove("{}.zip".format(complet_path))
+        os.remove("{}.zip".format(complete_path))
 
 
 if __name__ == "__main__":
