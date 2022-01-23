@@ -16,7 +16,7 @@ setuptools.setup(
     description="Package to create Hive",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),
+    packages=install_modules,
     classifiers=[
         "Programming Language :: Python :: 2",
         "License :: OSI Approved :: MIT License",
