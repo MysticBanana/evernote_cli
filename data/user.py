@@ -50,6 +50,7 @@ class User(object):
         self.logger = self.controller.create_logger("USER | %s" % user_name)
         self.logger.info("Initializing user: {}".format(user_name))
 
+        #self.decrypt_token()
         self.km = krypto_manager.CryptoManager(key=self._password, salt="user",
                                                logger=self.controller.create_logger("Krypto"))
         self.user_path = path

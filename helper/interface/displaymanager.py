@@ -2,23 +2,23 @@ import enum
 import argument_parser
 
 
+
 class HelpMenu:
     _usage_str = ""
     _description = ""
     _option_str = ""
 
     # todo
-    _name = "evernote.py"
+    _name = "evernote_cli.py"
 
     def __init__(self):
         pass
 
     def __str__(self):
-        pass
-        # return "Usage: {}\n\n" \
-        #        "{:<5}\n\n" \
-        #        "Commands\n" \
-        #        "{:<5}".format(self._usage_str, self._description, self._option_str)
+        return "Usage: {}\n\n" \
+               "{:<5}\n\n" \
+               "Commands\n" \
+               "{:<5}".format(self._usage_str, self._description, self._option_str)
 
 
 

@@ -24,6 +24,18 @@ $ evernote ...
 class ArgumentParser:
     arguments = {
         # todo add --version
+        "version":
+            {
+                "opt_str": ["-v", "--version"],
+                "help": "shows version of the programm",
+                "func": True,
+                "func_name": "version",
+                "require": {
+                    "parameter": False,
+                },
+                "next_args": None,
+                "next_params": None
+            },
         "help":
             {
                 "opt_str": ["-h", "--help"],
@@ -258,7 +270,7 @@ class ArgumentParser:
                     end = False
                 if not arguments[key]["next_args"] is None:
                     if not arguments[key]["next_args"]["none_opt"] is None:
-                        self.get_args(arguments[key]["next_args"]["none_opt"])  # TODO implement
+                        self.get_args(arguments[key]["next_args"]["none_opt"])
                     if not arguments[key]["next_args"]["opt"] is None:
                         self.get_opt_args(arguments[key]["next_args"]["opt"])
         if not correct_param:
