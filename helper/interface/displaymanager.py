@@ -1,5 +1,5 @@
 import enum
-from helper.interface import argument_parser
+import argument_parser
 
 
 class HelpMenu:
@@ -14,10 +14,11 @@ class HelpMenu:
         pass
 
     def __str__(self):
-        return "Usage: {}\n\n" \
-               "{:<5}\n\n" \ 
-               "Commands\n" \
-               "{:<5}".format(self._usage_str, self._description, self._option_str)
+        pass
+        # return "Usage: {}\n\n" \
+        #        "{:<5}\n\n" \
+        #        "Commands\n" \
+        #        "{:<5}".format(self._usage_str, self._description, self._option_str)
 
 
 

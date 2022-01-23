@@ -1,6 +1,7 @@
 # https://github.com/Jaymon/enno/blob/master/enno/__main__.py
 
 from helper import exception
+from time import sleep
 import subprocess
 
 import enum
@@ -74,5 +75,6 @@ class Auth:
         except Exception as e:
             raise self.AuthError(None, "can not open the browser for access token")
 
+        sleep(1)
         self.logger.info("stopping webserver")
         self.server.stop()

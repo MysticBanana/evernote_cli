@@ -262,6 +262,7 @@ class User(object):
     def close(self):
         try:
             self.save_files()
+            self.user_token = self._user_token
         except Exception as e:
             raise self.UserError(self.UserError.ErrorReason.DEFAULT,
                                  "error while saving user files\nS%s" % e)
