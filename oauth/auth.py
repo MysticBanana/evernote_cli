@@ -75,6 +75,6 @@ class Auth:
         except Exception as e:
             raise self.AuthError(None, "can not open the browser for access token")
 
-        sleep(1)
+        sleep(3)
         self.logger.info("stopping webserver")
         self.server.stop()
