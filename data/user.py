@@ -190,10 +190,16 @@ class User(object):
 
         k = krypto_manager.CryptoManager(self._password)
 
+        enc_names = self.user_config.get("encrypted_names", {})
+        if not len(enc_names):
+            return
+
         for i in path:
             if ".enc" not in i[1]:
                 continue
-            k.decrypt(i[0], i[1])
+            k.decrypt(i[0], i[1], origin_name=enc_names.get(i[1].replace(".enc", "")))
+
+        self.user_config.set("encrypted_names", {})
 
         for i in path:
             if ".enc" not in i[1]:
@@ -206,10 +212,16 @@ class User(object):
 
         k = krypto_manager.CryptoManager(self._password)
 
+        enc_names = {}
+
         for i in path:
             if ".enc" in i[1]:
                 continue
-            k.encrypt(i[0], i[1])
+            names = k.encrypt(i[0], i[1])
+            enc_names[names[0]] = names[1]
+
+        self.user_config.set("encrypted_names", enc_names)
+        self.user_config.dump()
 
         for i in path:
             if ".enc" in i[1]:

@@ -213,6 +213,7 @@ class Evernote:
         outputs help text on the terminal
         :param params: a dict containing all parsed arguments
         """
+
         p = params["param"]
         if type(p) == list:
             self.display_manager.print_help(p[0])
@@ -323,11 +324,11 @@ class Evernote:
 if __name__ == "__main__":
     # print(sys.argv[1:])
 
-    tmp_user_name = "test"
+    tmp_user_name = "mneuhaus"
     tmp_user_password = "test"
 
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
-    # e = Evernote(
-    #       "-u {user_name} -p password -c -p {password}".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
+    e = Evernote(
+          "-u {user_name} -p {password} -c -e 0".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
     # e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    e = Evernote(sys.argv[1:])
+    #e = Evernote(sys.argv[1:])

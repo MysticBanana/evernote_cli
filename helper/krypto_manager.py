@@ -97,17 +97,19 @@ class CryptoManager:
                 self.logger.error("no file found for encryption")
 
         if content_only:
-            enc_file_name = file_name
+            hash_name = file_name
+            enc_file_name = ""
         else:
             enc_file_name = self.fernet.encrypt(bytes(file_name))
+            hash_name = hash_str(enc_file_name)
 
         with open("{}{}".format(file_path, file_name), "rb") as origin:
             enc_content = origin.read()
 
-        with open("{}{}.enc".format(file_path, enc_file_name), "wb") as encrypted:
+        with open("{}{}.enc".format(file_path, hash_name), "wb") as encrypted:
             encrypted.write(self.fernet.encrypt(bytes(enc_content)))
 
-        return True
+        return (hash_name, enc_file_name)
 
     def encrypt_str(self, text):
         """
@@ -136,7 +138,7 @@ class CryptoManager:
 
     @decorator.exception_handler(CryptographyError, "error while decrypting file",
                                  error_reason=CryptographyError.ErrorReason.DECRYPTION_ERROR)
-    def decrypt(self, file_path, file_name, content_only=False):
+    def decrypt(self, file_path, file_name, origin_name="", content_only=False):
         """
         Decrypting the file content and name, removes '.enc' if in the filename
         :param file_path: path to the file (ends with '/')
@@ -151,13 +153,18 @@ class CryptoManager:
         if content_only:
             dec_file_name = file_name.replace(".enc", "")
         else:
-            dec_file_name = self.fernet.decrypt(file_name)
+            if not origin_name:
+                dec_file_name = self.fernet.decrypt(bytes(file_name))
+            else:
+                dec_file_name = self.fernet.decrypt(bytes(origin_name))
 
         with open("{}{}".format(file_path, file_name), "rb") as encrypted:
             dec_content = encrypted.read()
 
         with open("{}{}".format(file_path, dec_file_name), "wb") as decrypted:
             decrypted.write(self.fernet.decrypt(dec_content))
+
+
 
         return True
 
