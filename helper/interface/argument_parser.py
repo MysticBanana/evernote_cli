@@ -22,6 +22,7 @@ $ evernote ...
 
 
 class ArgumentParser:
+
     arguments = {
         # todo add --version
         "version":
@@ -169,7 +170,7 @@ class ArgumentParser:
                                                 },
                                                 "next_args": {
                                                     "none_opt": None,
-                                                    "opt": [("force", "-f"), ("overwrite", "-o"), ("encrypt_lvl", int)]
+                                                    "opt": [("force", "-f"), ("overwrite", "-o"), ("encryption_lvl", int)]
                                                 },
                                                 "next_params": None
                                             },
@@ -184,7 +185,7 @@ class ArgumentParser:
                                                 },
                                                 "next_args": {
                                                     "none_opt": None,
-                                                    "opt": [("encrypt_lvl", int)]
+                                                    "opt": [("encryption_lvl", int)]
                                                 },
                                                 "next_params": None
                                             },
@@ -225,6 +226,7 @@ class ArgumentParser:
                     }
             }
     }
+    optionals = ["-f", "-o"]
 
     # for generating help menu
     optional_params = [""]
@@ -274,15 +276,19 @@ class ArgumentParser:
                     if not arguments[key]["next_args"]["opt"] is None:
                         self.get_opt_args(arguments[key]["next_args"]["opt"])
         if not correct_param:
-            self.add_input_check_error(
-                helper.interface.displaymanager.error[helper.interface.displaymanager.UserError.FALSE_PARAMETER], [param])
-
-            return None, True
+            if param in self.optionals:
+                return arguments, False
+            else:
+                self.add_input_check_error(
+                    helper.interface.displaymanager.error[helper.interface.displaymanager.UserError.FALSE_PARAMETER], [param])
+                return None, True
         return next_params, end
 
     def get_args(self, args):
         try:
             for arg in args:
+                while self.arg_list[0] in self.optionals:
+                    self.arg_list.pop(0)
                 if len(self.arg_list) == 0:
                     self.add_input_check_error(
                         helper.interface.displaymanager.error[

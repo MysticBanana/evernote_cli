@@ -1,11 +1,13 @@
 # encoding: utf-8
 
+# coding=utf-8
 import base64
 import hashlib
 import os
 import shutil
 from zipfile import ZipFile
 from time import sleep
+import sys
 
 import enum
 from cryptography.fernet import Fernet
@@ -14,7 +16,6 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 from helper import exception, decorator
-
 
 def hash_str(string, hash_type="sha256"):
     """
@@ -105,11 +106,9 @@ class CryptoManager:
             enc_file_name = self.fernet.encrypt(bytes(file_name))
             hash_name = hash_str(enc_file_name)
 
-        # todo remove
-        if "Aufbau" in file_name:
-            print "break"
-
-        with open("{}{}".format(file_path, file_name), "rb") as origin:
+        # not ASCII-Characters
+        file_name = unicode(file_name)
+        with open(u"{}{}".format(file_path, file_name), "rb") as origin:
             enc_content = origin.read()
 
         with open("{}{}.enc".format(file_path, hash_name), "wb") as encrypted:
@@ -163,10 +162,6 @@ class CryptoManager:
                 dec_file_name = self.fernet.decrypt(bytes(file_name))
             else:
                 dec_file_name = self.fernet.decrypt(bytes(origin_name))
-
-                # todo delete pls
-                if "Aufbau" in dec_file_name:
-                    print "break"
 
         with open("{}{}".format(file_path, file_name), "rb") as encrypted:
             dec_content = encrypted.read()
