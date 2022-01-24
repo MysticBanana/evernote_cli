@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import base64
 import hashlib
 import os
@@ -103,6 +105,10 @@ class CryptoManager:
             enc_file_name = self.fernet.encrypt(bytes(file_name))
             hash_name = hash_str(enc_file_name)
 
+        # todo remove
+        if "Aufbau" in file_name:
+            print "break"
+
         with open("{}{}".format(file_path, file_name), "rb") as origin:
             enc_content = origin.read()
 
@@ -157,6 +163,10 @@ class CryptoManager:
                 dec_file_name = self.fernet.decrypt(bytes(file_name))
             else:
                 dec_file_name = self.fernet.decrypt(bytes(origin_name))
+
+                # todo delete pls
+                if "Aufbau" in dec_file_name:
+                    print "break"
 
         with open("{}{}".format(file_path, file_name), "rb") as encrypted:
             dec_content = encrypted.read()
