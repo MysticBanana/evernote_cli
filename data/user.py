@@ -1,7 +1,9 @@
 # coding=utf-8
 
 import os
+import shutil
 import zipfile
+from time import sleep
 
 import enum
 
@@ -242,10 +244,10 @@ class User(object):
         if bool(self.encryption_level & (1 << self.EncryptionLevel.COMPRESS.value)):
             self.compress_files()
 
-    def get_files(self):
+    def get_files(self, path=None):
         list_of_files = []
 
-        for root, dirs, files in os.walk(self.file_path):
+        for root, dirs, files in os.walk(path or self.file_path):
             for f in files:
                 list_of_files.append((root.encode('utf-8') + "/", f.encode('utf-8')))
 
@@ -254,9 +256,14 @@ class User(object):
     @decorator.exception_handler(UserError, "compressing files", error_reason=UserError.ErrorReason.COMPRESSION_ERROR)
     def compress_files(self):
         path = "/".join(self.file_path.split("/")[:-2]) + "/"
+
         if os.path.isdir(self.file_path):
-            c = krypto_manager.CompressManager()
-            c.compress(path, "files")
+            c = krypto_manager.CompressManager(dst=u"{}files.zip".format(path))
+            c.compress(self.file_path)
+            c.close()
+
+            sleep(1)
+            shutil.rmtree("{}/{}".format(path, "files"))
         else:
             raise self.UserError(self.UserError.ErrorReason.COMPRESSION_ERROR, "path is no dir")
 

@@ -1,11 +1,11 @@
 # encoding: utf-8
-
 # coding=utf-8
+
 import base64
 import hashlib
 import os
 import shutil
-from zipfile import ZipFile
+import zipfile
 from time import sleep
 import sys
 
@@ -110,7 +110,7 @@ class CryptoManager:
         file_name = unicode(file_name)
         with open(u"{}{}".format(file_path, file_name), "rb") as origin:
             enc_content = origin.read()
-
+        
         with open("{}{}.enc".format(file_path, hash_name), "wb") as encrypted:
             encrypted.write(self.fernet.encrypt(bytes(enc_content)))
 
@@ -174,32 +174,51 @@ class CryptoManager:
         return True
 
 class CompressManager():
-    def __init__(self, logger=None):
+    def __init__(self, logger=None, dst=None):
         self.logger = logger
+        self.zip_file = None
 
-    def compress(self, path, file):
+        if dst:
+            self.zip_file = zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED, allowZip64=True)
+
+    def compress(self, path, file=None, all=True):
         """
         Zipping a file and removing the directory
         :param path: path to file (not necessary to end with '/')
         :param file: filename
         """
-        complet_path = "{}/{}".format(path, file)
-        shutil.make_archive(complet_path, "zip", complet_path)
-        shutil.rmtree("{}/{}".format(path, file))
 
-    def decompress(self, path, file):
+        if self.zip_file:
+            if all:
+                for root, dirs, files in os.walk(path):
+                    for file in files:
+                        self.zip_file.write(os.path.join(root, file),
+                                   os.path.relpath(os.path.join(root, file),
+                                                   os.path.join(path, '..')))
+
+
+        # Doesnt work right
+        # complete_path = "{}/{}".format(path, file)
+        # shutil.make_archive(complete_path, "zip", complete_path)
+        # shutil.rmtree("{}/{}".format(path, file))
+
+    def decompress(self, path, file=""):
         """
         Extracting a zip archive and removing the .zip at the end
         :param path: path to file (not necessary to end with '/')
         :param file: filename
         """
         complete_path = "{}/{}".format(path, file)
-        with ZipFile("{}.zip".format(complete_path), "r") as zipObj:
-            zipObj.extractall(complete_path)
+        with zipfile.ZipFile("{}.zip".format(complete_path), "r", allowZip64=True) as zipObj:
+            zipObj.extractall(path)
 
         # need a sleep otherwise raise error because file isnt closed
         sleep(1)
         os.remove("{}.zip".format(complete_path))
+
+    def close(self):
+        if self.zip_file:
+            self.zip_file.close()
 
 
 if __name__ == "__main__":
