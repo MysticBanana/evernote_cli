@@ -108,10 +108,11 @@ class CryptoManager:
 
         # not ASCII-Characters
         file_name = unicode(file_name)
+        file_path = unicode(file_path)
         with open(u"{}{}".format(file_path, file_name), "rb") as origin:
             enc_content = origin.read()
-        
-        with open("{}{}.enc".format(file_path, hash_name), "wb") as encrypted:
+
+        with open(u"{}{}.enc".format(file_path, hash_name), "wb") as encrypted:
             encrypted.write(self.fernet.encrypt(bytes(enc_content)))
 
         return (hash_name, enc_file_name)
@@ -163,14 +164,11 @@ class CryptoManager:
             else:
                 dec_file_name = self.fernet.decrypt(bytes(origin_name))
 
-        with open("{}{}".format(file_path, file_name), "rb") as encrypted:
+        with open(u"{}{}".format(file_path, file_name), "rb") as encrypted:
             dec_content = encrypted.read()
 
-        with open("{}{}".format(file_path, dec_file_name), "wb") as decrypted:
+        with open(u"{}{}".format(file_path, dec_file_name), "wb") as decrypted:
             decrypted.write(self.fernet.decrypt(dec_content))
-
-
-
         return True
 
 class CompressManager():
@@ -208,13 +206,13 @@ class CompressManager():
         :param path: path to file (not necessary to end with '/')
         :param file: filename
         """
-        complete_path = "{}/{}".format(path, file)
-        with zipfile.ZipFile("{}.zip".format(complete_path), "r", allowZip64=True) as zipObj:
+        complete_path = u"{}/{}".format(path, file)
+        with zipfile.ZipFile(u"{}.zip".format(complete_path), "r", allowZip64=True) as zipObj:
             zipObj.extractall(path)
 
         # need a sleep otherwise raise error because file isnt closed
         sleep(1)
-        os.remove("{}.zip".format(complete_path))
+        os.remove(u"{}.zip".format(complete_path))
 
     def close(self):
         if self.zip_file:
