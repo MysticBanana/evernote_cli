@@ -162,8 +162,42 @@ class ParameterStructure:
 
         dict_path = copy.deepcopy(self.parameter)
         for cmd in path:
-            print dict_path.get("opt_str")
-            pass#dict_path = dict_path[]
+            if len(dict_path) == 0:
+                break
+
+            c = dict_path[cmd]
+
+
+            u = c.get("opt_str")[0]
+            if len(c.get("requires", [])) != 0:
+                # get optional and none optional parameters now
+                n_opt = c["requires"].get("none_opt", [])
+                if len(n_opt) == 1:
+                    u += " {}".format(self.make_user_input(n_opt[0]))
+                elif len(n_opt) > 1:
+                    u += " " + ", ".join(self.make_user_input(n_opt))
+
+                opt = c["requires"].get("opt", [])
+                if len(opt) != 0:
+                    # oopt = [self.make_optional(self.make_user_input(i) if type(i) == str else i[0]) for i in opt]
+                    for i in opt:
+                        if type(i) == str:
+                            oopt = self.make_user_input(i)
+                        else:
+                            oopt = i[0]
+                            if type(i[1]) == str and i[1][0] == "-":
+                                pass
+                            else:
+                                oopt = self.make_user_input(oopt)
+
+                        u += " " + self.make_optional(oopt)
+
+            usage += u + " "
+            dict_path = dict_path[cmd]["subcommand"]
+
+        return usage
+
+
 
 
     def make_exclusive(self, *args):
@@ -173,6 +207,8 @@ class ParameterStructure:
         return self.optional_str.format(self.or_str.join(args))
 
     def make_user_input(self, *args):
+        # todo make decorator of
+        args = [i[0] if type(i) != str else i for i in args]
         return self.user_input_str.format(self.or_str.join(args))
 
 
@@ -335,9 +371,14 @@ commands = {
 if __name__ == "__main__":
     parameter_structure = ParameterStructure(parameter=commands)
 
-    print parameter_structure.parameter
+    # print parameter_structure.parameter
     # print parameter_structure.get_usage(parameter_structure.get_command("user"))
-    print parameter_structure.get_usage("new_user")
+    print parameter_structure.get_usage("new_encrypt")
+
+
+
+
+
 
 """
 > sum -d -e to -de?
