@@ -89,7 +89,7 @@ class GlobalFileManager:
         self._credentials.dump()
 
         try:
-            shutil.rmtree("user_data/{}/".format(user_name))
+            shutil.rmtree(u"user_data/{}/".format(user_name))
         except Exception:
             self.logger.error("error while deleting user")
             self.FileManagerError(self.FileManagerError.ErrorReason.DEFAULT, "error while deleting user: %s" % user_name)
@@ -103,7 +103,7 @@ class GlobalFileManager:
             self.logger.warning("user already exists")
             return
 
-        path = self.get_path("user_data") + "/" + str(user_name) + "/"
+        path = self.get_path("user_data") + "/" + unicode(user_name) + "/"
 
         if os.path.exists(path):
             self.logger.warning("user already exists")
