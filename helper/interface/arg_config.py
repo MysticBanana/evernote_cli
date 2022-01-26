@@ -194,7 +194,7 @@ commands = {
             "long_help": "",
             "func_name": "help",
             "requires": {
-                "opt": ["command"],
+                "opt": [("command", str)],
             }
         },
     "user":
@@ -226,6 +226,7 @@ commands = {
                         "opt_str": ["-p", "--passwd"],
                         "help": "input your stupid password after",
                         "long_help": "",
+                        "func_name": None,
                         "requires": {
                             "none_opt": ["password"],
                         },
@@ -237,6 +238,7 @@ commands = {
                                         "opt_str": ["-c", "--change"],
                                         "help": "change stuff ",
                                         "long_help": "",
+                                        "func_name": None,
                                         "subcommand":
                                             {
                                                 "new_pwd":
@@ -248,7 +250,7 @@ commands = {
                                                         "func_name": "new_pwd",
                                                         "requires": {
                                                             "none_opt": ["new_password"],
-                                                            "opt": [("force", "-f")]
+                                                            "opt": [("force", ["--force", "-f"])]
                                                         }
                                                     },
                                                 "new_path":
@@ -260,7 +262,7 @@ commands = {
                                                         "func_name": "new_path",
                                                         "requires": {
                                                             "none_opt": ["new_path"],
-                                                            "opt": [("force", "-f")]
+                                                            "opt": [("force", ["--force", "-f"])]
                                                         }
                                                     },
                                                 "new_encrypt":
@@ -272,7 +274,7 @@ commands = {
                                                         "func_name": "new_encrypt",
                                                         "requires": {
                                                             "none_opt": [("new_encrypt_lvl", int)],
-                                                            "opt": [("force", "-f")]
+                                                            "opt": [("force", ["--force", "-f"])]
                                                         }
                                                     },
                                             }
@@ -285,7 +287,7 @@ commands = {
                                         "long_help": "",
                                         "func_name": "download",
                                         "requires": {
-                                            "opt": [("force", "-f"), ("overwrite", "-o"), "encryption_lvl"]
+                                            "opt": [("force", ["--force", "-f"]), ("overwrite", ["--overwrite", "-o"]), ("encryption_lvl", int)]
                                         }
                                     },
                                 "encrypt":
@@ -306,9 +308,6 @@ commands = {
                                         "help": "decrypting your files",
                                         "long_help": "",
                                         "func_name": "decrypt",
-                                        "requires": {
-                                            "opt": [("encryption_lvl", int)]
-                                        }
                                     },
                                 "refresh":
                                     {

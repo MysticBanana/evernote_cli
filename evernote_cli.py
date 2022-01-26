@@ -304,6 +304,7 @@ class Evernote:
 
     def remove(self, params):
         self.global_data_manager.remove_user(params["username"])
+        self.user = None
 
     # todo remove
     def error(self, params):
