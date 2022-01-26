@@ -206,7 +206,7 @@ class User(object):
         for i in path:
             if ".enc" not in i[1]:
                 continue
-            os.remove(i[0] + i[1])
+            os.remove(unicode(i[0]) + unicode(i[1]))
 
     @decorator.exception_handler(UserError, "encrypting files", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def encrypt_files(self):
@@ -263,14 +263,15 @@ class User(object):
             c.close()
 
             sleep(1)
-            shutil.rmtree("{}/{}".format(path, "files"))
+            shutil.rmtree(u"{}/{}".format(path, "files"))
         else:
             raise self.UserError(self.UserError.ErrorReason.COMPRESSION_ERROR, "path is no dir")
 
     @decorator.exception_handler(UserError, "decompressing files", error_reason=UserError.ErrorReason.COMPRESSION_ERROR)
     def decompress_files(self):
         path = "/".join(self.file_path.split("/")[:-2]) + "/"
-        if os.path.isfile("{path}files.zip".format(path=path)):
+        path = unicode(path)
+        if os.path.isfile(u"{path}files.zip".format(path=path)):
             c = krypto_manager.CompressManager()
             c.decompress(path, "files")
         else:

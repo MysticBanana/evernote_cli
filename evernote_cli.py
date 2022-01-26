@@ -80,8 +80,6 @@ class Evernote:
         params = self.par.params
         # print params
 
-        #c = krypto_manager.CompressManager()
-        #c.decompress("D:\Python\Softwareprojekt\evernote-cli\user_data\mneuhaus", "files"
 
         try:
             if not params["func"] in ["help", "error", "input_error"]:
@@ -328,7 +326,7 @@ if __name__ == "__main__":
     tmp_user_password = "test"
 
     token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
-    e = Evernote(
-          "-u {user_name} -p {password} -c -e 0".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
+    # e = Evernote(
+    #       "-u {user_name} -p {password} -c -e 0".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
     # e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    #e = Evernote(sys.argv[1:])
+    e = Evernote(sys.argv[1:])
