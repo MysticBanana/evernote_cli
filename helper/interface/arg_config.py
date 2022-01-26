@@ -1,3 +1,5 @@
+import copy
+
 class Command(dict):
     def __setitem__(self, key, item):
         self.__dict__[key] = item
@@ -141,7 +143,7 @@ class ParameterStructure:
 
                     if path:
                         p = _v[1]
-                        _v = v[0]
+                        _v = _v[0]
                         p.append(k)
                         return _v, p
                     return _v
@@ -150,15 +152,19 @@ class ParameterStructure:
         if command is None:
             return self.default_usage
 
-        if not isinstance(command, dict):
-            return
+        # if not isinstance(command, dict):
+        #     return
 
         usage = "$%s " % self.app_name
 
         c, path = self.dict_search(self.parameter, command, path=True)
+        path.reverse()
 
+        dict_path = copy.deepcopy(self.parameter)
         for cmd in path:
-            print cmd
+            print dict_path.get("opt_str")
+            pass#dict_path = dict_path[]
+
 
     def make_exclusive(self, *args):
         return self.exclusive_str.format(self.or_str.join(args))
@@ -331,7 +337,7 @@ if __name__ == "__main__":
 
     print parameter_structure.parameter
     # print parameter_structure.get_usage(parameter_structure.get_command("user"))
-    print parameter_structure.get_command("new_user")
+    print parameter_structure.get_usage("new_user")
 
 """
 > sum -d -e to -de?
@@ -348,6 +354,4 @@ Commands
     Options
         - p
         ...
-        
-
 """
