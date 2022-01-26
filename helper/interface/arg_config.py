@@ -1,5 +1,3 @@
-
-
 class Command(dict):
     def __setitem__(self, key, item):
         self.__dict__[key] = item
@@ -148,7 +146,7 @@ class ParameterStructure:
         c, path = self.dict_search(self.parameter, command, path=True)
 
         for cmd in path:
-            pass
+            print cmd
 
     def make_exclusive(self, *args):
         return self.exclusive_str.format(self.or_str.join(args))
@@ -159,6 +157,7 @@ class ParameterStructure:
     def make_user_input(self, *args):
         return self.user_input_str.format(self.or_str.join(args))
 
+
 # should change subcommand to list
 commands = {
     "version":
@@ -166,6 +165,7 @@ commands = {
             "name": "version",
             "opt_str": ["-v", "--version"],
             "help": "shows version of the program",
+            "long_help": "",
             "func_name": "version",
         },
     "help":
@@ -173,6 +173,7 @@ commands = {
             "name": "help",
             "opt_str": ["-h", "--help"],
             "help": "shows this menu or help text for command",
+            "long_help": "",
             "func_name": "help",
             "requires": {
                 "opt": ["command"],
@@ -183,6 +184,7 @@ commands = {
             "name": "user",
             "opt_str": ["-u", "--user"],
             "help": "used in combination with --new or --passwd",
+            "long_help": "",
             "func_name": None,
             "requires": {
                 "none_opt": ["username"],
@@ -193,6 +195,7 @@ commands = {
                         "name": "new_user",
                         "opt_str": ["-n", "--new"],
                         "help": "create new user",
+                        "long_help": "",
                         "func_name": "new_user",
                         "requires": {
                             "none_opt": ["password"],
@@ -204,6 +207,7 @@ commands = {
                         "name": "passwd",
                         "opt_str": ["-p", "--passwd"],
                         "help": "input your stupid password after",
+                        "long_help": "",
                         "requires": {
                             "none_opt": ["password"],
                         },
@@ -214,6 +218,7 @@ commands = {
                                         "name": "change",
                                         "opt_str": ["-c", "--change"],
                                         "help": "change stuff ",
+                                        "long_help": "",
                                         "subcommand":
                                             {
                                                 "new_pwd":
@@ -221,6 +226,7 @@ commands = {
                                                         "name": "new_pwd",
                                                         "opt_str": ["-p", "--passwd"],
                                                         "help": "change password",
+                                                        "long_help": "",
                                                         "func_name": "new_pwd",
                                                         "requires": {
                                                             "none_opt": ["new_password"],
@@ -232,6 +238,7 @@ commands = {
                                                         "name": "new_path",
                                                         "opt_str": ["-d", "--downloadpath"],
                                                         "help": "change download path",
+                                                        "long_help": "",
                                                         "func_name": "new_path",
                                                         "requires": {
                                                             "none_opt": ["new_path"],
@@ -243,6 +250,7 @@ commands = {
                                                         "name": "new_encrypt",
                                                         "opt_str": ["-e", "--encrypt_files"],
                                                         "help": "change download encryption level",
+                                                        "long_help": "",
                                                         "func_name": "new_encrypt",
                                                         "requires": {
                                                             "none_opt": [("new_encrypt_lvl", int)],
@@ -256,6 +264,7 @@ commands = {
                                         "name": "download",
                                         "opt_str": ["-d", "--download"],
                                         "help": "download all files",
+                                        "long_help": "",
                                         "func_name": "download",
                                         "requires": {
                                             "opt": [("force", "-f"), ("overwrite", "-o"), "encryption_lvl"]
@@ -266,6 +275,7 @@ commands = {
                                         "name": "encrypt",
                                         "opt_str": ["-e", "--encrypt"],
                                         "help": "encrypting your files",
+                                        "long_help": "",
                                         "func_name": "encrypt",
                                         "requires": {
                                             "opt": [("encryption_lvl", int)]
@@ -276,6 +286,7 @@ commands = {
                                         "name": "decrypt",
                                         "opt_str": ["-de", "--decrypt"],
                                         "help": "decrypting your files",
+                                        "long_help": "",
                                         "func_name": "decrypt",
                                         "requires": {
                                             "opt": [("encryption_lvl", int)]
@@ -286,6 +297,7 @@ commands = {
                                         "name": "refresh",
                                         "opt_str": ["-r", "--refresh"],
                                         "help": "synchronize your files with the cloud",
+                                        "long_help": "",
                                         "func_name": "refresh"
                                     },
                                 "remove":
@@ -293,6 +305,7 @@ commands = {
                                         "name": "remove",
                                         "opt_str": ["-rm", "--remove"],
                                         "help": "remove user",
+                                        "long_help": "",
                                         "func_name": "remove"
                                     }
                             }
@@ -302,15 +315,11 @@ commands = {
 }
 
 if __name__ == "__main__":
-
     parameter_structure = ParameterStructure(parameter=commands)
 
     print parameter_structure.parameter
-
-
-
-
-
+    # print parameter_structure.get_usage(parameter_structure.get_command("user"))
+    print parameter_structure.get_command("user")
 
 """
 > sum -d -e to -de?
