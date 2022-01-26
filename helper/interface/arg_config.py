@@ -5,6 +5,9 @@ class Command(dict):
     def __getitem__(self, key):
         return self.__dict__[key]
 
+    def get(self, key, *args):
+        return self.__dict__.get(key, *args)
+
     def __repr__(self):
         return repr(self.__dict__)
 
@@ -130,9 +133,18 @@ class ParameterStructure:
                 elif v.get("name", "") == search or search in v.get("opt_str", ""):
                     return v, [k] if path else v
                 else:
-                    _v, p = self.dict_search(d, search, path=path)
-                    p.append(k)
-                    return _v, p if path else _v
+                    if len(v.get("subcommand", [])) == 0:
+                        continue
+                    _v = self.dict_search(v["subcommand"], search, path=path)
+                    if not _v:
+                        continue
+
+                    if path:
+                        p = _v[1]
+                        _v = v[0]
+                        p.append(k)
+                        return _v, p
+                    return _v
 
     def get_usage(self, command=None):
         if command is None:
@@ -319,7 +331,7 @@ if __name__ == "__main__":
 
     print parameter_structure.parameter
     # print parameter_structure.get_usage(parameter_structure.get_command("user"))
-    print parameter_structure.get_command("user")
+    print parameter_structure.get_command("new_user")
 
 """
 > sum -d -e to -de?
