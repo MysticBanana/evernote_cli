@@ -25,6 +25,9 @@ class EvernoteUser(EvernoteAccess):
         self.user_info = self.user_store.getUser()
 
     def get_user_info(self):
+        """
+        :return: The user information stored in the evernote cloud
+        """
         return vars(self.user_info)
 
 
@@ -40,6 +43,9 @@ class EvernoteNote(EvernoteAccess):
         self.path = self.path + "/" if self.path[-1] != "/" else self.path
         
     def download(self, ressources=True):
+        """
+        Download files from in init defined note_store and using FileHandler to save it in given structure
+        """
         note_list = self.note_store.findNotesMetadata(self.access_token, self.filter, 0, 250, self.meta).notes
 
         # iterate all notebooks

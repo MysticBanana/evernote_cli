@@ -549,7 +549,7 @@ commands = {
                                         "help": "remove user",
                                         "long_help": "",
                                         "func_name": "remove",
-                                        "note": "Dnoes not remove downloaded files if the download path is not default"
+                                        "note": "Does not remove downloaded files if the download path is not default"
                                     }
                             }
                     }
@@ -560,4 +560,4 @@ commands = {
 if __name__ == "__main__":
     parameter_structure = ParameterStructure(parameter=commands)
 
-    print parameter_structure.get_final_output(["--remove"])
+    print parameter_structure.get_final_output("--remove")

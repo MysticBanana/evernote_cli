@@ -13,6 +13,10 @@ from evernote.api.client import EvernoteClient
 import webbrowser
 
 class Auth:
+    """
+    https://github.com/Jaymon/enno/blob/master/enno/__main__.py
+    """
+
     CONSUMER_KEY = None
     CONSUMER_SECRET = None
     SANDBOX = True
