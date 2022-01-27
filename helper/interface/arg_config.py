@@ -371,6 +371,8 @@ class ParameterStructure:
         """
         if type(command) == str:
             command = self.get_command_from_chain(command.split())
+        elif type(command) == list:
+            command = self.get_command_from_chain(command)
         elif not isinstance(command, dict):
             command = None
 
@@ -386,7 +388,7 @@ class ParameterStructure:
 
         note = ""
         if command:
-            note = "Note: {}".format(command.get("note", "")) if command.get("note", "") else ""
+            note = "Note:\n{}".format(command.get("note", "")) if command.get("note", "") else ""
 
         o = [usage, description, help_tree]
         if note:
@@ -546,7 +548,8 @@ commands = {
                                         "opt_str": ["-rm", "--remove"],
                                         "help": "remove user",
                                         "long_help": "",
-                                        "func_name": "remove"
+                                        "func_name": "remove",
+                                        "note": "Dnoes not remove downloaded files if the download path is not default"
                                     }
                             }
                     }
@@ -557,4 +560,4 @@ commands = {
 if __name__ == "__main__":
     parameter_structure = ParameterStructure(parameter=commands)
 
-    print parameter_structure.get_final_output()
+    print parameter_structure.get_final_output(["--remove"])

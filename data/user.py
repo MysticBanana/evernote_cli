@@ -4,11 +4,11 @@ import os
 import shutil
 import zipfile
 from time import sleep
-
+from datetime import datetime
 import enum
-
 import file_loader
 from helper import downloader, exception, krypto_manager, decorator
+
 
 class User(object):
     # check if bits are set
@@ -45,14 +45,14 @@ class User(object):
 
         # if file path does not exists create path for it
         self._force_mode = kwargs.get("force_mode", False)
-        self._overwrite = kwargs.get("overwrite", False) # replace with just force maybe?
+        self._overwrite = kwargs.get("overwrite", False)  # replace with just force maybe?
 
         self.controller = controller
 
         self.logger = self.controller.create_logger("USER | %s" % user_name)
         self.logger.info("Initializing user: {}".format(user_name))
 
-        #self.decrypt_token()
+        # self.decrypt_token()
         self.km = krypto_manager.CryptoManager(key=self._password, salt="user",
                                                logger=self.controller.create_logger("Krypto"))
         self.user_path = path
@@ -60,7 +60,8 @@ class User(object):
         if self._password is None:
             raise self.UserError(self.UserError.ErrorReason.ENCRYPTION_ERROR, "can't encrypt_files with empty password")
 
-        self.user_config = file_loader.FileHandler(file_name=".user_info", path=self.user_path, mode="json", controller=self.controller)
+        self.user_config = file_loader.FileHandler(file_name=".user_info", path=self.user_path, mode="json",
+                                                   controller=self.controller)
         if not self.user_config.exists:
             raise self.UserError(self.UserError.ErrorReason.CONFIG_MISSING, "Config: .user_info")
 
@@ -119,7 +120,9 @@ class User(object):
             value = "%sfiles/" % self.user_path
 
         # checks if valid path
-        if os.path.isdir(value) or zipfile.is_zipfile("/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode or self._overwrite or self.defaults["create_download_path"]:
+        if os.path.isdir(value) or zipfile.is_zipfile(
+                "/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode or self._overwrite or self.defaults[
+            "create_download_path"]:
             if self._force_mode or self._overwrite or self.defaults["create_download_path"]:
                 try:
                     if not os.path.isdir(value):
@@ -134,7 +137,8 @@ class User(object):
             self.logger.info("custom file path changed")
         # TODO --force einbauen
         else:
-            raise self.UserError(self.UserError.ErrorReason.DEFAULT, "path: %s is no dir\n use --force or --overwrite to create it")
+            raise self.UserError(self.UserError.ErrorReason.DEFAULT,
+                                 "path: %s is no dir\n use --force or --overwrite to create it")
 
     @property
     def max_encryption_level(self):
@@ -298,6 +302,7 @@ class User(object):
         More user data can be downloaded by expanding the content of the downloaded_data variable
         """
         downloaded_data = ["id", "username", "email", "name", "timezone", "created", "updated", "deleted"]
+        times = ["created", "updated", "deleted"]
         d_user = downloader.EvernoteUser(self.controller, self)
         user_info = d_user.get_user_info()
         user_config = self.user_config.get_all()
@@ -305,6 +310,9 @@ class User(object):
         for key, val in user_info.items():
             if key in downloaded_data:
                 user_config[self.user_name][key] = val
+            if key in times and val is not None:
+                user_config[self.user_name][key] = datetime.fromtimestamp(val / 1000).strftime("%A, %B %d, %Y %H:%M:%S")
+
         self.user_config.set_all(user_config)
         self.user_config.dump()
 
