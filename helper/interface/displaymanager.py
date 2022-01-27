@@ -1,6 +1,6 @@
 import enum
 import argument_parser
-
+import arg_config
 
 
 class HelpMenu:
@@ -69,37 +69,9 @@ class DisplayManager:
         return False
 
     def print_help(self, command=None):
-
-        usage = self.get_usage_command(command)
-
-        # used to create usage strings
-        optional = "[%s]"
-        user_input = "<{}>"
-        exclusive = "({})"
-        _exclusive = " | "
-
-        output = "Usage: $%s" % self.controller.NAME
-        if command is not None:
-            for i in usage:
-                output += " " + i[0][0]
-                if type(i[1]) == str:
-                    output = i[1] + ":\n" + output
-
-                    if type(i[2]) == dict:
-                        # todo mit <>
-                        output += " " + exclusive.format(_exclusive.join(i[2].keys()))
-                    continue
-
-                if len(i) > 1:
-                    for para in i[1]:
-                        output += " " + user_input.format((para if i[1][para] else optional % para))
-
-            print output + "\n"
-        else:
-            print output + usage + "\n"
-
-        for i in self.get_help_tree(command=command):
-            print i
+        pm = argument_parser.ArgumentParser.parameter_structure
+        help_string = pm.get_final_output(command)
+        print help_string
 
     def get_help_tree(self, ret_dict=None, tab_counter=0, command=None):
         """

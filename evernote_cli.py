@@ -211,13 +211,8 @@ class Evernote:
         """
 
         p = params["command"]
-        if type(p) == list:
-            if len(p) == 0:
-                self.display_manager.print_help()
-            else:
-                self.display_manager.print_help(p[0])
-        else:
-            self.display_manager.print_help(p)
+        self.display_manager.print_help(p)
+
 
     def new_user(self, params):
         """
