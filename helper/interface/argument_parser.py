@@ -17,7 +17,6 @@ $ evernote ...
             -d | --download [-f] [<Overwrite>] [<Encryption_Lvl>]
             -e | --encrypt [<Encryption_Lvl>]
             -de | --decrypt
-            -r | --refresh
             -rm | --remove
 '''
 
@@ -36,7 +35,7 @@ class ArgumentParser:
 
         self.arg_list = args.split()
         self.params = {}
-        #self.logger = controller.create_logger("argument_parser")
+        self.logger = controller.create_logger("argument_parser")
 
         self.wrong_input = False
 
@@ -49,11 +48,11 @@ class ArgumentParser:
             self.params = {"func": "input_error", "err_types": []}
         for i in arguments:
             input_typ = input_typ.replace("<rep>", i, 1)
-        #self.logger.error(input_typ)
+        self.logger.error(input_typ)
         self.params["err_types"].append(input_typ)
 
     def warning(self, msg):
-        #self.logger.warning(msg)
+        self.logger.warning(msg)
         print (msg)
 
     def get_next_params(self, arguments):
@@ -69,7 +68,11 @@ class ArgumentParser:
                     self.params["func"] = arguments[key]["func_name"]
                 else:
                     end = False
-                if not arguments[key].get("requires") is None:
+                if key == "help":
+                    self.params["command"] = []
+                    while len(self.arg_list) != 0:
+                        self.params["command"].append(self.arg_list.pop(0))
+                elif not arguments[key].get("requires") is None:
                     if "none_opt" in arguments[key].get("requires", ""):
                         self.get_args(arguments[key]["requires"]["none_opt"])
                     if "opt" in arguments[key].get("requires", ""):
@@ -144,19 +147,19 @@ class ArgumentParser:
         if not self.params["func"] in ["version", "help", "error", "input_error"]:
             # add password hash to self.params
             self.params["password_hash"] = helper.krypto_manager.hash_str(self.params["password"])
-            # check = self.controller.global_data_manager.check_user_hash(self.params["username"],
-            #                                                             self.params["password_hash"])
-            #user_exists = self.controller.global_data_manager.is_user(self.params["username"])
+            check = self.controller.global_data_manager.check_user_hash(self.params["username"],
+                                                                        self.params["password_hash"])
+            user_exists = self.controller.global_data_manager.is_user(self.params["username"])
             if not self.params["func"] in ["new_user"]:
                 # User Input Check
                 params = copy.deepcopy(self.params)
                 # Check if login data are correct
-                # if not check:
-                #     Authentication failed
-                    # self.add_input_check_error(
-                    #     helper.interface.displaymanager.error[
-                    #         helper.interface.displaymanager.UserError.AUTHENTICATION_FAILED],
-                    #     [self.params["username"], self.params["password"]])
+                if not check:
+                    #Authentication failed
+                    self.add_input_check_error(
+                        helper.interface.displaymanager.error[
+                            helper.interface.displaymanager.UserError.AUTHENTICATION_FAILED],
+                            [self.params["username"], self.params["password"]])
                 for key, val in params.items():
                     if key == "encrypt_lvl" or key == "new_encrypt_lvl":
                         print val
@@ -169,10 +172,9 @@ class ArgumentParser:
                                         helper.interface.displaymanager.UserError.FALSE_ENCRYPTION_LEVEL],
                                     [str(self.controller.max_encryption_level), str(val)])
             else:
-                print "user exists"
-                # if user_exists:
-                #     self.params["token"] = -1
-                #     self.warning("{} exists".format(self.params["username"]))
+                if user_exists:
+                    self.params["token"] = -1
+                    self.warning("{} exists".format(self.params["username"]))
 
         if not len(self.arg_list) == 0:
             self.warning("Warning! {} was ignored".format(self.arg_list))

@@ -27,7 +27,7 @@ class DisplayManager:
         self.controller = controller
         self.logger = controller.create_logger("Display")
 
-        self.help_dict = argument_parser.ArgumentParser.arguments
+        self.help_dict = argument_parser.ArgumentParser.commands
 
         self.tab_size = "  "
         self.max_tabs = 5
