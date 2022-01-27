@@ -2,7 +2,6 @@ import os
 from datetime import datetime
 from evernote.api.client import EvernoteClient
 from evernote.edam.notestore.ttypes import NotesMetadataResultSpec, NoteFilter
-from helper import krypto_manager
 from data import file_loader
 
 
@@ -73,6 +72,7 @@ class EvernoteNote(EvernoteAccess):
                     res = self.note_store.getResource(res_guid.guid, True, True, True, True)
                     res_name = res.attributes.fileName
 
+                    # --overwrite and --force check
                     overwrite = False
                     if os.path.exists("{}{}res/{}".format(self.path, note_dir, res_name)):
                         overwrite = self.user_data.get_default("overwrite_files")
@@ -86,13 +86,16 @@ class EvernoteNote(EvernoteAccess):
                             else:
                                 overwrite = self.controller.display_manager.get_user_input("The file {} already exists. Do you want to overwrite?".format(res_name))
 
+                    # saving of resource in composite path
                     f = file_loader.FileHandler(res_name, "{}{}res/".format(self.path, note_dir), create=True, mode=None, binary=True, overwrite=overwrite)
                     f.set_all(res.data.body)
                     f.dump()
 
+                    # Hash check
                     if f.file_hash != res.data.bodyHash:
                         self.logger.warn("hash of file: {} is not correct".format(res_name))
 
+                    # add resources metadata
                     note_meta["resources"].append(vars(res.attributes))
 
             # main content file of note
@@ -105,5 +108,3 @@ class EvernoteNote(EvernoteAccess):
 
             self.logger.info("downloaded note: {}".format(note_book.name))
 
-# TODO einzeln suchen und nach Notebook runterladen (funkt nicht in sandbox)
-# TODO download mit tags (funkt nicht in sandbox)
