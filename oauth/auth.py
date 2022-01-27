@@ -2,15 +2,11 @@
 
 from helper import exception
 from time import sleep
-import subprocess
-
 import enum
 import server
-
 from evernote.api.client import EvernoteClient
-
-# test
 import webbrowser
+
 
 class Auth:
     """
@@ -39,6 +35,7 @@ class Auth:
             raise self.AuthError(self.AuthError.ErrorReason.DEFAULT, "no logger defined")
 
         request_token = dict()
+
         # callback from the evernote server
         def callback(request):
             self.logger.info("successfully got the user access token")
@@ -68,9 +65,6 @@ class Auth:
         auth_url = client.get_authorize_url(request_token)
 
         self.logger.info("calling browser for authentication")
-
-        # windows error, linux works
-        # subprocess.call(["open", auth_url])
 
         # call webbrowser to open url for oauth authentication
         try:
