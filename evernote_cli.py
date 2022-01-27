@@ -213,7 +213,6 @@ class Evernote:
         p = params["command"]
         self.display_manager.print_help(p)
 
-
     def new_user(self, params):
         """
         Create a new user

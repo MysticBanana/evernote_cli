@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import enum
 import argument_parser
 import arg_config
@@ -72,97 +74,6 @@ class DisplayManager:
         pm = argument_parser.ArgumentParser.parameter_structure
         help_string = pm.get_final_output(command)
         print help_string
-
-    def get_help_tree(self, ret_dict=None, tab_counter=0, command=None):
-        """
-        Returns a tree dict starting from root or from "command" parameter in the origin tree
-        :param ret_dict: recursive dict to return
-        :param tab_counter: add tab / space character to the string and counting the depth
-        :param command: if none returns the complete dict as a string, if name of a parameter returns a dict tree starting there
-        :return:
-        """
-        ret_dict = ret_dict if ret_dict is not None else self.help_dict
-        lines = []
-
-        for k, v in ret_dict.items():
-            if type(v) == dict:
-                if "opt_str" in v:
-                    if "help" not in v:
-                        continue
-
-                    tabs = "\t" * (6 - (len(v["opt_str"])+tab_counter*len(self.tab_size))//4)
-                    if command: tab_counter = 0
-                    # string = "{spaces}{opt_str} | {opt_str_long} {tabs} {helptext}".format(opt_str=v["opt_str"][0],
-                    #                                                                        opt_str_long=v["opt_str"][1],
-                    #                                                                        helptext=v["help"],
-                    #                                                                        spaces=(
-                    #                                                                                self.tab_size * tab_counter),
-                    #                                                                        tabs=tabs)
-
-                    # string = "{:<2 {opt_short} | {opt_long}} {:>20 {help}}".format(opt_long=v["opt_str"][1],
-                    #                                                                         opt_short=v["opt_str"][0],
-                    #                                                                                   help=v["help"])
-
-                    opt = "{0[0]} | {0[1]}".format(v["opt_str"])
-                    space = self.tab_size*tab_counter
-
-                    string = "{:<15}".format(space+opt)
-
-
-                    # string = "{:{spaces}}   {:<5}".format(v["opt_str"][0], v["help"],
-                    #                                                    spaces=(tab_counter*2), anti_space=(tab_counter*2))
-
-                    if v.get("next_params", None) is not None:
-                        ret = self.get_help_tree(v["next_params"], tab_counter + 1, command)
-                    else:
-                        ret = []
-
-                    if command is None or command in v["opt_str"]:
-                        ret.insert(0, string)
-
-                    lines.append(ret)
-
-        return [i for row in lines for i in row]
-
-    def get_usage_command(self, command=None, ret_dict=None):
-        """
-        creates a usage string based on the parameter tree. If none returns the default string, if not returns usage
-        from the parameter with all required parameters
-        """
-
-        usage = ""
-        usage_param = []
-
-        if command is None:
-            usage = "[-h] [-u <username> (-n <password> [<token>] | -p <password>) --command]"
-            return usage
-
-        ret_dict = ret_dict if ret_dict else self.help_dict
-
-        for k, v in ret_dict.items():
-            if type(v) == dict:
-                if ("opt_str" in v):
-                    if (command in v["opt_str"]):
-                        # maybe find a better way for new features
-                        require = v["require"]
-                        if len(v["require"]) == 0:
-                            pass
-
-                            for i in list(v):
-                                j = v[i]
-                                if "opt_str" in j:
-                                    require[i] = j["opt_str"][0]
-
-                        usage_param.append((v["opt_str"], k, require))
-                        # usage_param.append((require,))
-                        break
-                    else:
-                        ret = self.get_usage_command(command, v)
-                        if len(ret) > 0:
-                            ret.insert(0, (v["opt_str"], v["require"]))
-                            usage_param = ret
-
-        return usage_param
 
 
 class UserError(enum.Enum):
