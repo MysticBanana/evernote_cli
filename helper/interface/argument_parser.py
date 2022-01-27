@@ -131,8 +131,7 @@ class ArgumentParser:
         nr_of_args = len(self.arg_list)
         # Check general number of parameters
         if nr_of_args == 0:
-            self.add_input_check_error(
-                helper.interface.displaymanager.error[helper.interface.displaymanager.UserError.TOO_FEW_ARGUMENT])
+            self.params = {"func": "help", "command": []}
             return
         end = False
         next_param = self.commands
