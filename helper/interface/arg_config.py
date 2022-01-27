@@ -450,7 +450,7 @@ commands = {
                     {
                         "name": "passwd",
                         "opt_str": ["-p", "--passwd"],
-                        "help": "input your stupid password after",
+                        "help": "input your password",
                         "long_help": "",
                         "func_name": None,
                         "requires": {
@@ -462,7 +462,7 @@ commands = {
                                     {
                                         "name": "change",
                                         "opt_str": ["-c", "--change"],
-                                        "help": "change stuff ",
+                                        "help": "change settings ",
                                         "long_help": "",
                                         "func_name": None,
                                         "subcommand":
@@ -496,7 +496,8 @@ commands = {
                                                         "name": "new_encrypt",
                                                         "opt_str": ["-e", "--encrypt_files"],
                                                         "help": "change download encryption level",
-                                                        "long_help": "",
+                                                        "long_help": "choose between encryption level 0 (none), "
+                                                                     "1 (compress), 2 (encrypt), 3 (compress and encrypt)",
                                                         "func_name": "new_encrypt",
                                                         "requires": {
                                                             "none_opt": [("new_encrypt_lvl", int)],
@@ -541,7 +542,7 @@ commands = {
                                         "name": "remove",
                                         "opt_str": ["-rm", "--remove"],
                                         "help": "remove user",
-                                        "long_help": "",
+                                        "long_help": "remove local user not your evernote user",
                                         "func_name": "remove",
                                         "note": "Does not remove downloaded files if the download path is not default"
                                     }
