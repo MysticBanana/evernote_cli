@@ -81,7 +81,7 @@ class ParameterStructure:
     # default usage string if too complex and hard coding is easier to read for user
     default_usage = "[-h] [-u <username> (-n <password> [<token>] | -p <password>) --command]"
     default_description = "A console based client for the Evernote API"
-    default_finish_str = "For complete documentation visit: <https://github.com/MysticBanana/evernote_cli>"
+    default_finish_str = "For full documentation visit: <https://github.com/MysticBanana/evernote_cli>"
 
     # string prototypes for formating
     optional_str = "[{}]"

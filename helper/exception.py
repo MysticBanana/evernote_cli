@@ -1,6 +1,5 @@
 # coding=utf-8
 from time import sleep
-import traceback
 import enum
 import traceback
 import sys
@@ -57,10 +56,11 @@ class EvernoteException(BaseException):
         if exc is not None:
             del stack[-1]
 
+        # https://stackoverflow.com/questions/6086976/how-to-get-a-complete-exception-stack-trace-in-python
         trc = '"\n"Traceback (most recent call last):\n'
-        stack_str = trc + ''.join(traceback.format_list(stack))
+        stack_str = trc + "".join(traceback.format_list(stack))
         if exc is not None:
-            stack_str += '  ' + traceback.format_exc().lstrip(trc)
+            stack_str += "  " + traceback.format_exc().lstrip(trc)
         return stack_str
 
     def trigger_long_error(self):

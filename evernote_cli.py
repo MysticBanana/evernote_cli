@@ -24,7 +24,7 @@ class Evernote:
         self._easter_egg = False
 
         # change working dir to current dir
-        os.chdir(os.path.dirname(__file__))
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
         self.global_data_manager = global_data_manager.GlobalFileManager(self)
 
@@ -255,6 +255,9 @@ class Evernote:
         new_path = params["new_path"]
         # self.user = self.global_data_manager.get_user(self.username, self.passwd)
         self.user.file_path = new_path
+
+        # would try to encrypt a empty dir and raise error
+        self.user.encryption_level = 0
 
     def new_encryption_lvl(self, params):
         """
