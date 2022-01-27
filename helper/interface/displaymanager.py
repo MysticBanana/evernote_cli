@@ -162,7 +162,7 @@ class DisplayManager:
         usage_param = []
 
         if command is None:
-            usage = "[-h] [-u <username> (-n [<token>] <password> | -p <password>) --command] "
+            usage = "[-h] [-u <username> (-n <password> [<token>] | -p <password>) --command]"
             return usage
 
         ret_dict = ret_dict if ret_dict else self.help_dict

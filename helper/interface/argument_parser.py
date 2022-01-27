@@ -111,7 +111,7 @@ class ArgumentParser:
                 try:
                     self.params[arg] = typ(self.arg_list[0])
                     self.arg_list.pop(0)
-                except:
+                except Exception:
                     self.params[arg] = None
             # z.B. arg = "param"; typ = "-f"
             elif type(typ) == list:

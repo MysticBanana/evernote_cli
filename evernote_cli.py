@@ -34,7 +34,6 @@ class Evernote:
         # setup logging for exceptions
         exception.EvernoteException.logger = self.get_logger()
 
-
         self.global_data_manager.setup_logging()
         self.global_data_manager.init_files()
         self._sandbox = self.global_data_manager.main_config.get("sandbox", True)
