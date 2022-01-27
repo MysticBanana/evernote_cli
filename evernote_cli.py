@@ -24,7 +24,7 @@ class Evernote:
         self._easter_egg = False
 
         # change working dir to current dir
-        os.chdir(os.path.realpath(__file__))
+        os.chdir(os.path.dirname(__file__))
 
         self.global_data_manager = global_data_manager.GlobalFileManager(self)
 
