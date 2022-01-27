@@ -534,14 +534,6 @@ commands = {
                                         "long_help": "",
                                         "func_name": "decrypt",
                                     },
-                                "refresh":
-                                    {
-                                        "name": "refresh",
-                                        "opt_str": ["-r", "--refresh"],
-                                        "help": "synchronize your files with the cloud",
-                                        "long_help": "",
-                                        "func_name": "refresh"
-                                    },
                                 "remove":
                                     {
                                         "name": "remove",

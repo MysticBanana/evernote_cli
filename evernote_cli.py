@@ -51,7 +51,6 @@ class Evernote:
             "new_pwd": self.new_pwd,
             "new_path": self.new_path,
             "download": self.download,
-            "refresh": self.refresh,
             "encrypt": self.encrypt,
             "decrypt": self.decrypt,
             "new_encrypt": self.new_encryption_lvl,
@@ -213,7 +212,10 @@ class Evernote:
 
         p = params["command"]
         if type(p) == list:
-            self.display_manager.print_help(p[0])
+            if len(p) == 0:
+                self.display_manager.print_help()
+            else:
+                self.display_manager.print_help(p[0])
         else:
             self.display_manager.print_help(p)
 
@@ -292,14 +294,6 @@ class Evernote:
         :return:
         """
         self.user.encryption_level = 0
-
-
-    def refresh(self, params):
-        """
-        :param params:
-        :return:
-        """
-        pass
 
     def remove(self, params):
         self.global_data_manager.remove_user(params["username"])

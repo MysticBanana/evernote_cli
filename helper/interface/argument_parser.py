@@ -17,7 +17,6 @@ $ evernote ...
             -d | --download [-f] [<Overwrite>] [<Encryption_Lvl>]
             -e | --encrypt [<Encryption_Lvl>]
             -de | --decrypt
-            -r | --refresh
             -rm | --remove
 '''
 
