@@ -211,7 +211,7 @@ class Evernote:
         :param params: a dict containing all parsed arguments
         """
 
-        p = params["param"]
+        p = params["command"]
         if type(p) == list:
             self.display_manager.print_help(p[0])
         else:

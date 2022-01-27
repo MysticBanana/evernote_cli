@@ -64,7 +64,6 @@ class GlobalFileManager:
 
     def check_user_hash(self, user_name, password_hash):
         """
-
         :param user_name: username
         :param password_hash: hash of password
         :return:
@@ -95,7 +94,7 @@ class GlobalFileManager:
             self.FileManagerError(self.FileManagerError.ErrorReason.DEFAULT, "error while deleting user: %s" % user_name)
 
 
-    def create_user(self, user_name, user_password_hash=None, user_password=None, token=None):
+    def create_user(self, user_name, user_password, user_password_hash=None, token=None):
         if user_password_hash is None:
             user_password_hash = krypto_manager.hash_str(user_password)
 
@@ -110,6 +109,7 @@ class GlobalFileManager:
             return
 
         os.makedirs(path)
+
         self._credentials.set(user_name, str(user_password_hash))
         self._credentials.dump()
 
