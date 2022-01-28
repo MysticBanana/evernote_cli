@@ -82,7 +82,7 @@ class CryptoManager:
             iterations=100000,
             backend=default_backend())
 
-        key = base64.urlsafe_b64encode(kdf.derive(key))
+        key = base64.urlsafe_b64encode(kdf.derive(bytes(key)))
 
         self.logger = logger
         self.fernet = Fernet(key)

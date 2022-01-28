@@ -141,7 +141,7 @@ class User(object):
 
         # checks if valid path
         if os.path.isdir(value) or zipfile.is_zipfile(
-                os.path.dirname(value) + "/files.zip") or self._force_mode or self._overwrite or self.defaults[
+                "{dirname}/{name}.zip".format(dirname=os.path.dirname(value), name=os.path.basename(value))) or self._force_mode or self._overwrite or self.defaults[
             "create_download_path"]:
             if self._force_mode or self._overwrite or self.defaults["create_download_path"]:
                 try:
