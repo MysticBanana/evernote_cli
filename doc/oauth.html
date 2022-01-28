@@ -1,0 +1,275 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>oauth package &#8212; Evernote CLI 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="helper.interface package" href="helper.interface.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="helper.interface.html" title="helper.interface package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Evernote CLI 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">src</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="oauth-package">
+<h1>oauth package<a class="headerlink" href="#oauth-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-oauth.auth">
+<span id="oauth-auth-module"></span><h2>oauth.auth module<a class="headerlink" href="#module-oauth.auth" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="oauth.auth.Auth">
+<em class="property">class </em><code class="descclassname">oauth.auth.</code><code class="descname">Auth</code><span class="sig-paren">(</span><em>controller</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#oauth.auth.Auth" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://github.com/Jaymon/enno/blob/master/enno/__main__.py">https://github.com/Jaymon/enno/blob/master/enno/__main__.py</a></p>
+<dl class="exception">
+<dt id="oauth.auth.Auth.AuthError">
+<em class="property">exception </em><code class="descname">AuthError</code><span class="sig-paren">(</span><em>error_type=&lt;ErrorReason.DEFAULT: 1&gt;</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#oauth.auth.Auth.AuthError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="helper.html#helper.exception.EvernoteException" title="helper.exception.EvernoteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">helper.exception.EvernoteException</span></code></a></p>
+<dl class="class">
+<dt id="oauth.auth.Auth.AuthError.ErrorReason">
+<em class="property">class </em><code class="descname">ErrorReason</code><a class="headerlink" href="#oauth.auth.Auth.AuthError.ErrorReason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="oauth.auth.Auth.AuthError.ErrorReason.DEFAULT">
+<code class="descname">DEFAULT</code><em class="property"> = 1</em><a class="headerlink" href="#oauth.auth.Auth.AuthError.ErrorReason.DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="oauth.auth.Auth.CONSUMER_KEY">
+<code class="descname">CONSUMER_KEY</code><em class="property"> = None</em><a class="headerlink" href="#oauth.auth.Auth.CONSUMER_KEY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="oauth.auth.Auth.CONSUMER_SECRET">
+<code class="descname">CONSUMER_SECRET</code><em class="property"> = None</em><a class="headerlink" href="#oauth.auth.Auth.CONSUMER_SECRET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="oauth.auth.Auth.SANDBOX">
+<code class="descname">SANDBOX</code><em class="property"> = True</em><a class="headerlink" href="#oauth.auth.Auth.SANDBOX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oauth.server">
+<span id="oauth-server-module"></span><h2>oauth.server module<a class="headerlink" href="#module-oauth.server" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="oauth.server.BasicServer">
+<em class="property">class </em><code class="descclassname">oauth.server.</code><code class="descname">BasicServer</code><span class="sig-paren">(</span><em>callback</em>, <em>hostname=''</em>, <em>port=0</em>, <em>RequestHandlerClass=&lt;class oauth.server.CallbackHandler&gt;</em>, <em>logger=None</em><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.BasicServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SocketServer.TCPServer</span></code></p>
+<dl class="exception">
+<dt id="oauth.server.BasicServer.ServerError">
+<em class="property">exception </em><code class="descname">ServerError</code><span class="sig-paren">(</span><em>error_type=&lt;ErrorReason.DEFAULT: 1&gt;</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.BasicServer.ServerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="helper.html#helper.exception.EvernoteException" title="helper.exception.EvernoteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">helper.exception.EvernoteException</span></code></a></p>
+<dl class="class">
+<dt id="oauth.server.BasicServer.ServerError.ErrorReason">
+<em class="property">class </em><code class="descname">ErrorReason</code><a class="headerlink" href="#oauth.server.BasicServer.ServerError.ErrorReason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="oauth.server.BasicServer.ServerError.ErrorReason.DEFAULT">
+<code class="descname">DEFAULT</code><em class="property"> = 1</em><a class="headerlink" href="#oauth.server.BasicServer.ServerError.ErrorReason.DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="oauth.server.BasicServer.allow_reuse_address">
+<code class="descname">allow_reuse_address</code><em class="property"> = 1</em><a class="headerlink" href="#oauth.server.BasicServer.allow_reuse_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="oauth.server.BasicServer.callback">
+<code class="descname">callback</code><em class="property"> = None</em><a class="headerlink" href="#oauth.server.BasicServer.callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="oauth.server.BasicServer.server_bind">
+<code class="descname">server_bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.BasicServer.server_bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override server_bind to store the server name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oauth.server.BasicServer.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.BasicServer.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="oauth.server.BasicServer.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.BasicServer.stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="oauth.server.BasicServer.thread">
+<code class="descname">thread</code><em class="property"> = None</em><a class="headerlink" href="#oauth.server.BasicServer.thread" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="oauth.server.BasicServer.url">
+<code class="descname">url</code><a class="headerlink" href="#oauth.server.BasicServer.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oauth.server.CallbackHandler">
+<em class="property">class </em><code class="descclassname">oauth.server.</code><code class="descname">CallbackHandler</code><span class="sig-paren">(</span><em>request</em>, <em>client_address</em>, <em>server</em><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.CallbackHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleHTTPServer.SimpleHTTPRequestHandler</span></code></p>
+<dl class="exception">
+<dt id="oauth.server.CallbackHandler.CallbackError">
+<em class="property">exception </em><code class="descname">CallbackError</code><span class="sig-paren">(</span><em>error_type=&lt;ErrorReason.DEFAULT: 1&gt;</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.CallbackHandler.CallbackError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="helper.html#helper.exception.EvernoteException" title="helper.exception.EvernoteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">helper.exception.EvernoteException</span></code></a></p>
+<dl class="class">
+<dt id="oauth.server.CallbackHandler.CallbackError.ErrorReason">
+<em class="property">class </em><code class="descname">ErrorReason</code><a class="headerlink" href="#oauth.server.CallbackHandler.CallbackError.ErrorReason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="oauth.server.CallbackHandler.CallbackError.ErrorReason.DEFAULT">
+<code class="descname">DEFAULT</code><em class="property"> = 1</em><a class="headerlink" href="#oauth.server.CallbackHandler.CallbackError.ErrorReason.DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="oauth.server.CallbackHandler.do">
+<code class="descname">do</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.CallbackHandler.do" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="oauth.server.CallbackHandler.do_GET">
+<code class="descname">do_GET</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.CallbackHandler.do_GET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="oauth.server.CallbackHandler.do_HEAD">
+<code class="descname">do_HEAD</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.CallbackHandler.do_HEAD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="oauth.server.CallbackHandler.end_headers">
+<code class="descname">end_headers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.CallbackHandler.end_headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="oauth.server.CallbackHandler.parse_querystr">
+<code class="descname">parse_querystr</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#oauth.server.CallbackHandler.parse_querystr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="oauth.server.CallbackHandler.query">
+<code class="descname">query</code><a class="headerlink" href="#oauth.server.CallbackHandler.query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oauth">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-oauth" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">oauth package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-oauth.auth">oauth.auth module</a></li>
+<li><a class="reference internal" href="#module-oauth.server">oauth.server module</a></li>
+<li><a class="reference internal" href="#module-oauth">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="helper.interface.html"
+                        title="previous chapter">helper.interface package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/oauth.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="helper.interface.html" title="helper.interface package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Evernote CLI 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >src</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, MysticBanana, tomsch43dlich, Marco-rm-f, Dawnarcher, D4rkWIZZard.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.6.
+    </div>
+  </body>
+</html>

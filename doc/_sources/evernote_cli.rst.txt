@@ -1,0 +1,7 @@
+evernote\_cli module
+====================
+
+.. automodule:: evernote_cli
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,53 @@
+helper package
+==============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    helper.interface
+
+Submodules
+----------
+
+helper.decorator module
+-----------------------
+
+.. automodule:: helper.decorator
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+helper.downloader module
+------------------------
+
+.. automodule:: helper.downloader
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+helper.exception module
+-----------------------
+
+.. automodule:: helper.exception
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+helper.krypto\_manager module
+-----------------------------
+
+.. automodule:: helper.krypto_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: helper
+    :members:
+    :undoc-members:
+    :show-inheritance:

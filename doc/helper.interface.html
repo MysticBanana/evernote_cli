@@ -1,0 +1,487 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>helper.interface package &#8212; Evernote CLI 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="oauth package" href="oauth.html" />
+    <link rel="prev" title="helper package" href="helper.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="oauth.html" title="oauth package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="helper.html" title="helper package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Evernote CLI 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >src</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="helper.html" accesskey="U">helper package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="helper-interface-package">
+<h1>helper.interface package<a class="headerlink" href="#helper-interface-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-helper.interface.arg_config">
+<span id="helper-interface-arg-config-module"></span><h2>helper.interface.arg_config module<a class="headerlink" href="#module-helper.interface.arg_config" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="helper.interface.arg_config.Command">
+<em class="property">class </em><code class="descclassname">helper.interface.arg_config.</code><code class="descname">Command</code><a class="headerlink" href="#helper.interface.arg_config.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>Custom dictionary for custom access</p>
+<dl class="method">
+<dt id="helper.interface.arg_config.Command.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None.  Remove all items from D.<a class="headerlink" href="#helper.interface.arg_config.Command.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.Command.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; a shallow copy of D<a class="headerlink" href="#helper.interface.arg_config.Command.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.Command.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>k</em><span class="optional">[</span>, <em>d</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; D[k] if k in D, else d.  d defaults to None.<a class="headerlink" href="#helper.interface.arg_config.Command.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.Command.has_key">
+<code class="descname">has_key</code><span class="sig-paren">(</span><em>k</em><span class="sig-paren">)</span> &#x2192; True if D has a key k, else False<a class="headerlink" href="#helper.interface.arg_config.Command.has_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.Command.items">
+<code class="descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list of D's (key, value) pairs, as 2-tuples<a class="headerlink" href="#helper.interface.arg_config.Command.items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.Command.keys">
+<code class="descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list of D's keys<a class="headerlink" href="#helper.interface.arg_config.Command.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.Command.pop">
+<code class="descname">pop</code><span class="sig-paren">(</span><em>k</em><span class="optional">[</span>, <em>d</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; v, remove specified key and return the corresponding value.<a class="headerlink" href="#helper.interface.arg_config.Command.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>If key is not found, d is returned if given, otherwise KeyError is raised</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.Command.update">
+<code class="descname">update</code><span class="sig-paren">(</span><span class="optional">[</span><em>E</em>, <span class="optional">]</span><em>**F</em><span class="sig-paren">)</span> &#x2192; None.  Update D from dict/iterable E and F.<a class="headerlink" href="#helper.interface.arg_config.Command.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
+If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
+In either case, this is followed by: for k in F: D[k] = F[k]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.Command.values">
+<code class="descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list of D's values<a class="headerlink" href="#helper.interface.arg_config.Command.values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="helper.interface.arg_config.ParameterStructure">
+<em class="property">class </em><code class="descclassname">helper.interface.arg_config.</code><code class="descname">ParameterStructure</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the dictionary of all available parameter.
+Used for custom output for example usage strings or help menus</p>
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.add_subcommand">
+<code class="descname">add_subcommand</code><span class="sig-paren">(</span><em>command</em>, <em>new_command</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.add_subcommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a subcommand “Command” in the dict “subcommand” in command
+:param command: the “Command” where to add the subcommand
+:param new_command: gets added to command</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.app_name">
+<code class="descname">app_name</code><em class="property"> = 'evernote_cli.py'</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.app_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.create_command">
+<code class="descname">create_command</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.create_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Dictionary in “Command” and adds default values
+:param command: dict with all necessary values
+:return: “Command”</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.default_description">
+<code class="descname">default_description</code><em class="property"> = 'A console based client for the Evernote API'</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.default_description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.default_finish_str">
+<code class="descname">default_finish_str</code><em class="property"> = 'For full documentation visit: &lt;https://github.com/MysticBanana/evernote_cli&gt;'</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.default_finish_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.default_usage">
+<code class="descname">default_usage</code><em class="property"> = '[-h] [-u &lt;username&gt; (-n &lt;password&gt; [&lt;token&gt;] | -p &lt;password&gt;) --command]'</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.default_usage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.dict_search">
+<code class="descname">dict_search</code><span class="sig-paren">(</span><em>d</em>, <em>search</em>, <em>path=False</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.dict_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive look up for a command. Available to return the key-path too (list of all keys needed to reach the command
+:param d: dictionary where to look in
+:param search: name, opt_str or command to look for
+:param path: True or False if the path is needed
+:return: first “Command”</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.exclusive_str">
+<code class="descname">exclusive_str</code><em class="property"> = '({})'</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.exclusive_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.get_command">
+<code class="descname">get_command</code><span class="sig-paren">(</span><em>command_name</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.get_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter for Commands in the parameter dictionary
+:param command_name: can be the “name”, the opt_str (“-u” or “–user”) or Command
+:return: “Command”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.get_command_from_chain">
+<code class="descname">get_command_from_chain</code><span class="sig-paren">(</span><em>*command_chain</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.get_command_from_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as get_command but also accept the user input string and returns the last possible command
+example: “-u username -p password -d” will return the “Command” of download (-d)
+:param command_chain: user input string split to list
+:return: “Command”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.get_final_output">
+<code class="descname">get_final_output</code><span class="sig-paren">(</span><em>command=None</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.get_final_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>builds the help menu with the functions above and returns it</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.get_help_tree">
+<code class="descname">get_help_tree</code><span class="sig-paren">(</span><em>command=None</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.get_help_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts all parameter in a easy readable string(opt_str + short help text)
+:param command: command to print usage string for
+:return: help tree string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.get_usage">
+<code class="descname">get_usage</code><span class="sig-paren">(</span><em>command=None</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.get_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert all parameters needed and shows all available optional and none optional parameters
+:param command: command to print usage string for
+:return: usage string</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.help_line">
+<code class="descname">help_line</code><em class="property"> = '{space}{0:&lt;{max_space}} {1:&lt;2{max_space}}{2:&lt;20}'</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.help_line" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.init_commands">
+<code class="descname">init_commands</code><span class="sig-paren">(</span><em>command_list</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.init_commands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive function to convert all commands in command_list in proper format
+:param command_list: command dictionary
+:return: initialised command dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.make_exclusive">
+<code class="descname">make_exclusive</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.make_exclusive" title="Permalink to this definition">¶</a></dt>
+<dd><p>format args</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.make_optional">
+<code class="descname">make_optional</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.make_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>format args</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.arg_config.ParameterStructure.make_user_input">
+<code class="descname">make_user_input</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.make_user_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>format args</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.max_space">
+<code class="descname">max_space</code><em class="property"> = 5</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.max_space" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.optional_str">
+<code class="descname">optional_str</code><em class="property"> = '[{}]'</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.optional_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.optionals">
+<code class="descname">optionals</code><em class="property"> = ['force', 'overwrite']</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.optionals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.or_str">
+<code class="descname">or_str</code><em class="property"> = ' | '</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.or_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.parameter">
+<code class="descname">parameter</code><em class="property"> = None</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.parameter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.arg_config.ParameterStructure.user_input_str">
+<code class="descname">user_input_str</code><em class="property"> = '&lt;{}&gt;'</em><a class="headerlink" href="#helper.interface.arg_config.ParameterStructure.user_input_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-helper.interface.argument_parser">
+<span id="helper-interface-argument-parser-module"></span><h2>helper.interface.argument_parser module<a class="headerlink" href="#module-helper.interface.argument_parser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="helper.interface.argument_parser.ArgumentParser">
+<em class="property">class </em><code class="descclassname">helper.interface.argument_parser.</code><code class="descname">ArgumentParser</code><span class="sig-paren">(</span><em>controller</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="helper.interface.argument_parser.ArgumentParser.add_input_check_error">
+<code class="descname">add_input_check_error</code><span class="sig-paren">(</span><em>input_typ</em>, <em>arguments=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.add_input_check_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.argument_parser.ArgumentParser.commands">
+<code class="descname">commands</code><em class="property"> = {'help': {'func': None, 'func_name': 'help', 'help': 'shows this menu or help text for command', 'long_help': '', 'name': 'help', 'note': '', 'opt_str': ['-h', '--help'], 'optional': True, 'requires': {'opt': [('command', &lt;type 'str'&gt;)]}, 'subcommand': {}}, 'user': {'func': None, 'func_name': None, 'help': 'used in combination with --new or --passwd', 'long_help': '', 'name': 'user', 'note': '', 'opt_str': ['-u', '--user'], 'optional': True, 'requires': {'none_opt': ['username']}, 'subcommand': {'new_user': {'func': None, 'func_name': 'new_user', 'help': 'create new user', 'long_help': '', 'name': 'new_user', 'note': '', 'opt_str': ['-n', '--new'], 'optional': True, 'requires': {'none_opt': ['password'], 'opt': [('token', &lt;type 'str'&gt;)]}, 'subcommand': {}}, 'passwd': {'func': None, 'func_name': None, 'help': 'input your password', 'long_help': '', 'name': 'passwd', 'note': '', 'opt_str': ['-p', '--password'], 'optional': True, 'requires': {'none_opt': ['password']}, 'subcommand': {'change': {'func': None, 'func_name': None, 'help': 'change settings ', 'long_help': '', 'name': 'change', 'note': '', 'opt_str': ['-c', '--change'], 'optional': True, 'requires': {}, 'subcommand': {'new_encrypt': {'func': None, 'func_name': 'new_encrypt', 'help': 'change download encryption level', 'long_help': 'choose between encryption level 0 (none), 1 (compress), 2 (encrypt), 3 (compress and encrypt)', 'name': 'new_encrypt', 'note': '', 'opt_str': ['-e', '--encrypt'], 'optional': True, 'requires': {'none_opt': [('new_encrypt_lvl', &lt;type 'int'&gt;)], 'opt': [('force', ['--force', '-f'])]}, 'subcommand': {}}, 'new_path': {'func': None, 'func_name': 'new_path', 'help': 'change download path', 'long_help': '', 'name': 'new_path', 'note': '', 'opt_str': ['-d', '--downloadpath'], 'optional': True, 'requires': {'none_opt': ['new_path'], 'opt': [('force', ['--force', '-f'])]}, 'subcommand': {}}, 'new_pwd': {'func': None, 'func_name': 'new_pwd', 'help': 'change password', 'long_help': '', 'name': 'new_pwd', 'note': '', 'opt_str': ['-p', '--password'], 'optional': True, 'requires': {'none_opt': ['new_password'], 'opt': [('force', ['--force', '-f'])]}, 'subcommand': {}}}}, 'decrypt': {'func': None, 'func_name': 'decrypt', 'help': 'decrypting your files', 'long_help': '', 'name': 'decrypt', 'note': '', 'opt_str': ['-de', '--decrypt'], 'optional': True, 'requires': {}, 'subcommand': {}}, 'download': {'func': None, 'func_name': 'download', 'help': 'download all files', 'long_help': '', 'name': 'download', 'note': '', 'opt_str': ['-d', '--download'], 'optional': True, 'requires': {'opt': [('force', ['--force', '-f']), ('overwrite', ['--overwrite', '-o']), ('encryption_lvl', &lt;type 'int'&gt;)]}, 'subcommand': {}}, 'encrypt': {'func': None, 'func_name': 'encrypt', 'help': 'encrypting your files', 'long_help': '', 'name': 'encrypt', 'note': '', 'opt_str': ['-e', '--encrypt'], 'optional': True, 'requires': {'opt': [('encryption_lvl', &lt;type 'int'&gt;)]}, 'subcommand': {}}, 'remove': {'func': None, 'func_name': 'remove', 'help': 'remove user', 'long_help': 'remove local user not your evernote user', 'name': 'remove', 'note': 'Does not remove downloaded files if the download path is not default', 'opt_str': ['-rm', '--remove'], 'optional': True, 'requires': {}, 'subcommand': {}}}}}}, 'version': {'func': None, 'func_name': 'version', 'help': 'shows version of the program', 'long_help': '', 'name': 'version', 'note': '', 'opt_str': ['-v', '--version'], 'optional': True, 'requires': {}, 'subcommand': {}}}</em><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.commands" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.argument_parser.ArgumentParser.error">
+<code class="descname">error</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.argument_parser.ArgumentParser.get_args">
+<code class="descname">get_args</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.get_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.argument_parser.ArgumentParser.get_next_params">
+<code class="descname">get_next_params</code><span class="sig-paren">(</span><em>arguments</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.get_next_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.argument_parser.ArgumentParser.get_opt_args">
+<code class="descname">get_opt_args</code><span class="sig-paren">(</span><em>opt_args</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.get_opt_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.argument_parser.ArgumentParser.optional_params">
+<code class="descname">optional_params</code><em class="property"> = ['']</em><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.optional_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.argument_parser.ArgumentParser.optionals">
+<code class="descname">optionals</code><em class="property"> = ['-f', '-o']</em><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.optionals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.argument_parser.ArgumentParser.parameter_structure">
+<code class="descname">parameter_structure</code><em class="property"> = &lt;helper.interface.arg_config.ParameterStructure instance&gt;</em><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.parameter_structure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.argument_parser.ArgumentParser.parser">
+<code class="descname">parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.argument_parser.ArgumentParser.warning">
+<code class="descname">warning</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.argument_parser.ArgumentParser.warning" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-helper.interface.displaymanager">
+<span id="helper-interface-displaymanager-module"></span><h2>helper.interface.displaymanager module<a class="headerlink" href="#module-helper.interface.displaymanager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="helper.interface.displaymanager.DisplayManager">
+<em class="property">class </em><code class="descclassname">helper.interface.displaymanager.</code><code class="descname">DisplayManager</code><span class="sig-paren">(</span><em>controller</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.displaymanager.DisplayManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="helper.interface.displaymanager.DisplayManager.default_display">
+<code class="descname">default_display</code><span class="sig-paren">(</span><em>display_text</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.displaymanager.DisplayManager.default_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.displaymanager.DisplayManager.default_error">
+<code class="descname">default_error</code><span class="sig-paren">(</span><em>reason</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.displaymanager.DisplayManager.default_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.displaymanager.DisplayManager.get_user_input">
+<code class="descname">get_user_input</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.displaymanager.DisplayManager.get_user_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>If you need a request from user yes/no use this</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.interface.displaymanager.DisplayManager.print_help">
+<code class="descname">print_help</code><span class="sig-paren">(</span><em>command=None</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.interface.displaymanager.DisplayManager.print_help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="helper.interface.displaymanager.HelpMenu">
+<em class="property">class </em><code class="descclassname">helper.interface.displaymanager.</code><code class="descname">HelpMenu</code><a class="headerlink" href="#helper.interface.displaymanager.HelpMenu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="helper.interface.displaymanager.InputError">
+<em class="property">class </em><code class="descclassname">helper.interface.displaymanager.</code><code class="descname">InputError</code><a class="headerlink" href="#helper.interface.displaymanager.InputError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="helper.interface.displaymanager.InputError.AUTHENTICATION_FAILED">
+<code class="descname">AUTHENTICATION_FAILED</code><em class="property"> = 5</em><a class="headerlink" href="#helper.interface.displaymanager.InputError.AUTHENTICATION_FAILED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.displaymanager.InputError.FALSE_ENCRYPTION_LEVEL">
+<code class="descname">FALSE_ENCRYPTION_LEVEL</code><em class="property"> = 7</em><a class="headerlink" href="#helper.interface.displaymanager.InputError.FALSE_ENCRYPTION_LEVEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.displaymanager.InputError.FALSE_PARAMETER">
+<code class="descname">FALSE_PARAMETER</code><em class="property"> = 6</em><a class="headerlink" href="#helper.interface.displaymanager.InputError.FALSE_PARAMETER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.displaymanager.InputError.MISSING_ARGUMENT">
+<code class="descname">MISSING_ARGUMENT</code><em class="property"> = 3</em><a class="headerlink" href="#helper.interface.displaymanager.InputError.MISSING_ARGUMENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.displaymanager.InputError.MISSING_PARAMETER">
+<code class="descname">MISSING_PARAMETER</code><em class="property"> = 4</em><a class="headerlink" href="#helper.interface.displaymanager.InputError.MISSING_PARAMETER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.displaymanager.InputError.TOO_FEW_ARGUMENT">
+<code class="descname">TOO_FEW_ARGUMENT</code><em class="property"> = 2</em><a class="headerlink" href="#helper.interface.displaymanager.InputError.TOO_FEW_ARGUMENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.interface.displaymanager.InputError.TOO_MANY_ARGUMENT">
+<code class="descname">TOO_MANY_ARGUMENT</code><em class="property"> = 1</em><a class="headerlink" href="#helper.interface.displaymanager.InputError.TOO_MANY_ARGUMENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-helper.interface">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-helper.interface" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">helper.interface package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-helper.interface.arg_config">helper.interface.arg_config module</a></li>
+<li><a class="reference internal" href="#module-helper.interface.argument_parser">helper.interface.argument_parser module</a></li>
+<li><a class="reference internal" href="#module-helper.interface.displaymanager">helper.interface.displaymanager module</a></li>
+<li><a class="reference internal" href="#module-helper.interface">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="helper.html"
+                        title="previous chapter">helper package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="oauth.html"
+                        title="next chapter">oauth package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/helper.interface.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="oauth.html" title="oauth package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="helper.html" title="helper package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Evernote CLI 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >src</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="helper.html" >helper package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, MysticBanana, tomsch43dlich, Marco-rm-f, Dawnarcher, D4rkWIZZard.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.6.
+    </div>
+  </body>
+</html>
