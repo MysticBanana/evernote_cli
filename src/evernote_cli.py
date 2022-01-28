@@ -9,7 +9,6 @@ from helper import krypto_manager, exception
 from helper.interface import argument_parser, displaymanager
 
 
-
 class Evernote:
     # todo dynamicly with __file__
     NAME = "evernote_cli.py"
@@ -307,21 +306,49 @@ class Evernote:
     def version(self, params):
         print self._version
 
-    ##########################################
-    ##########################################
+# https://code.activestate.com/recipes/572200/
+def win32_unicode_argv():
+    """Uses shell32.GetCommandLineArgvW to get sys.argv as a list of Unicode
+    strings.
 
+    Versions 2.x of Python don't support Unicode in sys.argv on
+    Windows, with the underlying Windows API instead replacing multi-byte
+    characters with '?'.
 
+    https://code.activestate.com/recipes/572200/
+    """
+
+    from ctypes import POINTER, byref, cdll, c_int, windll
+    from ctypes.wintypes import LPCWSTR, LPWSTR
+
+    GetCommandLineW = cdll.kernel32.GetCommandLineW
+    GetCommandLineW.argtypes = []
+    GetCommandLineW.restype = LPCWSTR
+
+    CommandLineToArgvW = windll.shell32.CommandLineToArgvW
+    CommandLineToArgvW.argtypes = [LPCWSTR, POINTER(c_int)]
+    CommandLineToArgvW.restype = POINTER(LPWSTR)
+
+    cmd = GetCommandLineW()
+    argc = c_int(0)
+    argv = CommandLineToArgvW(cmd, byref(argc))
+    if argc.value > 0:
+        # Remove Python executable and commands if present
+        start = argc.value - len(sys.argv)
+        return [argv[i] for i in
+                xrange(start, argc.value)]
 
 # main
 if __name__ == "__main__":
-    # print(sys.argv[1:])
 
-    tmp_user_name = "mneuhaus"
-    tmp_user_password = "test"
-
-    token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
+    # check if running on windows because argv is bytestring and needs to be converted
+    if sys.platform == "win32":
+        sys.argv = win32_unicode_argv()
+        params = [unicode(i) for i in sys.argv[1:]]
+    else:
+        params = sys.argv[1:]
 
     # e = Evernote(
     #       "-u {user_name} -p {password} -c -e 0".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
     # e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    e = Evernote(sys.argv[1:])
+    e = Evernote(params)
