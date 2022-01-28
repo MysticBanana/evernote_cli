@@ -449,7 +449,7 @@ commands = {
                 "passwd":
                     {
                         "name": "passwd",
-                        "opt_str": ["-p", "--passwd"],
+                        "opt_str": ["-p", "--password"],
                         "help": "input your password",
                         "long_help": "",
                         "func_name": None,
@@ -470,7 +470,7 @@ commands = {
                                                 "new_pwd":
                                                     {
                                                         "name": "new_pwd",
-                                                        "opt_str": ["-p", "--passwd"],
+                                                        "opt_str": ["-p", "--password"],
                                                         "help": "change password",
                                                         "long_help": "",
                                                         "func_name": "new_pwd",
@@ -494,7 +494,7 @@ commands = {
                                                 "new_encrypt":
                                                     {
                                                         "name": "new_encrypt",
-                                                        "opt_str": ["-e", "--encrypt_files"],
+                                                        "opt_str": ["-e", "--encrypt"],
                                                         "help": "change download encryption level",
                                                         "long_help": "choose between encryption level 0 (none), "
                                                                      "1 (compress), 2 (encrypt), 3 (compress and encrypt)",

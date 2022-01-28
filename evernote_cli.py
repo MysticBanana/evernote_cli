@@ -3,11 +3,11 @@ import os
 import sys
 
 import enum
-
 import oauth.auth
 from data import user, global_data_manager
 from helper import krypto_manager, exception
 from helper.interface import argument_parser, displaymanager
+
 
 
 class Evernote:
@@ -22,6 +22,7 @@ class Evernote:
         self._sandbox = True
         self._testing = True
         self._easter_egg = False
+        self._version = "1.0.4"
 
         self.global_data_manager = global_data_manager.GlobalFileManager(self)
 
@@ -56,7 +57,8 @@ class Evernote:
             "new_encrypt": self.new_encryption_lvl,
             "remove": self.remove,
             "error": self.error,
-            "input_error": self.input_error
+            "input_error": self.input_error,
+            "version" : self.version
         }
 
         self.user = None
@@ -69,9 +71,6 @@ class Evernote:
         #args = "-u " + tmp_user_name + " -n passwd123 S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
         self.par = argument_parser.ArgumentParser(self, args)
         self.par.parser()
-        #self.username = params["username"]
-        #self.passwd = params["passwd"] # hashed
-        #self.passwd_hash = krypto_manager.hash_str(tmp_user_password)
 
         # test
        # self.user_web_auth()
@@ -80,7 +79,7 @@ class Evernote:
 
 
         try:
-            if not params["func"] in ["help", "error", "input_error"]:
+            if not params["func"] in ["version", "help", "error", "input_error"]:
                 self.username = params["username"]
                 self.password = params["password"]
                 if not params["func"] == "new_user":
@@ -293,13 +292,14 @@ class Evernote:
         self.global_data_manager.remove_user(params["username"])
         self.user = None
 
-    # todo remove
     def error(self, params):
-        print "error"
+        pass
 
-    # todo remove
     def input_error(self, params):
-        print "input error"
+        pass
+
+    def version(self, params):
+        print self._version
 
     ##########################################
     ##########################################
