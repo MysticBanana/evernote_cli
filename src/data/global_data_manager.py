@@ -102,7 +102,7 @@ class GlobalFileManager:
             self.logger.warning("user already exists")
             return
 
-        path = self.get_path("user_data") + "/" + unicode(user_name) + "/"
+        path = self.get_path("user_data") + "/" + user_name + "/"
 
         if os.path.exists(path):
             self.logger.warning("user already exists")

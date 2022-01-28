@@ -90,11 +90,11 @@ error = {
     UserError.TOO_FEW_ARGUMENT: "Too few arguments! At least one argument expected",
     UserError.MISSING_ARGUMENT: "At least one argument is missing!",
     UserError.MISSING_PARAMETER: "Parameter is missing!",
-    UserError.AUTHENTICATION_FAILED: "Authentication failed!"
-                                     " Check if password and username are correct."
-                                     " If you are using the program for the first time, create a new user with:"
-                                     "    '-u <username> -n <passwd>' "
-                                     " Tried [<rep>, <rep>]",
+    UserError.AUTHENTICATION_FAILED: "Authentication failed!\n"
+                                     " Check if password and username are correct.\n"
+                                     " If you are using the program for the first time, create a new user with:\n"
+                                     "    '-u <username> -n <passwd>' \n"
+                                     " Tried [<rep>, <rep>] \n",
     UserError.FALSE_PARAMETER: "The parameter is incorrect! Parameter <rep> does not exist in this context",
     UserError.FALSE_ENCRYPTION_LEVEL: "Incorrect encryption level! Expected level 0 to <rep>, got <rep>"
 }

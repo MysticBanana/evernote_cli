@@ -4,6 +4,7 @@ import sys
 
 import enum
 import oauth.auth
+import codecs
 from data import user, global_data_manager
 from helper import krypto_manager, exception
 from helper.interface import argument_parser, displaymanager
@@ -66,19 +67,10 @@ class Evernote:
         self.user = None
 
         # PARSER return Dictionary with information about parameter and function
-        # args = "-u {user_name} -n {password} {token} ".format(user_name=tmp_user_name,
-        #                                                     password=tmp_user_password,
-        #                                                     token=token)
-        args = " ".join(argv)
-        #args = "-u " + tmp_user_name + " -n passwd123 S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
-        self.par = argument_parser.ArgumentParser(self, args)
+        self.par = argument_parser.ArgumentParser(self, argv)
         self.par.parser()
 
-        # test
-       # self.user_web_auth()
         params = self.par.params
-        # print params
-
 
         try:
             if not params["func"] in ["version", "help", "error", "input_error"]:
@@ -222,13 +214,13 @@ class Evernote:
         """
         token = params["token"]
 
-        #todo again
+
         if token == -1:
             return
         elif not token:
             token = self.user_web_auth()
             if not token:
-                print "Bad request syntax: try again!"
+                print "Bad request syntax: Try again!"
                 return
         self.user = self.global_data_manager.create_user(user_name=self.username, user_password=self.password, token=token)
 
@@ -298,10 +290,11 @@ class Evernote:
         self.user = None
 
     def error(self, params):
-        pass
+        print params["err_types"][0]
 
     def input_error(self, params):
-        pass
+        print params["err_types"][0]
+
 
     def version(self, params):
         print self._version
