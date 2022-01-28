@@ -11,20 +11,21 @@ install_modules = ["evernote==1.25.3",
                    "ipaddress==1.0.23"
                    ]
 
-setuptools.setup(
-    name="evernote_cli",
-    version="1.0.4",
-    author="Secret",
-    author_email="no-reply@hs-mittweida.de",
-    description="Package to create Hive",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),
-    classifiers=[
-        "Programming Language :: Python :: 2",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-    ],
-    install_requires=install_modules,
-    python_requires='>2.7, <3.0',
-)
+if __name__ == "__main__":
+    s = setuptools.setup(
+            name="evernote_cli",
+            version="1.0.4",
+            author="Secret",
+            author_email="no-reply@hs-mittweida.de",
+            description="Package to create Hive",
+            long_description=long_description,
+            long_description_content_type="text/markdown",
+            packages=setuptools.find_packages(),
+            classifiers=[
+                "Programming Language :: Python :: 2",
+                "License :: OSI Approved :: MIT License",
+                "Operating System :: OS Independent",
+            ],
+            install_requires=install_modules,
+            python_requires='>2.7, <3.0',
+        )
