@@ -1,13 +1,13 @@
 {
-    "consumer_key": "mneuhaus", 
+    "cringe": false,
     "testing": false, 
     "consumer_secret": "a0d6022ff08c56b6", 
-    "sandbox": false, 
+    "sandbox": true,
     "path": {
         "log": "logs/", 
         "user_data": "user_data/"
     }, 
-    "cringe": false, 
+    "consumer_key": "mneuhaus", 
     "user_requirements": [
         ".user_info.json", 
         "files"
