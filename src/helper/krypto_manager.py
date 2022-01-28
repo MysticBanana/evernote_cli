@@ -29,7 +29,8 @@ def hash_str(string, hash_type="sha256"):
     elif hash_type == "md5":
         return hashlib.md5(string).hexdigest()
 
-
+# if file gets deleted
+@decorator.exception_handler(stop=False)
 def file_hash(file_path, hash_type="sha256"):
     """
     Calculate the hash of a file
@@ -63,6 +64,7 @@ class CryptoManager:
             DECRYPTION_ERROR = 5,
             ENCRYPTION_ERROR = 6
 
+    # todo random salt
     def __init__(self, key, salt=b"sdffa2edjdh", logger=None):
         """
         Generate a fernet object for decryption and encryption
@@ -216,6 +218,12 @@ class CompressManager():
     def close(self):
         if self.zip_file:
             self.zip_file.close()
+
+    def __del__(self):
+        self.close()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
 
 
 

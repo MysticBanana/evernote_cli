@@ -23,7 +23,6 @@ class HelpMenu:
                "{:<5}".format(self._usage_str, self._description, self._option_str)
 
 
-
 class DisplayManager:
     def __init__(self, controller):
         self.controller = controller
@@ -49,8 +48,8 @@ class DisplayManager:
 
         # check for multiple different inputs by user
         decision = {
-            "yes": ["yes", "y", "true", "yee", "yes i want"],
-            "no": ["no", "n", "nope", "shut up", "false", ""]
+            "yes": ["yes", "y", "true", "yee", "yes i want", "ja"],
+            "no": ["no", "n", "nope", "shut up", "false", "", "nein"]
         }
 
         max_wrong_input = 3

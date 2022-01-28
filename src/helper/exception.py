@@ -36,6 +36,7 @@ class EvernoteException(BaseException):
         if self.logger is not None:
             self.logger.error(self.return_text + self.full_stack())
 
+        # todo load from fun_content dynamic
         if self.fun_mode:
             self.trigger_long_error()
 
