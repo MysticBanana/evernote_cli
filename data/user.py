@@ -35,6 +35,16 @@ class User(object):
     }
 
     def __init__(self, controller, path, user_name, password, token=None, **kwargs):
+        """
+        Initialise user
+
+        Gets data from .user_info and if values arnt set, set them to default values.
+        Checks if all dirs and needed files exist in user directory and creates them if not.
+        Decrypt user files.
+        :param controller: instance of the Evernote object
+        :param path: path of the root user dir - user_data/
+        :param token: access token for authentication with evernote API
+        """
         self._user_token = token
         self._file_path = ""
         self._encryption_level = 0
@@ -92,6 +102,10 @@ class User(object):
 
     @user_token.setter
     def user_token(self, value):
+        """
+        checks correctness of token and save it in .user_info
+        :param value:
+        """
         try:
             value = unicode(value)
         except Exception:
@@ -111,10 +125,16 @@ class User(object):
 
     @property
     def file_path(self):
+        """
+        returns the path where to save downloaded files
+        """
         return self._file_path
 
     @file_path.setter
     def file_path(self, value):
+        """
+        checks correctness of path and save it in .user_info
+        """
         if value is None:
             self.logger.info("file_path setter is none")
             value = "%sfiles/" % self.user_path
@@ -142,6 +162,9 @@ class User(object):
 
     @property
     def max_encryption_level(self):
+        """
+        returns max encryption level possible
+        """
         return 2 ** len(self.EncryptionLevel) - 1
 
     @property
@@ -150,6 +173,9 @@ class User(object):
 
     @encryption_level.setter
     def encryption_level(self, value):
+        """
+        checks correctness of path and save it in .user_info
+        """
         if value is None:
             value = 0
 
@@ -180,6 +206,9 @@ class User(object):
 
     @decorator.exception_handler(UserError, "decrypting token", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def decrypt_token(self):
+        """
+        gets token from .user_info and returns it decrypted
+        """
         token = self.user_config.get("key", None)
         if len(str(token)) != 96 and token is not None:
             # set the new encrypted version
@@ -187,11 +216,17 @@ class User(object):
 
     @decorator.exception_handler(UserError, "encrypting token", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def encrypt_token(self, token=None):
+        """
+        returns a encrypted token
+        """
         if token is not None:
             return self.km.encrypt_str(token)
 
     @decorator.exception_handler(UserError, "decrypting files", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def decrypt_files(self):
+        """
+        iterate through downloaded files, decrypt them and deletes encrypted files after
+        """
         path = self.get_files()
 
         k = krypto_manager.CryptoManager(self._password)
@@ -214,6 +249,9 @@ class User(object):
 
     @decorator.exception_handler(UserError, "encrypting files", error_reason=UserError.ErrorReason.ENCRYPTION_ERROR)
     def encrypt_files(self):
+        """
+        iterate through downloaded files, encrypt them and deletes files after
+        """
         path = self.get_files()
 
         k = krypto_manager.CryptoManager(self._password)
@@ -235,6 +273,9 @@ class User(object):
             os.remove(i[0].decode('utf-8') + i[1].decode('utf-8'))
 
     def decrypt(self):
+        """
+        Calls functions selected from encryption level to decrypt/uncompress files
+        """
         # handle encryption level
         if bool(self.encryption_level & (1 << self.EncryptionLevel.COMPRESS.value)):
             self.decompress_files()
@@ -242,6 +283,9 @@ class User(object):
             self.decrypt_files()
 
     def encrypt(self):
+        """
+        Calls functions selected from encryption level to encrypt/compress files
+        """
         # handle encryption level
         if bool(self.encryption_level & (1 << self.EncryptionLevel.ENCRYPT.value)):
             self.encrypt_files()
@@ -249,8 +293,10 @@ class User(object):
             self.compress_files()
 
     def get_files(self, path=None):
+        """
+        Returns a list of all files (path + file) in <path>
+        """
         list_of_files = []
-
         for root, dirs, files in os.walk(path or self.file_path):
             for f in files:
                 list_of_files.append((root.encode('utf-8') + "/", f.encode('utf-8')))
@@ -259,6 +305,9 @@ class User(object):
 
     @decorator.exception_handler(UserError, "compressing files", error_reason=UserError.ErrorReason.COMPRESSION_ERROR)
     def compress_files(self):
+        """
+        Makes a zip archive from all files in download directory
+        """
         path = "/".join(self.file_path.split("/")[:-2]) + "/"
 
         if os.path.isdir(self.file_path):
@@ -273,6 +322,10 @@ class User(object):
 
     @decorator.exception_handler(UserError, "decompressing files", error_reason=UserError.ErrorReason.COMPRESSION_ERROR)
     def decompress_files(self):
+        """
+        Extract all files from the zip archive
+        """
+
         path = "/".join(self.file_path.split("/")[:-2]) + "/"
         path = unicode(path)
         if os.path.isfile(u"{path}files.zip".format(path=path)):
@@ -285,6 +338,10 @@ class User(object):
         pass
 
     def close(self):
+        """
+        Called at the end of the program to close/save all config files.
+        Encrypt downloaded files.
+        """
         try:
             self.save_files()
             self.user_token = self._user_token
@@ -298,7 +355,7 @@ class User(object):
     @decorator.exception_handler(UserError, "downloading user data", error_reason=UserError.ErrorReason.DOWNLOAD_ERROR)
     def download_user_data(self):
         """
-        downloads user data and stores it in the .user_info.json of the respective user.
+        Downloads user data and stores it in the .user_info.json of the respective user.
         More user data can be downloaded by expanding the content of the downloaded_data variable
         """
         downloaded_data = ["id", "username", "email", "name", "timezone", "created", "updated", "deleted"]
@@ -318,18 +375,8 @@ class User(object):
 
     @decorator.exception_handler(UserError, "downloading notes", error_reason=UserError.ErrorReason.DOWNLOAD_ERROR)
     def test_download(self):
+        """
+        Downloads all files from cloud storage and saves to self.file_path
+        """
         d = downloader.EvernoteNote(self.controller, self)
         d.download()
-
-    def get_all_files(self):
-        files = []
-        dirlist = [self.user_path]
-
-        # todo @tom utf-8 codierung hinzufügen! (existiert übrigens schon die gleiche methode)
-
-        while len(dirlist) > 0:
-            for (dirpath, dirnames, filenames) in os.walk(dirlist.pop()):
-                dirlist.extend(dirnames)
-                files.extend(map(lambda n: os.path.join(*n), zip([dirpath] * len(filenames), filenames)))
-
-        print(files)

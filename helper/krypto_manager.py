@@ -194,7 +194,6 @@ class CompressManager():
                                    os.path.relpath(os.path.join(root, file),
                                                    os.path.join(path, '..')))
 
-
         # Doesnt work right
         # complete_path = "{}/{}".format(path, file)
         # shutil.make_archive(complete_path, "zip", complete_path)
@@ -217,6 +216,7 @@ class CompressManager():
     def close(self):
         if self.zip_file:
             self.zip_file.close()
+
 
 
 if __name__ == "__main__":
