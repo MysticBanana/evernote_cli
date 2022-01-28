@@ -173,6 +173,7 @@ class CryptoManager:
             decrypted.write(self.fernet.decrypt(dec_content))
         return True
 
+
 class CompressManager():
     def __init__(self, logger=None, dst=None):
         self.logger = logger

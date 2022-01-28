@@ -137,11 +137,11 @@ class User(object):
         """
         if value is None:
             self.logger.info("file_path setter is none")
-            value = "%sfiles/" % self.user_path
+            value = "%sfiles" % self.user_path
 
         # checks if valid path
         if os.path.isdir(value) or zipfile.is_zipfile(
-                "/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode or self._overwrite or self.defaults[
+                os.path.dirname(value) + "/files.zip") or self._force_mode or self._overwrite or self.defaults[
             "create_download_path"]:
             if self._force_mode or self._overwrite or self.defaults["create_download_path"]:
                 try:
@@ -150,6 +150,8 @@ class User(object):
                 except Exception:
                     raise self.UserError(file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_CREATING_PATH,
                                          "path: %s " % value)
+
+            value = value[:-1] if (value[-1] == "/") else value
 
             self._file_path = value
             self.user_config.set("file_path", self.file_path).dump()
