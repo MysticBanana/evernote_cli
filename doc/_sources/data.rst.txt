@@ -1,0 +1,38 @@
+data package
+============
+
+Submodules
+----------
+
+data.file\_loader module
+------------------------
+
+.. automodule:: data.file_loader
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data.global\_data\_manager module
+---------------------------------
+
+.. automodule:: data.global_data_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data.user module
+----------------
+
+.. automodule:: data.user
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: data
+    :members:
+    :undoc-members:
+    :show-inheritance:

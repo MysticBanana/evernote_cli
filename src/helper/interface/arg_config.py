@@ -427,8 +427,9 @@ commands = {
         {
             "name": "user",
             "opt_str": ["-u", "--user"],
-            "help": "used in combination with --new or --passwd",
-            "long_help": "",
+            "help": "used for login as the user",
+            "long_help": "Use -u <username> in combination with password authentication or new user creation. "
+                         "For more Information call help of -p or -n.",
             "func_name": None,
             "requires": {
                 "none_opt": ["username"],
@@ -439,7 +440,9 @@ commands = {
                         "name": "new_user",
                         "opt_str": ["-n", "--new"],
                         "help": "create new user",
-                        "long_help": "",
+                        "long_help": "Creates a user directory and saves/encrypt your token. "
+                                     "If there was no token given the browser will automatically open, ask you to "
+                                     "login on the Evernote website to be able to access the token.",
                         "func_name": "new_user",
                         "requires": {
                             "none_opt": ["password"],
@@ -450,8 +453,9 @@ commands = {
                     {
                         "name": "passwd",
                         "opt_str": ["-p", "--password"],
-                        "help": "input your password",
-                        "long_help": "",
+                        "help": "your password",
+                        "long_help": "Use -p <password> for authentication and decryption of your files. "
+                                     "After authentication you can download files or execute other subcommands.",
                         "func_name": None,
                         "requires": {
                             "none_opt": ["password"],
@@ -462,7 +466,7 @@ commands = {
                                     {
                                         "name": "change",
                                         "opt_str": ["-c", "--change"],
-                                        "help": "change settings ",
+                                        "help": "change settings",
                                         "long_help": "",
                                         "func_name": None,
                                         "subcommand":
@@ -471,8 +475,10 @@ commands = {
                                                     {
                                                         "name": "new_pwd",
                                                         "opt_str": ["-p", "--password"],
-                                                        "help": "change password",
+                                                        "help": "update your password",
                                                         "long_help": "",
+                                                        "note": "Already encrypted files will automatically get "
+                                                                "encrypted with the new password.",
                                                         "func_name": "new_pwd",
                                                         "requires": {
                                                             "none_opt": ["new_password"],
@@ -483,8 +489,9 @@ commands = {
                                                     {
                                                         "name": "new_path",
                                                         "opt_str": ["-d", "--downloadpath"],
-                                                        "help": "change download path",
-                                                        "long_help": "",
+                                                        "help": "changes download path",
+                                                        "long_help": "Changes the directory where to download files",
+                                                        "note": "Does not move already downloaded files.",
                                                         "func_name": "new_path",
                                                         "requires": {
                                                             "none_opt": ["new_path"],
@@ -495,9 +502,10 @@ commands = {
                                                     {
                                                         "name": "new_encrypt",
                                                         "opt_str": ["-e", "--encrypt"],
-                                                        "help": "change download encryption level",
+                                                        "help": "changes encryption level of files",
                                                         "long_help": "choose between encryption level 0 (none), "
-                                                                     "1 (compress), 2 (encrypt), 3 (compress and encrypt)",
+                                                                     "1 (compress), 2 (encrypt), 3 "
+                                                                     "(compress and encrypt)",
                                                         "func_name": "new_encrypt",
                                                         "requires": {
                                                             "none_opt": [("new_encrypt_lvl", int)],
@@ -511,7 +519,8 @@ commands = {
                                         "name": "download",
                                         "opt_str": ["-d", "--download"],
                                         "help": "download all files",
-                                        "long_help": "",
+                                        "long_help": "Will download all files stored in the cloud and encrypt them if "
+                                                     "needed",
                                         "func_name": "download",
                                         "requires": {
                                             "opt": [("force", ["--force", "-f"]), ("overwrite", ["--overwrite", "-o"]),
@@ -523,7 +532,9 @@ commands = {
                                         "name": "encrypt",
                                         "opt_str": ["-e", "--encrypt"],
                                         "help": "encrypting your files",
-                                        "long_help": "",
+                                        "long_help": "choose level between 0 (none), 1 (compress), 2 (encrypt), 3 "
+                                                     "(compress and encrypt)",
+                                        "note": "Downloads all files in download directory",
                                         "func_name": "encrypt",
                                         "requires": {
                                             "opt": [("encryption_lvl", int)]

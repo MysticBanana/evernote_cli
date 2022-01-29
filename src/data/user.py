@@ -137,11 +137,11 @@ class User(object):
         """
         if value is None:
             self.logger.info("file_path setter is none")
-            value = "%sfiles/" % self.user_path
+            value = "%sfiles" % self.user_path
 
         # checks if valid path
         if os.path.isdir(value) or zipfile.is_zipfile(
-                "/".join(value.split("/")[:-2]) + "/files.zip") or self._force_mode or self._overwrite or self.defaults[
+                "{dirname}/{name}.zip".format(dirname=os.path.dirname(value), name=os.path.basename(value))) or self._force_mode or self._overwrite or self.defaults[
             "create_download_path"]:
             if self._force_mode or self._overwrite or self.defaults["create_download_path"]:
                 try:
@@ -150,6 +150,8 @@ class User(object):
                 except Exception:
                     raise self.UserError(file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_CREATING_PATH,
                                          "path: %s " % value)
+
+            value = value[:-1] if (value[-1] == "/") else value
 
             self._file_path = value
             self.user_config.set("file_path", self.file_path).dump()
@@ -308,15 +310,22 @@ class User(object):
         """
         Makes a zip archive from all files in download directory
         """
-        path = "/".join(self.file_path.split("/")[:-2]) + "/"
+        # path = os.path.abspath(os.path.join(self.file_path, '..'))
+        path = os.path.dirname(self.file_path)
 
         if os.path.isdir(self.file_path):
-            c = krypto_manager.CompressManager(dst=u"{}files.zip".format(path))
+            c = krypto_manager.CompressManager(dst=u"{}/{}.zip".format(path, os.path.basename(self.file_path)))
             c.compress(self.file_path)
             c.close()
 
+            del c
             sleep(1)
-            shutil.rmtree(u"{}/{}".format(path, "files"))
+
+            try:
+                shutil.rmtree(u"{}/{}".format(path, os.path.basename(self.file_path)))
+            except WindowsError:
+                # folder is still opened and avoid access denied
+                pass
         else:
             raise self.UserError(self.UserError.ErrorReason.COMPRESSION_ERROR, "path is no dir")
 
@@ -326,13 +335,19 @@ class User(object):
         Extract all files from the zip archive
         """
 
-        path = "/".join(self.file_path.split("/")[:-2]) + "/"
-        path = unicode(path)
-        if os.path.isfile(u"{path}files.zip".format(path=path)):
-            c = krypto_manager.CompressManager()
-            c.decompress(path, "files")
-        else:
-            raise self.UserError(self.UserError.ErrorReason.COMPRESSION_ERROR, "path is no file")
+        path = os.path.dirname(self.file_path)
+        try:
+            if os.path.isfile(u"{path}/{filename}.zip".format(path=path, filename=os.path.basename(self.file_path))):
+                c = krypto_manager.CompressManager()
+                c.decompress(path, u"{}.zip".format(os.path.basename(self.file_path)))
+            else:
+                return
+                # should be ignored if deleted or moved
+                # raise self.UserError(self.UserError.ErrorReason.COMPRESSION_ERROR, "path is no file")
+        except IOError as e:
+            print "im sorry i dont have permission for this"
+            self.logger.error("no permission to access the zip")
+            raise e
 
     def save_files(self):
         pass

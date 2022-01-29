@@ -1,0 +1,377 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>helper package &#8212; Evernote CLI 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="helper.interface package" href="helper.interface.html" />
+    <link rel="prev" title="evernote_cli module" href="evernote_cli.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="helper.interface.html" title="helper.interface package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="evernote_cli.html" title="evernote_cli module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Evernote CLI 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">src</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="helper-package">
+<h1>helper package<a class="headerlink" href="#helper-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="helper.interface.html">helper.interface package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helper.interface.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helper.interface.html#module-helper.interface.arg_config">helper.interface.arg_config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helper.interface.html#module-helper.interface.argument_parser">helper.interface.argument_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helper.interface.html#module-helper.interface.displaymanager">helper.interface.displaymanager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helper.interface.html#module-helper.interface">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-helper.decorator">
+<span id="helper-decorator-module"></span><h2>helper.decorator module<a class="headerlink" href="#module-helper.decorator" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="helper.decorator.exception_handler">
+<code class="descclassname">helper.decorator.</code><code class="descname">exception_handler</code><span class="sig-paren">(</span><em>error=&lt;class 'helper.exception.EvernoteException'&gt;</em>, <em>desc=''</em>, <em>error_reason=None</em>, <em>stop=True</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.decorator.exception_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception handler to catch exception from functions. Calls the error given or default EvernoteException
+:param error: Can be a custom Error inheriting from Exception
+:param desc: Description of the error
+:param error_reason: Enum for custom error
+:param stop: If error should be ignored or raised</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-helper.downloader">
+<span id="helper-downloader-module"></span><h2>helper.downloader module<a class="headerlink" href="#module-helper.downloader" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="helper.downloader.EvernoteAccess">
+<em class="property">class </em><code class="descclassname">helper.downloader.</code><code class="descname">EvernoteAccess</code><span class="sig-paren">(</span><em>controller</em>, <em>user_data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.downloader.EvernoteAccess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">evernote.api.client.EvernoteClient</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="helper.downloader.EvernoteNote">
+<em class="property">class </em><code class="descclassname">helper.downloader.</code><code class="descname">EvernoteNote</code><span class="sig-paren">(</span><em>controller</em>, <em>user_data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.downloader.EvernoteNote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#helper.downloader.EvernoteAccess" title="helper.downloader.EvernoteAccess"><code class="xref py py-class docutils literal notranslate"><span class="pre">helper.downloader.EvernoteAccess</span></code></a></p>
+<dl class="method">
+<dt id="helper.downloader.EvernoteNote.download">
+<code class="descname">download</code><span class="sig-paren">(</span><em>ressources=True</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.downloader.EvernoteNote.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download files from in init defined note_store and using FileHandler to save it in given structure</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="helper.downloader.EvernoteUser">
+<em class="property">class </em><code class="descclassname">helper.downloader.</code><code class="descname">EvernoteUser</code><span class="sig-paren">(</span><em>controller</em>, <em>user_data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.downloader.EvernoteUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#helper.downloader.EvernoteAccess" title="helper.downloader.EvernoteAccess"><code class="xref py py-class docutils literal notranslate"><span class="pre">helper.downloader.EvernoteAccess</span></code></a></p>
+<dl class="method">
+<dt id="helper.downloader.EvernoteUser.get_user_info">
+<code class="descname">get_user_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#helper.downloader.EvernoteUser.get_user_info" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The user information stored in the evernote cloud</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-helper.exception">
+<span id="helper-exception-module"></span><h2>helper.exception module<a class="headerlink" href="#module-helper.exception" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="helper.exception.EvernoteException">
+<em class="property">exception </em><code class="descclassname">helper.exception.</code><code class="descname">EvernoteException</code><span class="sig-paren">(</span><em>error_type=&lt;ErrorReason.DEFAULT: 1&gt;</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.exception.EvernoteException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">exceptions.BaseException</span></code></p>
+<dl class="class">
+<dt id="helper.exception.EvernoteException.ErrorReason">
+<em class="property">class </em><code class="descname">ErrorReason</code><a class="headerlink" href="#helper.exception.EvernoteException.ErrorReason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="helper.exception.EvernoteException.ErrorReason.DEFAULT">
+<code class="descname">DEFAULT</code><em class="property"> = 1</em><a class="headerlink" href="#helper.exception.EvernoteException.ErrorReason.DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.exception.EvernoteException.full_stack">
+<code class="descname">full_stack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#helper.exception.EvernoteException.full_stack" title="Permalink to this definition">¶</a></dt>
+<dd><p>generate the full stack trace of the error
+:return: string of the stack trace</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="helper.exception.EvernoteException.fun_mode">
+<code class="descname">fun_mode</code><em class="property"> = True</em><a class="headerlink" href="#helper.exception.EvernoteException.fun_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.exception.EvernoteException.logger">
+<code class="descname">logger</code><em class="property"> = None</em><a class="headerlink" href="#helper.exception.EvernoteException.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.exception.EvernoteException.testing">
+<code class="descname">testing</code><em class="property"> = True</em><a class="headerlink" href="#helper.exception.EvernoteException.testing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.exception.EvernoteException.trigger_long_error">
+<code class="descname">trigger_long_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#helper.exception.EvernoteException.trigger_long_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-helper.krypto_manager">
+<span id="helper-krypto-manager-module"></span><h2>helper.krypto_manager module<a class="headerlink" href="#module-helper.krypto_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="helper.krypto_manager.CompressManager">
+<em class="property">class </em><code class="descclassname">helper.krypto_manager.</code><code class="descname">CompressManager</code><span class="sig-paren">(</span><em>logger=None</em>, <em>dst=None</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CompressManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="helper.krypto_manager.CompressManager.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CompressManager.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helper.krypto_manager.CompressManager.compress">
+<code class="descname">compress</code><span class="sig-paren">(</span><em>path</em>, <em>file=None</em>, <em>all=True</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CompressManager.compress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zipping a file and removing the directory
+:param path: path to file (not necessary to end with ‘/’)
+:param file: filename</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.krypto_manager.CompressManager.decompress">
+<code class="descname">decompress</code><span class="sig-paren">(</span><em>path</em>, <em>file=''</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CompressManager.decompress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting a zip archive and removing the .zip at the end
+:param path: path to file (not necessary to end with ‘/’)
+:param file: filename</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="helper.krypto_manager.CryptoManager">
+<em class="property">class </em><code class="descclassname">helper.krypto_manager.</code><code class="descname">CryptoManager</code><span class="sig-paren">(</span><em>key</em>, <em>salt='sdffa2edjdh'</em>, <em>logger=None</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CryptoManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="exception">
+<dt id="helper.krypto_manager.CryptoManager.CryptographyError">
+<em class="property">exception </em><code class="descname">CryptographyError</code><span class="sig-paren">(</span><em>error_type=&lt;ErrorReason.DEFAULT: 1&gt;</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CryptoManager.CryptographyError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#helper.exception.EvernoteException" title="helper.exception.EvernoteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">helper.exception.EvernoteException</span></code></a></p>
+<dl class="class">
+<dt id="helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason">
+<em class="property">class </em><code class="descname">ErrorReason</code><a class="headerlink" href="#helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.DECRYPTION_ERROR">
+<code class="descname">DECRYPTION_ERROR</code><em class="property"> = (5,)</em><a class="headerlink" href="#helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.DECRYPTION_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.DEFAULT">
+<code class="descname">DEFAULT</code><em class="property"> = (1,)</em><a class="headerlink" href="#helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.ENCRYPTION_ERROR">
+<code class="descname">ENCRYPTION_ERROR</code><em class="property"> = 6</em><a class="headerlink" href="#helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.ENCRYPTION_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.ERROR_READING_FILE">
+<code class="descname">ERROR_READING_FILE</code><em class="property"> = (4,)</em><a class="headerlink" href="#helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.ERROR_READING_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.ERROR_WRITING_IN_FILE">
+<code class="descname">ERROR_WRITING_IN_FILE</code><em class="property"> = (3,)</em><a class="headerlink" href="#helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.ERROR_WRITING_IN_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.FILE_DOES_NOT_EXIST">
+<code class="descname">FILE_DOES_NOT_EXIST</code><em class="property"> = (2,)</em><a class="headerlink" href="#helper.krypto_manager.CryptoManager.CryptographyError.ErrorReason.FILE_DOES_NOT_EXIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.krypto_manager.CryptoManager.decrypt">
+<code class="descname">decrypt</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CryptoManager.decrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrypting the file content and name, removes ‘.enc’ if in the filename
+:param file_path: path to the file (ends with ‘/’)
+:param file_name: name of the file to decrypt
+:param content_only: if filename should not be changed
+:return: True if decryption was successful</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.krypto_manager.CryptoManager.decrypt_str">
+<code class="descname">decrypt_str</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CryptoManager.decrypt_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decryption of a string
+:param text: text string to get decrypted
+:return: returns the decrypted string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.krypto_manager.CryptoManager.encrypt">
+<code class="descname">encrypt</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CryptoManager.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypting the file content and name, adds ‘.enc’ at the end
+:param file_path: path to the file (ends with ‘/’)
+:param file_name: name of the file to encrypt
+:param content_only: if filename should not be changed
+:return: True if encryption was successful</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="helper.krypto_manager.CryptoManager.encrypt_str">
+<code class="descname">encrypt_str</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.CryptoManager.encrypt_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encryption of a string
+:param text: text string to get encrypted
+:return: returns the encrypted string</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="helper.krypto_manager.file_hash">
+<code class="descclassname">helper.krypto_manager.</code><code class="descname">file_hash</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.file_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the hash of a file
+:param file_path: the absolute or relative path to the file
+:param hash_type: hash methode to use, default is sha256
+:return: returns the hash string</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="helper.krypto_manager.hash_str">
+<code class="descclassname">helper.krypto_manager.</code><code class="descname">hash_str</code><span class="sig-paren">(</span><em>string</em>, <em>hash_type='sha256'</em><span class="sig-paren">)</span><a class="headerlink" href="#helper.krypto_manager.hash_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the hash of a string
+:param string: string to hash
+:param hash_type: hash methode to use, default is sha256
+:return: retuns the hash string</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-helper">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-helper" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">helper package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-helper.decorator">helper.decorator module</a></li>
+<li><a class="reference internal" href="#module-helper.downloader">helper.downloader module</a></li>
+<li><a class="reference internal" href="#module-helper.exception">helper.exception module</a></li>
+<li><a class="reference internal" href="#module-helper.krypto_manager">helper.krypto_manager module</a></li>
+<li><a class="reference internal" href="#module-helper">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="evernote_cli.html"
+                        title="previous chapter">evernote_cli module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="helper.interface.html"
+                        title="next chapter">helper.interface package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/helper.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="helper.interface.html" title="helper.interface package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="evernote_cli.html" title="evernote_cli module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Evernote CLI 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >src</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, MysticBanana, tomsch43dlich, Marco-rm-f, Dawnarcher, D4rkWIZZard.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.6.
+    </div>
+  </body>
+</html>

@@ -82,7 +82,7 @@ class CryptoManager:
             iterations=100000,
             backend=default_backend())
 
-        key = base64.urlsafe_b64encode(kdf.derive(key))
+        key = base64.urlsafe_b64encode(kdf.derive(bytes(key)))
 
         self.logger = logger
         self.fernet = Fernet(key)
@@ -173,6 +173,7 @@ class CryptoManager:
             decrypted.write(self.fernet.decrypt(dec_content))
         return True
 
+
 class CompressManager():
     def __init__(self, logger=None, dst=None):
         self.logger = logger
@@ -207,20 +208,26 @@ class CompressManager():
         :param path: path to file (not necessary to end with '/')
         :param file: filename
         """
+
+        # to avoid error
+        if not os.path.isfile(u"{}/{}".format(path, file)):
+            return
+
         complete_path = u"{}/{}".format(path, file)
-        with zipfile.ZipFile(u"{}.zip".format(complete_path), "r", allowZip64=True) as zipObj:
+        with zipfile.ZipFile(complete_path, "r", allowZip64=True) as zipObj:
             zipObj.extractall(path)
 
         # need a sleep otherwise raise error because file isnt closed
         sleep(1)
-        os.remove(u"{}.zip".format(complete_path))
+
+        os.remove(complete_path)
 
     def close(self):
         if self.zip_file:
             self.zip_file.close()
 
     def __del__(self):
-        self.close()
+        pass# self.close()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()

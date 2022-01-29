@@ -25,6 +25,7 @@ class ArgumentParser:
 
     parameter_structure = arg_config.ParameterStructure(parameter=arg_config.commands)
     commands = parameter_structure.parameter
+
     optionals = ["-f", "-o"]
 
     # for generating help menu
@@ -33,7 +34,7 @@ class ArgumentParser:
     def __init__(self, controller, args):
         self.controller = controller
 
-        self.arg_list = args.split()
+        self.arg_list = args
         self.params = {}
         self.logger = controller.create_logger("argument_parser")
 
@@ -106,6 +107,7 @@ class ArgumentParser:
         except:
             self.add_input_check_error(
                 helper.interface.displaymanager.error[helper.interface.displaymanager.UserError.MISSING_PARAMETER])
+
 
     def get_opt_args(self, opt_args):
         for arg, typ in opt_args:

@@ -4,10 +4,10 @@ import sys
 
 import enum
 import oauth.auth
+import codecs
 from data import user, global_data_manager
 from helper import krypto_manager, exception
 from helper.interface import argument_parser, displaymanager
-
 
 
 class Evernote:
@@ -67,19 +67,10 @@ class Evernote:
         self.user = None
 
         # PARSER return Dictionary with information about parameter and function
-        # args = "-u {user_name} -n {password} {token} ".format(user_name=tmp_user_name,
-        #                                                     password=tmp_user_password,
-        #                                                     token=token)
-        args = " ".join(argv)
-        #args = "-u " + tmp_user_name + " -n passwd123 S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
-        self.par = argument_parser.ArgumentParser(self, args)
+        self.par = argument_parser.ArgumentParser(self, argv)
         self.par.parser()
 
-        # test
-       # self.user_web_auth()
         params = self.par.params
-        # print params
-
 
         try:
             if not params["func"] in ["version", "help", "error", "input_error"]:
@@ -223,13 +214,13 @@ class Evernote:
         """
         token = params["token"]
 
-        #todo again
+
         if token == -1:
             return
         elif not token:
             token = self.user_web_auth()
             if not token:
-                print "Bad request syntax: try again!"
+                print "Bad request syntax: Try again!"
                 return
         self.user = self.global_data_manager.create_user(user_name=self.username, user_password=self.password, token=token)
 
@@ -299,29 +290,58 @@ class Evernote:
         self.user = None
 
     def error(self, params):
-        pass
+        print params["err_types"][0]
 
     def input_error(self, params):
-        pass
+        print params["err_types"][0]
+
 
     def version(self, params):
         print self._version
 
-    ##########################################
-    ##########################################
+# https://code.activestate.com/recipes/572200/
+def win32_unicode_argv():
+    """Uses shell32.GetCommandLineArgvW to get sys.argv as a list of Unicode
+    strings.
 
+    Versions 2.x of Python don't support Unicode in sys.argv on
+    Windows, with the underlying Windows API instead replacing multi-byte
+    characters with '?'.
 
+    https://code.activestate.com/recipes/572200/
+    """
+
+    from ctypes import POINTER, byref, cdll, c_int, windll
+    from ctypes.wintypes import LPCWSTR, LPWSTR
+
+    GetCommandLineW = cdll.kernel32.GetCommandLineW
+    GetCommandLineW.argtypes = []
+    GetCommandLineW.restype = LPCWSTR
+
+    CommandLineToArgvW = windll.shell32.CommandLineToArgvW
+    CommandLineToArgvW.argtypes = [LPCWSTR, POINTER(c_int)]
+    CommandLineToArgvW.restype = POINTER(LPWSTR)
+
+    cmd = GetCommandLineW()
+    argc = c_int(0)
+    argv = CommandLineToArgvW(cmd, byref(argc))
+    if argc.value > 0:
+        # Remove Python executable and commands if present
+        start = argc.value - len(sys.argv)
+        return [argv[i] for i in
+                xrange(start, argc.value)]
 
 # main
 if __name__ == "__main__":
-    # print(sys.argv[1:])
 
-    tmp_user_name = "mneuhaus"
-    tmp_user_password = "test"
-
-    token = "S=s1:U=96801:E=1845cafec40:C=17d04fec040:P=185:A=mneuhaus:V=2:H=ce322afcd49b909aadff4e59c4354924"
+    # check if running on windows because argv is bytestring and needs to be converted
+    if sys.platform == "win32":
+        sys.argv = win32_unicode_argv()
+        params = [unicode(i) for i in sys.argv[1:]]
+    else:
+        params = sys.argv[1:]
 
     # e = Evernote(
     #       "-u {user_name} -p {password} -c -e 0".format(user_name=tmp_user_name, password=tmp_user_password, token=token).split(" "))
     # e = Evernote("-h -p".format(user_name=tmp_user_name, password=tmp_user_password).split(" "))
-    e = Evernote(sys.argv[1:])
+    e = Evernote(params)

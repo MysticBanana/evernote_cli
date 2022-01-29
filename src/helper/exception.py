@@ -10,7 +10,7 @@ import json
 
 class EvernoteException(BaseException):
     logger = None
-    fun_mode = True
+    fun_mode = False
 
     # if testing / debugging this is True (gets set in .config.json) for more information
     testing = True

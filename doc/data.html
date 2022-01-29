@@ -1,0 +1,583 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>data package &#8212; Evernote CLI 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="evernote_cli module" href="evernote_cli.html" />
+    <link rel="prev" title="src" href="modules.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="evernote_cli.html" title="evernote_cli module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="src"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Evernote CLI 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">src</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="data-package">
+<h1>data package<a class="headerlink" href="#data-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-data.file_loader">
+<span id="data-file-loader-module"></span><h2>data.file_loader module<a class="headerlink" href="#module-data.file_loader" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="data.file_loader.FileHandler">
+<em class="property">class </em><code class="descclassname">data.file_loader.</code><code class="descname">FileHandler</code><span class="sig-paren">(</span><em>file_name</em>, <em>path=None</em>, <em>create=False</em>, <em>exists_ok=False</em>, <em>*args</em>, <em>**params</em><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="exception">
+<dt id="data.file_loader.FileHandler.FileHandlerException">
+<em class="property">exception </em><code class="descname">FileHandlerException</code><span class="sig-paren">(</span><em>error_type=&lt;ErrorReason.DEFAULT: 1&gt;</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.FileHandlerException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="helper.html#helper.exception.EvernoteException" title="helper.exception.EvernoteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">helper.exception.EvernoteException</span></code></a></p>
+<dl class="class">
+<dt id="data.file_loader.FileHandler.FileHandlerException.ErrorReason">
+<em class="property">class </em><code class="descname">ErrorReason</code><a class="headerlink" href="#data.file_loader.FileHandler.FileHandlerException.ErrorReason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="data.file_loader.FileHandler.FileHandlerException.ErrorReason.DEFAULT">
+<code class="descname">DEFAULT</code><em class="property"> = 1</em><a class="headerlink" href="#data.file_loader.FileHandler.FileHandlerException.ErrorReason.DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_CREATING_PATH">
+<code class="descname">ERROR_CREATING_PATH</code><em class="property"> = 7</em><a class="headerlink" href="#data.file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_CREATING_PATH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_READING_FILE">
+<code class="descname">ERROR_READING_FILE</code><em class="property"> = 6</em><a class="headerlink" href="#data.file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_READING_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_WRITING_IN_FILE">
+<code class="descname">ERROR_WRITING_IN_FILE</code><em class="property"> = 5</em><a class="headerlink" href="#data.file_loader.FileHandler.FileHandlerException.ErrorReason.ERROR_WRITING_IN_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.file_loader.FileHandler.FileHandlerException.ErrorReason.FILE_NO_PERMISSION">
+<code class="descname">FILE_NO_PERMISSION</code><em class="property"> = 3</em><a class="headerlink" href="#data.file_loader.FileHandler.FileHandlerException.ErrorReason.FILE_NO_PERMISSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.file_loader.FileHandler.FileHandlerException.ErrorReason.WRONG_FILE_FORMAT">
+<code class="descname">WRONG_FILE_FORMAT</code><em class="property"> = 4</em><a class="headerlink" href="#data.file_loader.FileHandler.FileHandlerException.ErrorReason.WRONG_FILE_FORMAT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.add_element">
+<code class="descname">add_element</code><span class="sig-paren">(</span><em>key</em>, <em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.add_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>adding an element to a list in the dictionary
+:param key: key of the dict
+:param e: data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.dump">
+<code class="descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls methode for saving data</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="data.file_loader.FileHandler.exists">
+<code class="descname">exists</code><a class="headerlink" href="#data.file_loader.FileHandler.exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>is True if the path is a file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="data.file_loader.FileHandler.file_hash">
+<code class="descname">file_hash</code><a class="headerlink" href="#data.file_loader.FileHandler.file_hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>key</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns value of file_data[key] or equivalent of get_all for default_mode
+:rtype: object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.get_all">
+<code class="descname">get_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.get_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.load_default">
+<code class="descname">load_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.load_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>stores file content as string in self._file_data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.load_json">
+<code class="descname">load_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.load_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>stores json data in dict</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="data.file_loader.FileHandler.path">
+<code class="descname">path</code><a class="headerlink" href="#data.file_loader.FileHandler.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>getter for the path</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.set">
+<code class="descname">set</code><span class="sig-paren">(</span><em>key</em>, <em>*args</em>, <em>**params</em><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>set value of file_data[key] or equivalent of set_all for default_mode</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.set_all">
+<code class="descname">set_all</code><span class="sig-paren">(</span><em>file_data</em><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.set_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>set complete data to file_data (replace)
+:param file_data: new file_data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>appending text string to file_data, no check right file mode (not saving)
+:param text: string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.write_default">
+<code class="descname">write_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.write_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>saving data as plaintext</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.file_loader.FileHandler.write_json">
+<code class="descname">write_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.file_loader.FileHandler.write_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>saving data into json</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.global_data_manager">
+<span id="data-global-data-manager-module"></span><h2>data.global_data_manager module<a class="headerlink" href="#module-data.global_data_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="data.global_data_manager.GlobalFileManager">
+<em class="property">class </em><code class="descclassname">data.global_data_manager.</code><code class="descname">GlobalFileManager</code><span class="sig-paren">(</span><em>controller</em><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="data.global_data_manager.GlobalFileManager.CONSUMER_KEY">
+<code class="descname">CONSUMER_KEY</code><em class="property"> = None</em><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.CONSUMER_KEY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.global_data_manager.GlobalFileManager.CONSUMER_SECRET">
+<code class="descname">CONSUMER_SECRET</code><em class="property"> = None</em><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.CONSUMER_SECRET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="data.global_data_manager.GlobalFileManager.FileManagerError">
+<em class="property">exception </em><code class="descname">FileManagerError</code><span class="sig-paren">(</span><em>error_type=&lt;ErrorReason.DEFAULT: 1&gt;</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.FileManagerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="helper.html#helper.exception.EvernoteException" title="helper.exception.EvernoteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">helper.exception.EvernoteException</span></code></a></p>
+<dl class="class">
+<dt id="data.global_data_manager.GlobalFileManager.FileManagerError.ErrorReason">
+<em class="property">class </em><code class="descname">ErrorReason</code><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.FileManagerError.ErrorReason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="data.global_data_manager.GlobalFileManager.FileManagerError.ErrorReason.DEFAULT">
+<code class="descname">DEFAULT</code><em class="property"> = 1</em><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.FileManagerError.ErrorReason.DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.check_user_hash">
+<code class="descname">check_user_hash</code><span class="sig-paren">(</span><em>user_name</em>, <em>password_hash</em><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.check_user_hash" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_name</strong> – username</li>
+<li><strong>password_hash</strong> – hash of password</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.create_user">
+<code class="descname">create_user</code><span class="sig-paren">(</span><em>user_name</em>, <em>user_password</em>, <em>user_password_hash=None</em>, <em>token=None</em><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.create_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.get_api_key">
+<code class="descname">get_api_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.get_api_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.get_path">
+<code class="descname">get_path</code><span class="sig-paren">(</span><em>key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.get_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.get_user">
+<code class="descname">get_user</code><span class="sig-paren">(</span><em>user_name</em>, <em>user_password</em>, <em>token=None</em>, <em>path=False</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.get_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns relative path to user files or returns UserObject
+:rtype:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.init_files">
+<code class="descname">init_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.init_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.is_user">
+<code class="descname">is_user</code><span class="sig-paren">(</span><em>user_name</em><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.is_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if user is in .credentials, no check if user files exist
+:param user_name: username
+:return: True if exists</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.remove_user">
+<code class="descname">remove_user</code><span class="sig-paren">(</span><em>user_name</em><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.remove_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the user directory from user_data and removes entry in .credentials
+:param user_name: username</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.global_data_manager.GlobalFileManager.setup_logging">
+<code class="descname">setup_logging</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.global_data_manager.GlobalFileManager.setup_logging" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.user">
+<span id="data-user-module"></span><h2>data.user module<a class="headerlink" href="#module-data.user" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="data.user.User">
+<em class="property">class </em><code class="descclassname">data.user.</code><code class="descname">User</code><span class="sig-paren">(</span><em>controller</em>, <em>path</em>, <em>user_name</em>, <em>password</em>, <em>token=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="class">
+<dt id="data.user.User.EncryptionLevel">
+<em class="property">class </em><code class="descname">EncryptionLevel</code><a class="headerlink" href="#data.user.User.EncryptionLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="data.user.User.EncryptionLevel.COMPRESS">
+<code class="descname">COMPRESS</code><em class="property"> = 0</em><a class="headerlink" href="#data.user.User.EncryptionLevel.COMPRESS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.EncryptionLevel.ENCRYPT">
+<code class="descname">ENCRYPT</code><em class="property"> = 1</em><a class="headerlink" href="#data.user.User.EncryptionLevel.ENCRYPT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="data.user.User.UserError">
+<em class="property">exception </em><code class="descname">UserError</code><span class="sig-paren">(</span><em>error_type=&lt;ErrorReason.DEFAULT: 1&gt;</em>, <em>desc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.UserError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="helper.html#helper.exception.EvernoteException" title="helper.exception.EvernoteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">helper.exception.EvernoteException</span></code></a></p>
+<dl class="class">
+<dt id="data.user.User.UserError.ErrorReason">
+<em class="property">class </em><code class="descname">ErrorReason</code><a class="headerlink" href="#data.user.User.UserError.ErrorReason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="data.user.User.UserError.ErrorReason.COMPRESSION_ERROR">
+<code class="descname">COMPRESSION_ERROR</code><em class="property"> = 6</em><a class="headerlink" href="#data.user.User.UserError.ErrorReason.COMPRESSION_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.UserError.ErrorReason.CONFIG_MISSING">
+<code class="descname">CONFIG_MISSING</code><em class="property"> = 8</em><a class="headerlink" href="#data.user.User.UserError.ErrorReason.CONFIG_MISSING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.UserError.ErrorReason.DEFAULT">
+<code class="descname">DEFAULT</code><em class="property"> = 1</em><a class="headerlink" href="#data.user.User.UserError.ErrorReason.DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.UserError.ErrorReason.DOWNLOAD_ERROR">
+<code class="descname">DOWNLOAD_ERROR</code><em class="property"> = 9</em><a class="headerlink" href="#data.user.User.UserError.ErrorReason.DOWNLOAD_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.UserError.ErrorReason.ENCRYPTION_ERROR">
+<code class="descname">ENCRYPTION_ERROR</code><em class="property"> = 7</em><a class="headerlink" href="#data.user.User.UserError.ErrorReason.ENCRYPTION_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.UserError.ErrorReason.INVALID_ENCRYPTION_LEVEL">
+<code class="descname">INVALID_ENCRYPTION_LEVEL</code><em class="property"> = 5</em><a class="headerlink" href="#data.user.User.UserError.ErrorReason.INVALID_ENCRYPTION_LEVEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.UserError.ErrorReason.INVALID_PASSWORD">
+<code class="descname">INVALID_PASSWORD</code><em class="property"> = 3</em><a class="headerlink" href="#data.user.User.UserError.ErrorReason.INVALID_PASSWORD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.UserError.ErrorReason.INVALID_TOKEN">
+<code class="descname">INVALID_TOKEN</code><em class="property"> = 4</em><a class="headerlink" href="#data.user.User.UserError.ErrorReason.INVALID_TOKEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.UserError.ErrorReason.INVALID_USERNAME">
+<code class="descname">INVALID_USERNAME</code><em class="property"> = 2</em><a class="headerlink" href="#data.user.User.UserError.ErrorReason.INVALID_USERNAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called at the end of the program to close/save all config files.
+Encrypt downloaded files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.compress_files">
+<code class="descname">compress_files</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.compress_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a zip archive from all files in download directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.decompress_files">
+<code class="descname">decompress_files</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.decompress_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract all files from the zip archive</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.decrypt">
+<code class="descname">decrypt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.decrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls functions selected from encryption level to decrypt/uncompress files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.decrypt_files">
+<code class="descname">decrypt_files</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.decrypt_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>iterate through downloaded files, decrypt them and deletes encrypted files after</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.decrypt_token">
+<code class="descname">decrypt_token</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.decrypt_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>gets token from .user_info and returns it decrypted</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.defaults">
+<code class="descname">defaults</code><em class="property"> = {'create_download_path': False, 'overwrite_files': False}</em><a class="headerlink" href="#data.user.User.defaults" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.download_user_data">
+<code class="descname">download_user_data</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.download_user_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads user data and stores it in the .user_info.json of the respective user.
+More user data can be downloaded by expanding the content of the downloaded_data variable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.encrypt">
+<code class="descname">encrypt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls functions selected from encryption level to encrypt/compress files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.encrypt_files">
+<code class="descname">encrypt_files</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.encrypt_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>iterate through downloaded files, encrypt them and deletes files after</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.encrypt_token">
+<code class="descname">encrypt_token</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.encrypt_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a encrypted token</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.encryption_level">
+<code class="descname">encryption_level</code><a class="headerlink" href="#data.user.User.encryption_level" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.file_path">
+<code class="descname">file_path</code><a class="headerlink" href="#data.user.User.file_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the path where to save downloaded files</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.file_path_zip">
+<code class="descname">file_path_zip</code><a class="headerlink" href="#data.user.User.file_path_zip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.force_mode">
+<code class="descname">force_mode</code><a class="headerlink" href="#data.user.User.force_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.get_default">
+<code class="descname">get_default</code><span class="sig-paren">(</span><em>default</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.get_default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.get_files">
+<code class="descname">get_files</code><span class="sig-paren">(</span><em>path=None</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.get_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all files (path + file) in &lt;path&gt;</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.max_encryption_level">
+<code class="descname">max_encryption_level</code><a class="headerlink" href="#data.user.User.max_encryption_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns max encryption level possible</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.overwrite">
+<code class="descname">overwrite</code><a class="headerlink" href="#data.user.User.overwrite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.save_files">
+<code class="descname">save_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.save_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.user.User.test_download">
+<code class="descname">test_download</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#data.user.User.test_download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads all files from cloud storage and saves to self.file_path</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="data.user.User.user_token">
+<code class="descname">user_token</code><a class="headerlink" href="#data.user.User.user_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-data">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-data" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">data package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-data.file_loader">data.file_loader module</a></li>
+<li><a class="reference internal" href="#module-data.global_data_manager">data.global_data_manager module</a></li>
+<li><a class="reference internal" href="#module-data.user">data.user module</a></li>
+<li><a class="reference internal" href="#module-data">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">src</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="evernote_cli.html"
+                        title="next chapter">evernote_cli module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/data.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="evernote_cli.html" title="evernote_cli module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="src"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Evernote CLI 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >src</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, MysticBanana, tomsch43dlich, Marco-rm-f, Dawnarcher, D4rkWIZZard.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.6.
+    </div>
+  </body>
+</html>

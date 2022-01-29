@@ -1,0 +1,30 @@
+oauth package
+=============
+
+Submodules
+----------
+
+oauth.auth module
+-----------------
+
+.. automodule:: oauth.auth
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+oauth.server module
+-------------------
+
+.. automodule:: oauth.server
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: oauth
+    :members:
+    :undoc-members:
+    :show-inheritance:

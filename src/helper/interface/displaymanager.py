@@ -74,8 +74,8 @@ class DisplayManager:
         help_string = pm.get_final_output(command)
         print help_string
 
-
-class InputError(enum.Enum):
+# todo add text
+class UserError(enum.Enum):
     TOO_MANY_ARGUMENT = 1
     TOO_FEW_ARGUMENT = 2
     MISSING_ARGUMENT = 3
@@ -86,17 +86,17 @@ class InputError(enum.Enum):
 
 
 error = {
-    InputError.TOO_MANY_ARGUMENT: "Too many arguments! Expected at most 8 arguments, got <rep>",  # not used atm
-    InputError.TOO_FEW_ARGUMENT: "Too few arguments! At least one argument expected",
-    InputError.MISSING_ARGUMENT: "At least one argument is missing!",
-    InputError.MISSING_PARAMETER: "Parameter is missing!",
-    InputError.AUTHENTICATION_FAILED: "Authentication failed!"
-                                     " Check if password and username are correct."
-                                     " If you are using the program for the first time, create a new user with:"
-                                     "    '-u <username> -n <passwd>' "
-                                     " Tried [<rep>, <rep>]",
-    InputError.FALSE_PARAMETER: "The parameter is incorrect! Parameter <rep> does not exist in this context",
-    InputError.FALSE_ENCRYPTION_LEVEL: "Incorrect encryption level! Expected level 0 to <rep>, got <rep>"
+    UserError.TOO_MANY_ARGUMENT: "Too many arguments! Expected at most 8 arguments, got <rep>",  # not used atm
+    UserError.TOO_FEW_ARGUMENT: "Too few arguments! At least one argument expected",
+    UserError.MISSING_ARGUMENT: "At least one argument is missing!",
+    UserError.MISSING_PARAMETER: "Parameter is missing!",
+    UserError.AUTHENTICATION_FAILED: "Authentication failed!\n"
+                                     " Check if password and username are correct.\n"
+                                     " If you are using the program for the first time, create a new user with:\n"
+                                     "    '-u <username> -n <passwd>' \n"
+                                     " Tried [<rep>, <rep>] \n",
+    UserError.FALSE_PARAMETER: "The parameter is incorrect! Parameter <rep> does not exist in this context",
+    UserError.FALSE_ENCRYPTION_LEVEL: "Incorrect encryption level! Expected level 0 to <rep>, got <rep>"
 }
 
 if __name__ == "__main__":

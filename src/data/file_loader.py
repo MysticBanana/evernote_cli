@@ -127,7 +127,7 @@ class FileHandler:
         """
         with open(self._path, "r") as file:
             try:
-                self._file_data = json.load(file)
+                self._file_data = json.load(file, encoding="utf-8")
             except Exception as e:
                 raise self.FileHandlerException(self.FileHandlerException.ErrorReason.WRONG_FILE_FORMAT,
                                                 "Error parsing the file %s" % self._path)
@@ -190,7 +190,7 @@ class FileHandler:
         """
         with open(self._path, "w") as file:
             try:
-                json.dump(self._file_data, file, ensure_ascii=False, indent=4)
+                json.dump(self._file_data, file, ensure_ascii=False, indent=4, encoding="utf-8")
             except Exception as e:
                 raise self.FileHandlerException(self.FileHandlerException.ErrorReason.WRONG_FILE_FORMAT,
                                                 "Error parsing the file %s" % self._path)
