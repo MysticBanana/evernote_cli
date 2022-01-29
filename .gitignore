@@ -17,3 +17,4 @@ Makefile
 /_templates
 /index.rst
 /src/user_data/
+/src/.config.json
